@@ -35,6 +35,11 @@
 ---
 
 ### 2. Product Management  
+
+E-Brand = Digital identity for artisan's business (Example: "Krishna's Handicrafts")
+E-Shop = Product category storefront (Example: "Krishna's Pottery Collection", "Krishna's Textile Gallery")
+Relationship: 1 artisan → 1 E-Brand → Multiple E-Shops
+
 - **Create an E-Brand:**  
   - Users must create a single E-Brand before posting any products.  
 
