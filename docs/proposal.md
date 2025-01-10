@@ -79,20 +79,20 @@ The Handicraft Marketplace aims to:
 
 ### Frontend  
 - **Framework:** React.js  
-- **Styling:** Tailwind CSS, Bootstrap  
+- **Styling:** Tailwind CSS  
 
 ### Backend  
-- **Framework:** Django or Flask (Python)  
+- **Framework:** FastAPI
 
 ### Database  
-- PostgreSQL or MySQL  
+- PostgreSQL
 
 ### API  
-- RESTful or GraphQL  
+- RESTful 
 
 ### Additional Technologies  
 - **Payment Integration:** Stripe, PayPal, bKash/Nagad  
-- **Hosting:** AWS, Heroku, or local providers  
+- **Hosting:** DigitalOcean
 
 ---
 
