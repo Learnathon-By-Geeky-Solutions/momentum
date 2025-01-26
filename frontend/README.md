@@ -16,7 +16,7 @@ Make sure you have the following installed:
 
 1. **Clone the repository:**
     ```bash
-    git clone hhttps://github.com/Learnathon-By-Geeky-Solutions/momentum.git
+    git clone https://github.com/Learnathon-By-Geeky-Solutions/momentum.git
     cd momentum/frontend
     ```
 
