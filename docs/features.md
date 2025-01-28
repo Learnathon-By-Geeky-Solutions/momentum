@@ -142,8 +142,6 @@ Relationship: 1 artisan → 1 E-Brand → Multiple E-Shops
 ---
 
 ### Project Details Flow Chart  
-[Flow Chart Link](https://www.mermaidchart.com/raw/cec2206c-c3d6-46fb-9f47-f83c0a7867fe?theme=light&version=v0.1&format=svg)  
 
- ```![mermaid](https://www.mermaidchart.com/raw/cec2206c-c3d6-46fb-9f47-f83c0a7867fe?theme=light&version=v0.1&format=svg)
-   
-```
+![Flow_Chart](https://www.mermaidchart.com/raw/cec2206c-c3d6-46fb-9f47-f83c0a7867fe?theme=light&version=v0.1&format=svg)
+
