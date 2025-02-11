@@ -1,4 +1,4 @@
-name: Deploy Next.js site to Pages
+name: Deploy frontend site to Pages
 
 on:
   push:
@@ -48,7 +48,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: ${{ steps.detect-package-manager.outputs.manager }}
+          # Remove cache for bun as it's not supported
+          cache: ${{ steps.detect-package-manager.outputs.manager != 'bun' && steps.detect-package-manager.outputs.manager || '' }}
           cache-dependency-path: frontend
 
       - name: Setup Bun
