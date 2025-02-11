@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH,
+  basePath: "/momentum",
   output: "export",
   images: {
     unoptimized: true,
