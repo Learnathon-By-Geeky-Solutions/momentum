@@ -129,7 +129,7 @@ export default function Hero() {
             <div className="space-y-4">
               <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
                 <Image
-                  src="/hero-craft-1.jpg"
+                  src="/momentum/hero-craft-1.jpg"
                   alt="Artisan craft 1"
                   width={300}
                   height={300}
@@ -138,7 +138,7 @@ export default function Hero() {
               </div>
               <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
                 <Image
-                  src="/hero-craft2.jpg"
+                  src="/momentum/hero-craft2.jpg"
                   alt="Artisan craft 2"
                   width={300}
                   height={300}
@@ -149,7 +149,7 @@ export default function Hero() {
             <div className="space-y-4 pt-8">
               <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
                 <Image
-                  src="/hero-craft3.jpg"
+                  src="/momentum/hero-craft3.jpg"
                   alt="Artisan craft 3"
                   width={300}
                   height={300}
@@ -158,7 +158,7 @@ export default function Hero() {
               </div>
               <div className="rounded-2xl overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
                 <Image
-                  src="/hero-craft-1.jpg"
+                  src="/momentum/hero-craft-1.jpg"
                   alt="Artisan craft 4"
                   width={300}
                   height={300}
