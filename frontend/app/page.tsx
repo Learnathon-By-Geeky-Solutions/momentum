@@ -1,4 +1,5 @@
 
+import Hero from "@/components/brand/hero"
 import { MainHeader } from "@/components/brand/navbar/main-header"
 import { Navigation } from "@/components/brand/navbar/navigation"
 
@@ -7,6 +8,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       <MainHeader />
       <Navigation />
+      <Hero/>
     </div>
   )
 }
