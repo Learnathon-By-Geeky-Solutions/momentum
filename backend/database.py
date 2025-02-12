@@ -2,11 +2,13 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base  
 from sqlalchemy.orm import sessionmaker    
 #from dotenv import load_dotenv  # Import the load_dotenv function
-#import os
+import os
 
 #load_dotenv()
 # Replace these values with your actual PostgreSQL credentials  
-DATABASE_URL = "postgresql+psycopg2://postgres:1234@localhost/handicraft" 
+
+pp = os.getenv("pas")
+DATABASE_URL = "postgresql+psycopg2://postgres:{pp}@localhost/handicraft" 
 # Create the database engine  
 engine = create_engine(DATABASE_URL)  
   
