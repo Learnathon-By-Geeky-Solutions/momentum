@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input"
 
 export function MainHeader() {
   return (
-    <div className="bg-blue-900 text-white p-4">
+    <div className="bg-primary text-white p-4">
       <div className="container mx-auto flex items-center justify-between gap-4">
         <Link href="/" className="text-2xl font-bold whitespace-nowrap">
           HANDICRAFT

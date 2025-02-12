@@ -5,7 +5,7 @@ import { CategoryDropdown } from "./category-dropdown"
 
 export function Navigation() {
   return (
-    <div className="border-b bg-white sticky top-0 z-50">
+    <div className="border-b bg-muted sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <MobileNav />
