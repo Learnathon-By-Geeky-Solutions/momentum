@@ -1,14 +1,19 @@
-# database.py
+from sqlalchemy import create_engine  
+from sqlalchemy.ext.declarative import declarative_base  
+from sqlalchemy.orm import sessionmaker    
+#from dotenv import load_dotenv  # Import the load_dotenv function
+import os
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+#load_dotenv()
+# Replace these values with your actual PostgreSQL credentials  
 
-# Replace these values with your actual PostgreSQL credentials
-DATABASE_URL = "postgresql://postgres:1234@localhost/handicraft"
-
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base class for our ORM models
-Base = declarative_base()
+pp = os.getenv("pas")
+DATABASE_URL = "postgresql+psycopg2://postgres:{pp}@localhost/handicraft" 
+# Create the database engine  
+engine = create_engine(DATABASE_URL)  
+  
+# Create a session factory  
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)  
+  
+# Base class for ORM models  
+Base = declarative_base()  
