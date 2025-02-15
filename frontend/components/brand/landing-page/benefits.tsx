@@ -1,12 +1,12 @@
 import { Shield, Globe, Award, Heart, Users, Gift } from "lucide-react"
 
 const benefits = [
-  { icon: Shield, title: "Quality Guaranteed", description: "Every item is vetted for quality" },
-  { icon: Globe, title: "Worldwide Shipping", description: "Deliver to doorsteps globally" },
-  { icon: Award, title: "Unique Handcrafted Items", description: "One-of-a-kind pieces" },
-  { icon: Heart, title: "Support Local Artisans", description: "Empower creators worldwide" },
-  { icon: Users, title: "Global Artisan Community", description: "Connect with skilled craftspeople" },
-  { icon: Gift, title: "Perfect for Gifts", description: "Find something special for everyone" },
+  { id: 1, icon: Shield, title: "Quality Guaranteed", description: "Every item is vetted for quality" },
+  { id: 2, icon: Globe, title: "Worldwide Shipping", description: "Deliver to doorsteps globally" },
+  { id: 3, icon: Award, title: "Unique Handcrafted Items", description: "One-of-a-kind pieces" },
+  { id: 4, icon: Heart, title: "Support Local Artisans", description: "Empower creators worldwide" },
+  { id: 5, icon: Users, title: "Global Artisan Community", description: "Connect with skilled craftspeople" },
+  { id: 6, icon: Gift, title: "Perfect for Gifts", description: "Find something special for everyone" },
 ]
 
 export function Benefits() {
@@ -24,7 +24,7 @@ export function Benefits() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {benefits.map((benefit, index) => (
             <div
-              key={index}
+              key={benefit.id}
               className="group relative overflow-hidden rounded-xl bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
               style={{ animationDelay: `${index * 150}ms` }}
             >

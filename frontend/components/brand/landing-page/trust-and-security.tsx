@@ -2,16 +2,19 @@ import { Shield, Lock, CreditCard } from "lucide-react"
 
 const trustPoints = [
   {
+    id: 1,
     icon: Shield,
     title: "Verified Artisans",
     description: "All artisans are carefully vetted to ensure quality and authenticity.",
   },
   {
+    id: 2,
     icon: Lock,
     title: "Secure Transactions",
     description: "Your personal and payment information is always protected.",
   },
   {
+    id: 3,
     icon: CreditCard,
     title: "Buyer Protection",
     description: "Shop with confidence knowing your purchases are covered.",
@@ -24,8 +27,8 @@ export function TrustAndSecurity() {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-serif font-bold text-center mb-12">Your Trust, Our Priority</h2>
         <div className="grid md:grid-cols-3 gap-8">
-          {trustPoints.map((point, index) => (
-            <div key={index} className="flex flex-col items-center text-center">
+          {trustPoints.map((point) => (
+            <div key={point.id} className="flex flex-col items-center text-center">
               <div className="bg-primary/10 rounded-full p-4 mb-4">
                 <point.icon className="h-8 w-8 text-primary" />
               </div>

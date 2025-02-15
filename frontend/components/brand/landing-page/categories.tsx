@@ -2,12 +2,12 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 const categories = [
-  { name: "Jewelry", image: "/placeholder.svg?height=200&width=200" },
-  { name: "Pottery", image: "/placeholder.svg?height=200&width=200" },
-  { name: "Textiles", image: "/placeholder.svg?height=200&width=200" },
-  { name: "Wood Crafts", image: "/placeholder.svg?height=200&width=200" },
-  { name: "Paintings", image: "/placeholder.svg?height=200&width=200" },
-  { name: "Sculptures", image: "/placeholder.svg?height=200&width=200" },
+  { id: 1, name: "Jewelry", image: "/placeholder.svg?height=200&width=200" },
+  { id: 2, name: "Pottery", image: "/placeholder.svg?height=200&width=200" },
+  { id: 3, name: "Textiles", image: "/placeholder.svg?height=200&width=200" },
+  { id: 4, name: "Wood Crafts", image: "/placeholder.svg?height=200&width=200" },
+  { id: 5, name: "Paintings", image: "/placeholder.svg?height=200&width=200" },
+  { id: 6, name: "Sculptures", image: "/placeholder.svg?height=200&width=200" },
 ]
 
 export function CategoriesShowcase() {
@@ -16,8 +16,8 @@ export function CategoriesShowcase() {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-serif font-bold text-center mb-12">Discover Artisanal Categories</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {categories.map((category, index) => (
-            <div key={index} className="group relative overflow-hidden rounded-lg">
+          {categories.map((category) => (
+            <div key={category.id} className="group relative overflow-hidden rounded-lg">
               <Image
                 src={category.image || "/placeholder.svg"}
                 alt={category.name}
