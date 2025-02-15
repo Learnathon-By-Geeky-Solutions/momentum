@@ -33,7 +33,7 @@ interface CategoryListProps {
   className?: string
 }
 
-export function CategoryList({ className }: CategoryListProps) {
+export function CategoryList({ className }: Readonly<CategoryListProps>) {
   return (
     <div className={cn("flex flex-col", className)}>
       {categories.map((category) => (
