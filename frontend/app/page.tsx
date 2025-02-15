@@ -1,7 +1,7 @@
 
 import { Benefits } from "@/components/brand/landing-page/benefits"
 import { CategoriesShowcase } from "@/components/brand/landing-page/categories"
-import { FAQ } from "@/components/brand/landing-page/faq"
+import { Faq } from "@/components/brand/landing-page/faq"
 import { FeaturedArtisans } from "@/components/brand/landing-page/featured-artisans"
 import { FeaturedProducts } from "@/components/brand/landing-page/featured-products"
 import { FinalCTA } from "@/components/brand/landing-page/final-cta"
@@ -29,7 +29,7 @@ export default function Home() {
       <CategoriesShowcase/>
       <PlatformFeatures/>
       <TrustAndSecurity/>
-      <FAQ/>
+      <Faq/>
       <Newsletter/>
       <FinalCTA/>
       <Footer/>
