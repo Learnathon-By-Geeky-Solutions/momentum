@@ -2,17 +2,17 @@ import { Search, ShoppingCart, Truck, Smile, UserPlus, Package, DollarSign, Tren
 import { Button } from "@/components/ui/button"
 
 const buyerSteps = [
-  { icon: Search, text: "Browse unique items", description: "Find handcrafted items that speak to you" },
-  { icon: ShoppingCart, text: "Add to cart", description: "Select your favorite pieces" },
-  { icon: Truck, text: "Fast shipping", description: "Quick and secure delivery to your door" },
-  { icon: Smile, text: "Enjoy your craft", description: "Experience the joy of artisanal products" },
+  { id:1, icon: Search, text: "Browse unique items", description: "Find handcrafted items that speak to you" },
+  { id:2,icon: ShoppingCart, text: "Add to cart", description: "Select your favorite pieces" },
+  { id:3,icon: Truck, text: "Fast shipping", description: "Quick and secure delivery to your door" },
+  { id:4, icon: Smile, text: "Enjoy your craft", description: "Experience the joy of artisanal products" },
 ]
 
 const sellerSteps = [
-  { icon: UserPlus, text: "Create account", description: "Join our community of artisans" },
-  { icon: Package, text: "List your products", description: "Showcase your unique creations" },
-  { icon: DollarSign, text: "Receive orders", description: "Start selling to eager customers" },
-  { icon: TrendingUp, text: "Grow your business", description: "Expand your creative enterprise" },
+  { id:1,icon: UserPlus, text: "Create account", description: "Join our community of artisans" },
+  { id:2, icon: Package, text: "List your products", description: "Showcase your unique creations" },
+  { id:3,icon: DollarSign, text: "Receive orders", description: "Start selling to eager customers" },
+  { id:4, icon: TrendingUp, text: "Grow your business", description: "Expand your creative enterprise" },
 ]
 
 export function HowItWorks() {
@@ -24,8 +24,8 @@ export function HowItWorks() {
           <div>
             <h3 className="text-2xl font-semibold mb-8 text-center">For Buyers</h3>
             <div className="relative">
-              {buyerSteps.map((step, index) => (
-                <div key={index} className="flex mb-8 relative">
+              {buyerSteps.map((step,index) => (
+                <div key={step.id} className="flex mb-8 relative">
                   <div className="flex-none">
                     <div className="bg-background w-12 h-12 rounded-full flex items-center justify-center z-10 relative border-2 border-primary">
                       <step.icon className="h-6 w-6 text-primary" />
@@ -50,7 +50,7 @@ export function HowItWorks() {
             <h3 className="text-2xl font-semibold mb-8 text-center">For Artisans</h3>
             <div className="relative">
               {sellerSteps.map((step, index) => (
-                <div key={index} className="flex mb-8 relative">
+                <div key={step.id} className="flex mb-8 relative">
                   <div className="flex-none">
                     <div className="bg-background w-12 h-12 rounded-full flex items-center justify-center z-10 relative border-2 border-secondary">
                       <step.icon className="h-6 w-6 text-secondary" />
@@ -60,7 +60,7 @@ export function HowItWorks() {
                     )}
                   </div>
                   <div className="ml-4 flex-1">
-                    <h4 className="font-semibold text-lg mb-1">{step.text}</h4>
+                    <h4 className="font-semibold text-lg mb-1">{step.text} </h4>
                     <p className="text-muted-foreground">{step.description}</p>
                   </div>
                 </div>

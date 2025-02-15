@@ -5,28 +5,32 @@ import { ChevronDown, ChevronUp } from "lucide-react"
 
 const faqs = [
   {
+    id: 1,
     question: "How do I become a seller on ArtisanMarket?",
     answer:
       "To become a seller, create an account, verify your email, and complete your artisan profile. Once approved, you can start listing your handcrafted items.",
   },
   {
+    id:2,
     question: "What types of products can I sell on ArtisanMarket?",
     answer:
       "ArtisanMarket welcomes a wide range of handcrafted items, including but not limited to jewelry, pottery, textiles, woodwork, and artwork. All items must be handmade or significantly altered by you.",
   },
   {
+    id:3,
     question: "How does shipping work for buyers?",
     answer:
       "Sellers are responsible for shipping their items. As a buyer, you'll see shipping costs and estimated delivery times on each product page before making a purchase.",
   },
   {
+    id:4,
     question: "What if I'm not satisfied with my purchase?",
     answer:
       "We have a buyer protection policy. If you're not satisfied, contact the seller first. If you can't resolve the issue, our customer support team will assist you with returns or refunds.",
   },
 ]
 
-export function FAQ() {
+export function Faq() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   const toggleFAQ = (index: number) => {

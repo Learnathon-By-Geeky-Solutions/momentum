@@ -13,8 +13,19 @@ export function CategoryMenu() {
     <div className="flex bg-white rounded-lg overflow-hidden shadow-lg">
       <div className="w-72 bg-gray-50 border-r border-gray-200 max-h-[calc(100vh-200px)] overflow-y-auto">
         {categories.map((category) => (
-          <div key={category.name} className="relative" onMouseEnter={() => setActiveCategory(category.name)}>
-            <Link
+            <div
+            key={category.name}
+            className="relative"
+            role="button"
+            tabIndex={0}
+            onMouseEnter={() => setActiveCategory(category.name)}
+            onFocus={() => setActiveCategory(category.name)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+              setActiveCategory(category.name)
+              }
+            }}
+            ><Link
               href={category.href}
               className={`flex items-center justify-between p-4 hover:bg-gray-100 transition-all duration-200 ${
                 activeCategory === category.name ? "bg-primary/10 text-primary border-r-2 border-primary" : ""
