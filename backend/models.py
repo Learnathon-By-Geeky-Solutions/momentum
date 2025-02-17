@@ -18,7 +18,7 @@ class User(Base):
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
 
     brands = relationship("Brand", back_populates="user")
-    # products = relationship("Product", back_populates="user")
+   
 
 
 class Brand(Base):
