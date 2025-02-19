@@ -1,3 +1,5 @@
+
+
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
@@ -75,3 +77,8 @@ class ProductOut(BaseModel):
 
     class Config:
         from_attributes = True  # Pydantic v2 update
+        
+        
+        
+        
+        

@@ -1,7 +1,6 @@
-# create_tables.py
 
 from database import engine, Base
-import models # This will register the User model with Base
+import models 
 
 def create_tables():
     Base.metadata.create_all(bind=engine)
