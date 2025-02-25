@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const categories = [
   { id: 1, name: "Jewelry", image: "/placeholder.svg?height=200&width=200" },
@@ -32,7 +32,7 @@ export function CategoriesShowcase() {
           ))}
         </div>
         <div className="text-center mt-8">
-          <Button variant="outline">View All Categories</Button>
+          <Link href='/products' >View All Categories</Link>
         </div>
       </div>
     </section>
