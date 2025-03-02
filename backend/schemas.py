@@ -59,7 +59,7 @@ class BrandOut(BaseModel):
         from_attributes = True  # Pydantic v2 update
 
 class ProductCreate(BaseModel):
-    brand_id: int  # Ensure the brand exists before creating a product
+    #brand_id: int  # Ensure the brand exists before creating a product
     product_name: str
     product_pic: List[str]  # Array of image storage links
     product_video: List[str]  # Array of video storage links
@@ -72,7 +72,7 @@ class ProductCreate(BaseModel):
 
 class ProductOut(BaseModel):
     product_id: int
-    brand_id: int
+    #brand_id: int
     product_name: str
     product_pic: List[str]
     product_video: List[str]

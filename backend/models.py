@@ -5,7 +5,7 @@ from database import Base
 class User(Base):
     __tablename__ = "user"
 
-    user_id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String, unique=True, nullable=True, index=True)
     email = Column(String, unique=True, nullable=False, index=True)
     password = Column(String, nullable=True)
@@ -16,6 +16,8 @@ class User(Base):
     role = Column(String, nullable=False, default="customer")
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
+    is_verified = Column(Boolean, default=False)  
+
 
     brands = relationship("Brand", back_populates="user")
    

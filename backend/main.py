@@ -7,15 +7,13 @@ from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from models import User
 from schemas import UserCreate, Token, LoginRequest, UserUpdate
-from utils import auth_utils, create_access_token, verify_token
+from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email
 from datetime import timedelta
 import os
 import dotenv
 from pydantic import BaseModel
 import uvicorn
 from typing import Annotated, List
-
-
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -31,6 +29,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from pydantic import BaseModel
+from starlette.responses import JSONResponse
 
 from typing import Annotated
 
@@ -80,7 +79,14 @@ def authenticate_user(db: Session, username: str, password: str):
 
 @app.post("/register", response_model=Token)
 async def register(user: UserCreate, db: Session = Depends(get_db)):
-    """Register a new user and return access token"""
+    """Register a new user and send a verification email"""
+
+    existing_user = db.query(User).filter(
+        (User.email == user.email) | (User.username == user.username)).first()
+
+    if existing_user:
+        raise HTTPException(status_code=400, detail="User with this email or username already exists.")
+
     hashed_password = auth_utils.hash_password(user.password)
 
     db_user = User(
@@ -89,15 +95,22 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         password=hashed_password,
         full_name=user.full_name,
         address=user.address,
-        phone=user.phone
+        phone=user.phone,
+        is_verified=False  
     )
 
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
 
-    access_token = create_access_token(data={"sub": user.email}, expires_delta=timedelta(minutes=30))
-    return {"access_token": access_token, "token_type": "bearer"}
+    # ✅ Generate verification token
+    token = create_email_verification_token(user.email)
+
+    # ✅ Send verification email
+    await send_verification_email(user.email, token)
+
+    return JSONResponse(status_code=200, content={"message": "Verification email sent. Please check your inbox."})
+
 
 
 @app.post("/login", response_model=Token)
@@ -110,6 +123,9 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
 
     access_token = create_access_token(data={"sub": user.email}, expires_delta=timedelta(minutes=30))
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+
 
 
 @app.post("/protected-route")  
@@ -217,6 +233,7 @@ def create_brand(brand: schemas.BrandCreate, db: Session = Depends(get_db), user
     
     
     existing_brand = db.query(models.Brand).filter(models.Brand.user_id == User.user_id).first()
+    #print(existing_brand.brand_name)
     
     if existing_brand:
         raise HTTPException(status_code=400, detail="You can create only one brand.")
@@ -265,18 +282,20 @@ def update_brand(brand_id: int, brand: schemas.BrandCreate, db: Session = Depend
 
 
 # Post Product (protected route)
-@app.post("/post-product", response_model=schemas.ProductOut)
+@app.post("/post-product", response_model=schemas.ProductCreate)
 def post_product(product: schemas.ProductCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user), current_user: models.User = Depends(get_current_user)):
     
     brand = db.query(models.Brand).filter(models.Brand.user_id == current_user.user_id).first()
-
+    print(brand.brand_id)
+     
     if not brand:
         raise HTTPException(status_code=400, detail="Brand does not exist.")
     if brand.user_id != user.user_id:
         raise HTTPException(status_code=403, detail="You do not have permission to add products to this brand.")
 
     new_product = models.Product(
-        brand_id=brand,
+        brand_id=brand.brand_id,
+
         product_name=product.product_name,
         product_pic=product.product_pic,
         product_video=product.product_video,
@@ -295,7 +314,7 @@ def post_product(product: schemas.ProductCreate, db: Session = Depends(get_db), 
 
 
 
-@app.put("/update-product/{product_id}", response_model=schemas.ProductOut)
+@app.put("/update-product/{product_id}", response_model=schemas.ProductCreate)
 def update_product(
     product_id: int,
     updated_product: schemas.ProductCreate,
