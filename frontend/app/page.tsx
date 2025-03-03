@@ -1,14 +1,37 @@
 
+import { Benefits } from "@/components/brand/landing-page/benefits"
+import { CategoriesShowcase } from "@/components/brand/landing-page/categories"
+import { Faq } from "@/components/brand/landing-page/faq"
+import { FeaturedArtisans } from "@/components/brand/landing-page/featured-artisans"
+import { FeaturedProducts } from "@/components/brand/landing-page/featured-products"
+import { FinalCTA } from "@/components/brand/landing-page/final-cta"
+import Hero from "@/components/brand/landing-page/hero"
+import { HowItWorks } from "@/components/brand/landing-page/how-it-works"
+import { Newsletter } from "@/components/brand/landing-page/newsletter"
+import { PlatformFeatures } from "@/components/brand/landing-page/platform-features"
+import { Testimonials } from "@/components/brand/landing-page/testimonial"
+import { TrustAndSecurity } from "@/components/brand/landing-page/trust-and-security"
+import { Navigation } from "@/components/brand/navbar/navigation"
 
 export default function Home() {
   return (
-   <main className="flex flex-col items-center justify-center min-h-screen py-2">
-     <h1 className="text-xl text-center">
-      Welcome to Handicraft
-    </h1>
-    <h2 className="text-5xl text-center font-bold">
-      HANDICRAFT - A D2C PLATFORM
-    </h2>
-   </main>
-  );
+    <div className="min-h-screen flex flex-col">
+     
+      <Navigation />
+      <Hero/>
+      <FeaturedProducts/>
+      <HowItWorks/>
+      <Benefits/>
+      <FeaturedArtisans/>
+      <Testimonials/>
+      <CategoriesShowcase/>
+      <PlatformFeatures/>
+      <TrustAndSecurity/>
+      <Faq/>
+      <Newsletter/>
+      <FinalCTA/>
+    
+    </div>
+  )
 }
+
