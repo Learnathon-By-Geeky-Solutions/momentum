@@ -1,3 +1,7 @@
+
+
+
+
 from fastapi import Security, HTTPException, status
 
 from google.oauth2 import id_token
@@ -9,11 +13,13 @@ import requests as http_requests
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+
 
 # Environment variables
-SECRET_KEY = os.getenv("JWT_SECRET_KEY", "my_key")  # Change this in production
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")  # Change this in production
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 100
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -22,6 +28,20 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
+
+
+print(os.getenv("google_password"))
+conf = ConnectionConfig(
+    MAIL_USERNAME="jamilahmediiuc@gmail.com",
+    MAIL_PASSWORD=os.getenv("google_password"),
+
+    MAIL_FROM="jamilahmediiuc@gmail.com",
+    MAIL_PORT=587,  # 587 for TLS, 465 for SSL
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_STARTTLS=True,  # Correct key name
+    MAIL_SSL_TLS=False,  # Correct key name
+    USE_CREDENTIALS=True
+)
 
 
 class AuthUtils:
@@ -77,12 +97,46 @@ class AuthUtils:
         if response.status_code != 200:
             raise HTTPException(status_code=400, detail="Failed to fetch access token")
         return response.json()
+    
+
+
+def create_email_verification_token(email: str):
+    expire = datetime.utcnow() + timedelta(hours=1)
+    to_encode = {"sub": email, "exp": expire}
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+
+async def send_verification_email(email: str, token: str):
+    verification_link = f"http://localhost:8000/verify-email?token={token}"
+    message = MessageSchema(
+        subject="Verify Your Email",
+        recipients=[email],
+        body=f"Click the link to verify your email: {verification_link}",
+        subtype="html"
+    )
+    fm = FastMail(conf)
+    await fm.send_message(message)
+
+
+
+
+
+
+
+
+    
+def generate_verification_token(email: str):
+    expire = datetime.utcnow() + timedelta(minutes=15)  # Token expires in 15 min
+    data = {"sub": email, "exp": expire}
+    return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+    
+
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     """Create a JWT access token."""
     to_encode = data.copy()
-    expire = datetime.now(timezone.UTC) + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -96,6 +150,11 @@ def verify_token(token: str = Security(oauth2_scheme)):
             detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
+        
+        
+        
+
+
 
 
 # Initialize utility class

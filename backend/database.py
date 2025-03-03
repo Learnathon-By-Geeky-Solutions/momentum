@@ -7,8 +7,8 @@ import os
 load_dotenv()
 # Replace these values with your actual PostgreSQL credentials  
 
-pp = os.getenv("pas")
-DATABASE_URL = "postgresql+psycopg2://postgres:{pp}@localhost/handicraft" 
+pp = os.getenv("DATABASE_URL")
+DATABASE_URL = pp 
 # Create the database engine  
 engine = create_engine(DATABASE_URL)  
   
