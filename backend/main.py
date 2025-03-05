@@ -1,12 +1,12 @@
 
 
 
-from fastapi import FastAPI, Depends, HTTPException,Header
+from fastapi import FastAPI, Depends, HTTPException,Header, APIRouter
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from models import User
-from schemas import UserCreate, Token, LoginRequest, UserUpdate
+from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate
 from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email
 from datetime import timedelta
 import os
@@ -14,6 +14,7 @@ import dotenv
 from pydantic import BaseModel
 import uvicorn
 from typing import Annotated, List
+from models import Order, OrderItem, Bill  
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -39,6 +40,7 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 if not GOOGLE_CLIENT_ID:
     raise ValueError("GOOGLE_CLIENT_ID is not set in environment variables.")
 
+router = APIRouter()  
 
 app = FastAPI()
 
@@ -46,7 +48,6 @@ app = FastAPI()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-router = APIRouter()
 
 
 def get_db():
@@ -359,6 +360,63 @@ def get_product(product_id: int,db: Session = Depends(get_db)):
 def get_all_products(db: Session = Depends(get_db)):
     products = db.query(models.Product).all()
     return products
+
+  
+@app.post("/orders", response_model=OrderOut)  
+def create_order(order: OrderCreate, db: Session = Depends(get_db)):  
+    """Create a new order"""  
+    db_order = Order(user_id=order.user_id, status=order.status)  
+    db.add(db_order)  
+    db.commit()  
+    db.refresh(db_order)  
+  
+    # Add order items  
+    for item in order.order_items:  
+        db_order_item = OrderItem(  
+            order_id=db_order.order_id,  
+            product_id=item.product_id,  
+            size=item.size,  
+            quantity=item.quantity  
+        )  
+        db.add(db_order_item)  
+  
+    # Add bill  
+    db_bill = Bill(  
+        order_id=db_order.order_id,  
+        amount=order.bill.amount,  
+        method=order.bill.method,  
+        trx_id=order.bill.trx_id,  
+        status=order.bill.status  
+    )  
+    db.add(db_bill)  
+  
+    db.commit()  
+    db.refresh(db_order)  
+    return db_order  
+
+
+
+  
+@app.get("/orders/{user_id}", response_model=List[OrderOut])  
+def get_orders_by_user(user_id: int, db: Session = Depends(get_db)):  
+    """Retrieve all orders for a specific user"""  
+    orders = db.query(Order).filter(Order.user_id == user_id).all()  
+    if not orders:  
+        raise HTTPException(status_code=404, detail="No orders found for this user")  
+    return orders  
+  
+@app.get("/order/{order_id}", response_model=OrderOut)  
+def get_order(order_id: int, db: Session = Depends(get_db)):  
+    """Retrieve a specific order by order_id"""  
+    order = db.query(Order).filter(Order.order_id == order_id).first()  
+    if not order:  
+        raise HTTPException(status_code=404, detail="Order not found")  
+    return order  
+  
+# --- Utility Functions ---  
+  
+# Include token creation and verification functions here  
+# Example: `create_access_token`, `verify_token`  
 
 
 

@@ -55,3 +55,39 @@ class Product(Base):
     approved = Column(Boolean, default=False)
 
     brand = relationship("Brand", back_populates="products")
+
+
+
+class Order(Base):  
+    __tablename__ = "orders"  
+    order_id = Column(Integer, primary_key=True, index=True, autoincrement=True)  
+    user_id = Column(Integer, ForeignKey("user.user_id", ondelete="CASCADE"), nullable=False)  
+    status = Column(String(50), nullable=False)  
+    created_at = Column(TIMESTAMP, server_default=func.now())  
+  
+    user = relationship("User", back_populates="orders")  
+    order_items = relationship("OrderItem", back_populates="order")  
+    bill = relationship("Bill", back_populates="order", uselist=False)  # One-to-one relationship  
+  
+class OrderItem(Base):  
+    __tablename__ = "order_items"  
+    order_item_id = Column(Integer, primary_key=True, index=True, autoincrement=True)  
+    order_id = Column(Integer, ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False)  
+    product_id = Column(Integer, ForeignKey("product.product_id", ondelete="CASCADE"), nullable=False)  
+    size = Column(String(50), nullable=True)  
+    quantity = Column(Integer, nullable=False)  
+  
+    order = relationship("Order", back_populates="order_items")  
+    product = relationship("Product")  
+  
+class Bill(Base):  
+    __tablename__ = "bills"  
+    bill_id = Column(Integer, primary_key=True, index=True, autoincrement=True)  
+    order_id = Column(Integer, ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False)  
+    amount = Column(DECIMAL(10, 2), nullable=False)  
+    method = Column(String(50), nullable=False)  
+    trx_id = Column(String(100), nullable=False)  
+    status = Column(String(50), nullable=False)  
+    created_at = Column(TIMESTAMP, server_default=func.now())  
+  
+    order = relationship("Order", back_populates="bill")  

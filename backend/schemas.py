@@ -109,3 +109,57 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     address: Optional[str] = None
     phone: Optional[str] = None
+
+
+
+
+
+
+class OrderItemCreate(BaseModel):  
+    product_id: int  
+    size: Optional[str]  
+    quantity: int  
+  
+class OrderItemOut(BaseModel):  
+    order_item_id: int  
+    product_id: int  
+    size: Optional[str]  
+    quantity: int  
+  
+    class Config:  
+        from_attributes = True  
+  
+class BillCreate(BaseModel):  
+    amount: float  
+    method: str  
+    trx_id: str  
+    status: str  
+  
+class BillOut(BaseModel):  
+    bill_id: int  
+    order_id: int  
+    amount: float  
+    method: str  
+    trx_id: str  
+    status: str  
+    created_at: datetime  
+  
+    class Config:  
+        from_attributes = True  
+  
+class OrderCreate(BaseModel):  
+    user_id: int  
+    status: str  
+    order_items: List[OrderItemCreate]  
+    bill: BillCreate  
+  
+class OrderOut(BaseModel):  
+    order_id: int  
+    user_id: int  
+    status: str  
+    created_at: datetime  
+    order_items: List[OrderItemOut]  
+    bill: Optional[BillOut]  
+  
+    class Config:  
+        from_attributes = True  
