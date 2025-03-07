@@ -1,0 +1,67 @@
+{
+  "labelsSynonyms": {
+    "bug": [
+      "error",
+      "need fix",
+      "not working",
+      "crash",
+      "issue",
+      "problem"
+    ],
+    "enhancement": [
+      "upgrade",
+      "improve",
+      "enhance",
+      "add feature",
+      "new feature"
+    ],
+    "question": [
+      "help",
+      "how can i",
+      "what is",
+      "explain",
+      "info"
+    ],
+    "documentation": [
+      "docs",
+      "document",
+      "manual",
+      "guide"
+    ],
+    "duplicate": [
+      "already reported",
+      "already exists"
+    ],
+    "invalid": [
+      "not valid",
+      "invalid request"
+    ]
+  },
+  "labelsNotAllowed": [
+    "documentation",
+    "duplicate",
+    "good first issue",
+    "help wanted",
+    "invalid"
+  ],
+  "defaultLabels": [
+    "triage",
+    "new issue"
+  ],
+  "ignoreComments": true,
+  "ignoreBody": false,
+  "ignoreTitle": false,
+  "labelsCaseSensitive": false,
+  "labelsRegex": true,
+  "labelsRegexFlags": "gi",
+  "labelsRegexPattern": "^(\\w+)$",
+  "labelsRegexReplace": "$1",
+  "labelsRegexReplaceAll": true,
+  "labelsRegexReplaceAllFlags": "gi",
+  "labelsRegexReplaceAllPattern": "^(\\w+)$",
+  "labelsRegexReplaceAllReplace": "$1",
+  "labelsRegexReplaceAllReplaceAll": true,
+  "labelsRegexReplaceAllReplaceAllFlags": "gi",
+  "labelsRegexReplaceAllReplaceAllPattern": "^(\\w+)$",
+  "labelsRegexReplaceAllReplaceAllReplace": "$1"
+}
