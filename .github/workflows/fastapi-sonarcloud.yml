@@ -35,7 +35,7 @@ jobs:
           pytest --cov=. --cov-report=xml tests/
 
       - name: Upload coverage to SonarCloud
-        uses: sonarsource/sonarcloud-github-action@master
+        uses: sonarsource/sonarcloud-github-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
