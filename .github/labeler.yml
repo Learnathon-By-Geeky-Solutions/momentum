@@ -1,0 +1,10 @@
+labels:
+  - name: backend
+    paths:
+      - 'src/backend/**'
+  - name: frontend
+    paths:
+      - 'src/frontend/**'
+  - name: docs
+    paths:
+      - 'docs/**'
