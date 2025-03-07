@@ -125,6 +125,7 @@ async def send_verification_email(email: str, token: str):
 
     
 def generate_verification_token(email: str):
+    
     expire = datetime.utcnow() + timedelta(minutes=15)  # Token expires in 15 min
     data = {"sub": email, "exp": expire}
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)

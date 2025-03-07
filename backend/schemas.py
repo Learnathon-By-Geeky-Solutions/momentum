@@ -3,6 +3,8 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from datetime import datetime
+from decimal import Decimal
+
 
 class Token(BaseModel):
     access_token: str
@@ -119,47 +121,58 @@ class OrderItemCreate(BaseModel):
     product_id: int  
     size: Optional[str]  
     quantity: int  
-  
-class OrderItemOut(BaseModel):  
-    order_item_id: int  
-    product_id: int  
-    size: Optional[str]  
-    quantity: int  
-  
-    class Config:  
-        from_attributes = True  
+   
   
 class BillCreate(BaseModel):  
     amount: float  
     method: str  
     trx_id: str  
     status: str  
-  
-class BillOut(BaseModel):  
-    bill_id: int  
-    order_id: int  
-    amount: float  
-    method: str  
-    trx_id: str  
-    status: str  
-    created_at: datetime  
-  
-    class Config:  
-        from_attributes = True  
+ 
   
 class OrderCreate(BaseModel):  
-    user_id: int  
-    status: str  
     order_items: List[OrderItemCreate]  
-    bill: BillCreate  
   
 class OrderOut(BaseModel):  
     order_id: int  
     user_id: int  
     status: str  
-    created_at: datetime  
-    order_items: List[OrderItemOut]  
-    bill: Optional[BillOut]  
+   
   
     class Config:  
         from_attributes = True  
+
+
+
+class BillOut(BaseModel):
+    bill_id: int
+    order_id: int
+    amount: int
+    method: str
+    trx_id: Optional[str]
+    status: str
+
+    class Config:
+        orm_mode = True
+
+
+
+
+
+class OrderItemDetail(BaseModel):
+    product_id: int
+    brand_id: int
+    product_name: str
+    brand_name: str
+    order_size: str
+    order_quantity: int
+
+class OrderDetailOut(BaseModel):
+    order_id: int
+    status: str
+    created_at: datetime
+    bill_amount: Optional[Decimal]  # Using Decimal for currency
+    order_items: List[OrderItemDetail]
+
+    class Config:
+        orm_mode = True
