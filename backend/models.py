@@ -2,6 +2,8 @@ from sqlalchemy import Column, Integer, String, Text, Boolean, DECIMAL, ARRAY, F
 from sqlalchemy.orm import relationship
 from database import Base
 
+
+
 class User(Base):
     __tablename__ = "user"
 
@@ -19,7 +21,10 @@ class User(Base):
     is_verified = Column(Boolean, default=False)  
 
 
-    brands = relationship("Brand", back_populates="user")
+    brands = relationship("Brand", back_populates="user") 
+  
+    # Add this relationship for Order  
+    orders = relationship("Order", back_populates="user")  
    
 
 
@@ -68,6 +73,8 @@ class Order(Base):
     user = relationship("User", back_populates="orders")  
     order_items = relationship("OrderItem", back_populates="order")  
     bill = relationship("Bill", back_populates="order", uselist=False)  # One-to-one relationship  
+    
+  
   
 class OrderItem(Base):  
     __tablename__ = "order_items"  

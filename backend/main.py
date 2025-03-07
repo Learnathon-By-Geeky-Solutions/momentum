@@ -15,24 +15,20 @@ from pydantic import BaseModel
 import uvicorn
 from typing import Annotated, List
 from models import Order, OrderItem, Bill  
-
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 import models
 import schemas
 from utils import verify_token
-
 from fastapi import Depends, FastAPI, HTTPException, status
 import jwt
-
-
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from pydantic import BaseModel
 from starlette.responses import JSONResponse
-
 from typing import Annotated
+from decimal import Decimal
 
 
 dotenv.load_dotenv()
@@ -78,6 +74,8 @@ def authenticate_user(db: Session, username: str, password: str):
     return user  # User is authenticated  
 
 
+
+
 @app.post("/register", response_model=Token)
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     """Register a new user and send a verification email"""
@@ -111,6 +109,8 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     await send_verification_email(user.email, token)
 
     return JSONResponse(status_code=200, content={"message": "Verification email sent. Please check your inbox."})
+
+
 
 
 
@@ -233,7 +233,8 @@ def update_profile(user_update: UserUpdate, db: Session = Depends(get_db), user:
 def create_brand(brand: schemas.BrandCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     
     
-    existing_brand = db.query(models.Brand).filter(models.Brand.user_id == User.user_id).first()
+    existing_brand = db.query(models.Brand).filter(models.Brand.user_id == user.user_id).first()
+
     #print(existing_brand.brand_name)
     
     if existing_brand:
@@ -361,63 +362,234 @@ def get_all_products(db: Session = Depends(get_db)):
     products = db.query(models.Product).all()
     return products
 
-  
-@app.post("/orders", response_model=OrderOut)  
-def create_order(order: OrderCreate, db: Session = Depends(get_db)):  
-    """Create a new order"""  
-    db_order = Order(user_id=order.user_id, status=order.status)  
-    db.add(db_order)  
-    db.commit()  
-    db.refresh(db_order)  
-  
-    # Add order items  
-    for item in order.order_items:  
-        db_order_item = OrderItem(  
-            order_id=db_order.order_id,  
-            product_id=item.product_id,  
-            size=item.size,  
-            quantity=item.quantity  
-        )  
-        db.add(db_order_item)  
-  
-    # Add bill  
-    db_bill = Bill(  
-        order_id=db_order.order_id,  
-        amount=order.bill.amount,  
-        method=order.bill.method,  
-        trx_id=order.bill.trx_id,  
-        status=order.bill.status  
-    )  
-    db.add(db_bill)  
-  
-    db.commit()  
-    db.refresh(db_order)  
-    return db_order  
+
+@app.post("/orders", response_model=schemas.OrderOut)
+def create_order(
+    order: schemas.OrderCreate, 
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """
+    Create a new order using the current user's id.
+    The order is created based on order items (product id, size, quantity).
+    The bill amount is calculated automatically as the sum of (product price * quantity)
+    for all order items.
+    """
+    # Create a new order for the current user
+    db_order = models.Order(
+        user_id=current_user.user_id,
+        status="Pending"  # Set initial status as "Pending"
+    )
+    db.add(db_order)
+    db.commit()
+    db.refresh(db_order)
+    
+    total_amount = 0
+
+    # Process each order item
+    for item in order.order_items:
+        # Retrieve product information to calculate the cost
+        product = db.query(models.Product).filter(models.Product.product_id == item.product_id).first()
+        if not product:
+            raise HTTPException(status_code=404, detail=f"Product with id {item.product_id} not found")
+        
+        # (Optional) Check if there's enough stock
+        if product.order_quantity is not None and item.quantity > product.order_quantity:
+            raise HTTPException(status_code=400, detail=f"Not enough stock for product {product.product_name}")
+        
+        # Calculate cost for this item (assuming product.price is of type DECIMAL/float)
+        item_cost = float(product.price) * item.quantity
+        total_amount += item_cost
+
+        # Create a new order item record
+        db_order_item = models.OrderItem(
+            order_id=db_order.order_id,
+            product_id=item.product_id,
+            size=item.size,
+            quantity=item.quantity
+        )
+        db.add(db_order_item)
+        
+    total_amount = Decimal(total_amount)
+    # Create the Bill record with the calculated total amount
+    db_bill = models.Bill(
+        order_id=db_order.order_id,
+        amount=total_amount,
+        method="Pending",  # you may update this later (e.g., "Cash on Delivery", "Credit Card")
+        trx_id="1234",
+        status="Pending"
+    )
+    db.add(db_bill)
+    db.commit()
+    db.refresh(db_order)
+    return db_order
 
 
 
-  
-@app.get("/orders/{user_id}", response_model=List[OrderOut])  
-def get_orders_by_user(user_id: int, db: Session = Depends(get_db)):  
-    """Retrieve all orders for a specific user"""  
-    orders = db.query(Order).filter(Order.user_id == user_id).all()  
-    if not orders:  
-        raise HTTPException(status_code=404, detail="No orders found for this user")  
-    return orders  
-  
-@app.get("/order/{order_id}", response_model=OrderOut)  
-def get_order(order_id: int, db: Session = Depends(get_db)):  
-    """Retrieve a specific order by order_id"""  
-    order = db.query(Order).filter(Order.order_id == order_id).first()  
-    if not order:  
-        raise HTTPException(status_code=404, detail="Order not found")  
-    return order  
-  
-# --- Utility Functions ---  
-  
-# Include token creation and verification functions here  
-# Example: `create_access_token`, `verify_token`  
 
+@app.get("/orders/me")
+def get_my_orders(
+    db: Session = Depends(get_db), 
+    current_user: models.User = Depends(get_current_user)
+):
+    orders = db.query(models.Order).filter(models.Order.user_id == current_user.user_id).all()
+    if not orders:
+        raise HTTPException(status_code=404, detail="No orders found for this user")
+    
+    # For constructing the links we use a base URL.
+    # In a real app, you might use request.url_for or an environment variable.
+    base_url = "http://127.0.0.1:8000"
+
+    
+    orders_with_links = []
+    for order in orders:
+        order_data = {
+            "order_id": order.order_id,
+            "user_id": order.user_id,
+            "status": order.status,
+            # Link to view full order details (e.g., order summary, bill, etc.)
+            "order_details_url": f"{base_url}/order/{order.order_id}",
+            # Link to view product details for items in this order
+            "product_details_url": f"{base_url}/order/{order.order_id}/products"
+        }
+        orders_with_links.append(order_data)
+        print(order_data)
+    
+    return orders_with_links
+
+
+
+@app.get("/order/{order_id}/bill", response_model=schemas.BillOut)
+def get_bill_for_order(order_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    """
+    Retrieve the bill information for a given order.
+    Ensures the order belongs to the current user.
+    """
+    order = db.query(models.Order).filter(models.Order.order_id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    if order.user_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="You do not have permission to view this order's bill")
+
+    bill = db.query(models.Bill).filter(models.Bill.order_id == order_id).first()
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found for this order")
+    return bill
+
+  
+  
+@app.get("/order/{order_id}/details", response_model=schemas.OrderDetailOut)
+def get_order_details(
+    order_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    # Get the order ensuring it belongs to the current user
+    order = db.query(models.Order).filter(
+        models.Order.order_id == order_id,
+        models.Order.user_id == current_user.user_id
+    ).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    # Get the bill for this order
+    bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
+
+    # Retrieve order items with product and brand details.
+    # We join OrderItem with Product and then join Product with Brand.
+    order_items_query = db.query(
+        models.OrderItem,
+        models.Product,
+        models.Brand
+    ).join(
+        models.Product, models.OrderItem.product_id == models.Product.product_id
+    ).join(
+        models.Brand, models.Product.brand_id == models.Brand.brand_id
+    ).filter(
+        models.OrderItem.order_id == order.order_id
+    ).all()
+
+    order_items = []
+    for order_item, product, brand in order_items_query:
+        item_data = {
+            "product_id": product.product_id,
+            "brand_id": brand.brand_id,
+            "product_name": product.product_name,
+            "brand_name": brand.brand_name,
+            "order_size": order_item.size,  # assuming OrderItem has a column 'size'
+            "order_quantity": order_item.quantity
+        }
+        order_items.append(item_data)
+
+    # Construct the output data
+    result = {
+        "order_id": order.order_id,
+        "status": order.status,
+        "created_at": order.created_at,
+        "bill_amount": bill.amount if bill else None,
+        "order_items": order_items
+    }
+    return result
+
+
+
+
+@app.get("/orders/me/details", response_model=List[schemas.OrderDetailOut])
+def get_all_order_details(
+    db: Session = Depends(get_db), 
+    current_user: models.User = Depends(get_current_user)
+):
+    """
+    Retrieve all orders for the current user, including:
+    - Order id, status, created_at, bill amount
+    - A list of order items with product and brand details
+    """
+    orders = db.query(models.Order).filter(models.Order.user_id == current_user.user_id).all()
+    if not orders:
+        raise HTTPException(status_code=404, detail="No orders found for this user")
+    
+    orders_details = []
+    for order in orders:
+        # Retrieve the bill for this order
+        bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
+        
+        # Retrieve order items along with product and brand details
+        order_items_query = db.query(
+            models.OrderItem,
+            models.Product,
+            models.Brand
+        ).join(
+            models.Product, models.OrderItem.product_id == models.Product.product_id
+        ).join(
+            models.Brand, models.Product.brand_id == models.Brand.brand_id
+        ).filter(
+            models.OrderItem.order_id == order.order_id
+        ).all()
+
+        order_items = []
+        for order_item, product, brand in order_items_query:
+            item_data = {
+                "product_id": product.product_id,
+                "brand_id": brand.brand_id,
+                "product_name": product.product_name,
+                "brand_name": brand.brand_name,
+                "order_size": order_item.size,  # Adjust if your column name is different
+                "order_quantity": order_item.quantity
+            }
+            order_items.append(item_data)
+
+        order_data = {
+            "order_id": order.order_id,
+            "status": order.status,
+            "created_at": order.created_at,
+            "bill_amount": bill.amount if bill else None,
+            "order_items": order_items
+        }
+        orders_details.append(order_data)
+    
+    return orders_details
+
+  
 
 
 
