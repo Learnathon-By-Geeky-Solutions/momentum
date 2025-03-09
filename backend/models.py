@@ -71,8 +71,8 @@ class Order(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())  
   
     user = relationship("User", back_populates="orders")  
-    order_items = relationship("OrderItem", back_populates="order")  
-    bill = relationship("Bill", back_populates="order", uselist=False)  # One-to-one relationship  
+    order_items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")  
+    bill = relationship("Bill", back_populates="order", cascade="all, delete-orphan", uselist=False)  # One-to-one relationship  
     
   
   

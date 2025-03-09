@@ -1,19 +1,19 @@
 
 
 
-from fastapi import FastAPI, Depends, HTTPException,Header, APIRouter
+from fastapi import FastAPI, Depends, HTTPException,Header, APIRouter, BackgroundTasks
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from database import SessionLocal, engine
 from models import User
-from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate
-from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email
+from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
+from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
 from datetime import timedelta
 import os
 import dotenv
 from pydantic import BaseModel
 import uvicorn
-from typing import Annotated, List
+from typing import Annotated, List, Optional
 from models import Order, OrderItem, Bill  
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -73,6 +73,43 @@ def authenticate_user(db: Session, username: str, password: str):
         return False  # Password is incorrect  
     return user  # User is authenticated  
 
+from fastapi import BackgroundTasks
+
+@app.post("/forgot-password")
+def forgot_password(request_data: ForgotPasswordRequest, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == request_data.email).first()
+    
+    # For security, return the same message even if the user is not found.
+    if not user:
+        return {"message": "If the email exists, a password reset link has been sent."}
+    
+    reset_token = create_reset_token(user.email)
+    reset_link = f"http://localhost:8000/reset-password?token={reset_token}"
+    
+    # Use background tasks to send the email asynchronously
+    background_tasks.add_task(send_reset_email, user.email, reset_link)
+    
+    return {"message": "If the email exists, a password reset link has been sent."}
+
+    
+
+@app.post("/reset-password")
+def reset_password(request_data: ResetPasswordRequest, db: Session = Depends(get_db)):
+    email = verify_reset_token(request_data.token)
+    if email is None:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid or expired token")
+    
+    # Find the user
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    
+    # Hash the new password and update
+    hashed_password = auth_utils.hash_password(request_data.new_password)
+    user.password = hashed_password
+    db.commit()
+    
+    return {"message": "Password reset successful. You can now log in with your new password."}
 
 
 
@@ -266,9 +303,12 @@ def get_my_brand(db: Session = Depends(get_db), current_user: models.User = Depe
 
 
 
-@app.put("/brands/{brand_id}", response_model=schemas.BrandOut)
-def update_brand(brand_id: int, brand: schemas.BrandCreate, db: Session = Depends(get_db)):
-    db_brand = db.query(models.Brand).filter(models.Brand.brand_id == brand_id).first()
+@app.put("/updatebrands/me", response_model=schemas.BrandOut)
+def update_brand(brand: schemas.BrandCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
+    
+
+    db_brand = db.query(models.Brand).filter(models.Brand.user_id == current_user.user_id).first()
+    
     if not db_brand:
         raise HTTPException(status_code=404, detail="Brand not found")
 
@@ -361,6 +401,52 @@ def get_product(product_id: int,db: Session = Depends(get_db)):
 def get_all_products(db: Session = Depends(get_db)):
     products = db.query(models.Product).all()
     return products
+
+
+@app.delete("/products/{product_id}")
+def delete_product(
+    product_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    # Retrieve the product by its ID
+    product = db.query(models.Product).filter(models.Product.product_id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    
+    # Retrieve the brand associated with the product
+    brand = db.query(models.Brand).filter(models.Brand.brand_id == product.brand_id).first()
+    # Ensure the current user owns this brand
+    if not brand or brand.user_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="You do not have permission to delete this product")
+    
+    # Check for any pending order items for this product.
+    # This joins OrderItem and Order, and checks if there is any order with status "Pending"
+    pending_order_item = (
+        db.query(models.OrderItem)
+          .join(models.Order, models.OrderItem.order_id == models.Order.order_id)
+          .filter(
+              models.OrderItem.product_id == product_id,
+              models.Order.status == "Pending"
+          )
+          .first()
+    )
+    
+    if pending_order_item:
+        raise HTTPException(status_code=400, detail="Complete the order before deleting this product.")
+    
+    # If no pending order is found, delete the product.
+    db.delete(product)
+    db.commit()
+    
+    return {"detail": "Product deleted successfully."}
+
+
+
+
+
+
+
 
 
 @app.post("/orders", response_model=schemas.OrderOut)
@@ -552,7 +638,7 @@ def get_all_order_details(
     for order in orders:
         # Retrieve the bill for this order
         bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
-        
+        #print(bill)
         # Retrieve order items along with product and brand details
         order_items_query = db.query(
             models.OrderItem,
@@ -565,6 +651,8 @@ def get_all_order_details(
         ).filter(
             models.OrderItem.order_id == order.order_id
         ).all()
+        
+        
 
         order_items = []
         for order_item, product, brand in order_items_query:
@@ -581,6 +669,7 @@ def get_all_order_details(
         order_data = {
             "order_id": order.order_id,
             "status": order.status,
+            "bill_status": bill.status if bill else None,
             "created_at": order.created_at,
             "bill_amount": bill.amount if bill else None,
             "order_items": order_items
@@ -588,6 +677,91 @@ def get_all_order_details(
         orders_details.append(order_data)
     
     return orders_details
+
+
+@app.delete("/order/{order_id}")
+def delete_order(
+    order_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    # Retrieve the order ensuring it belongs to the current user
+    order = db.query(models.Order).filter(
+        models.Order.order_id == order_id,
+        models.Order.user_id == current_user.user_id
+    ).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    # Retrieve the associated bill for this order
+    bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found for this order")
+    
+    # Check if the bill's status is still "Pending" (case-insensitive)
+    if bill.status.lower() != "pending":
+        raise HTTPException(
+            status_code=400,
+            detail="Cannot delete order: bill is already confirmed or processed."
+        )
+    
+    # Delete the order (if cascading is set up, related order items and bill might be deleted automatically)
+    db.delete(order)
+    db.commit()
+    
+    return {"detail": "Order deleted successfully."}
+
+
+
+
+
+
+@app.post("/paybill")
+def pay_bill(
+    paybill_data: schemas.PayBillRequest,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """
+    Confirm payment for an order:
+      - Update the bill with the given method and trx_id, and mark its status as confirmed.
+      - Decrease the stock (order_quantity) of each product based on the quantities in the order items.
+    """
+    # 1. Retrieve the order ensuring it belongs to the current user.
+    order = db.query(models.Order).filter(
+        models.Order.order_id == paybill_data.order_id,
+        models.Order.user_id == current_user.user_id
+    ).first()
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+    
+    # 2. Retrieve the corresponding bill
+    bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found for this order")
+    
+    # 3. Update bill details: set the method, trx_id, and update status to "Confirmed"
+    bill.method = paybill_data.method
+    bill.trx_id = paybill_data.trx_id
+    bill.status = "Confirmed"  # or "True" if you prefer, but using a descriptive status is better
+    db.add(bill)
+    db.commit()
+    
+    # 4. For each order item, decrease the product's available stock.
+    order_items = db.query(models.OrderItem).filter(models.OrderItem.order_id == order.order_id).all()
+    for item in order_items:
+        # Retrieve the product corresponding to the order item
+        product = db.query(models.Product).filter(models.Product.product_id == item.product_id).first()
+        if product and product.order_quantity is not None:
+            # Decrease the product stock by the ordered quantity
+            new_stock = product.order_quantity - item.quantity
+            # Ensure stock doesn't go negative
+            product.order_quantity = new_stock if new_stock >= 0 else 0
+            db.add(product)
+    
+    db.commit()
+    
+    return {"message": "Bill confirmed and product stocks updated successfully."}
 
   
 

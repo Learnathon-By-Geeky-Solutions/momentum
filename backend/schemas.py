@@ -1,6 +1,6 @@
 
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
@@ -12,6 +12,15 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+    
+    
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+    
 
 class UserCreate(BaseModel):
     username: Optional[str]
@@ -170,9 +179,21 @@ class OrderItemDetail(BaseModel):
 class OrderDetailOut(BaseModel):
     order_id: int
     status: str
+    bill_status: Optional[str] = None
     created_at: datetime
     bill_amount: Optional[Decimal]  # Using Decimal for currency
     order_items: List[OrderItemDetail]
 
     class Config:
         orm_mode = True
+        
+        
+ 
+
+class PayBillRequest(BaseModel):
+    order_id: int
+    method: str
+    trx_id: str
+
+
+

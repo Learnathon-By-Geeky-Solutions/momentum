@@ -65,3 +65,19 @@ Follow these instructions to run the FastAPI project:
   pip install <package-name>
   pip freeze > requirements.txt
   ```
+
+
+
+
+- **Run Command**
+  ```alembic init alembic
+alembic revision --autogenerate -m "modify relation"
+alembic upgrade head
+
+
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+venv\Scripts\activate
+uvicorn main:app --reload
+  ```
+
