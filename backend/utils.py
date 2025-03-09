@@ -3,7 +3,6 @@
 
 
 from fastapi import Security, HTTPException, status
-
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from passlib.context import CryptContext
@@ -20,7 +19,7 @@ from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")  # Change this in production
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 100
-
+RESET_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -30,12 +29,11 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
 
 
-print(os.getenv("google_password"))
-conf = ConnectionConfig(
-    MAIL_USERNAME="jamilahmediiuc@gmail.com",
-    MAIL_PASSWORD=os.getenv("google_password"),
 
-    MAIL_FROM="jamilahmediiuc@gmail.com",
+conf = ConnectionConfig(
+    MAIL_USERNAME= os.getenv("mymail"),
+    MAIL_PASSWORD=os.getenv("google_password"),
+    MAIL_FROM= os.getenv("mymail"),
     MAIL_PORT=587,  # 587 for TLS, 465 for SSL
     MAIL_SERVER="smtp.gmail.com",
     MAIL_STARTTLS=True,  # Correct key name
@@ -98,7 +96,20 @@ class AuthUtils:
             raise HTTPException(status_code=400, detail="Failed to fetch access token")
         return response.json()
     
+def create_reset_token(email: str):
+    expire = datetime.utcnow() + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
+    to_encode = {"sub": email, "exp": expire}
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+def verify_reset_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise JWTError("No email found in token")
+        return email
+    except JWTError:
+        return None
 
 def create_email_verification_token(email: str):
     expire = datetime.utcnow() + timedelta(hours=1)
@@ -120,6 +131,17 @@ async def send_verification_email(email: str, token: str):
 
 
 
+async def send_reset_email(email: str, link: str):
+    message = MessageSchema(
+        subject="Reset Your Password",
+        recipients=[email],
+        body=f"Click the link to reset your password: {link}",
+        subtype="html"
+    )
+    fm = FastMail(conf)
+    await fm.send_message(message)
+    
+    
 
 
 
@@ -152,10 +174,6 @@ def verify_token(token: str = Security(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
         
-        
-        
-
-
 
 
 # Initialize utility class
