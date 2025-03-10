@@ -2,6 +2,32 @@
 
 
 
+from fastapi import FastAPI, Depends, HTTPException,Header, APIRouter, BackgroundTasks, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
+from database import SessionLocal, engine
+from models import User
+from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
+from datetime import timedelta
+import os
+import dotenv
+from pydantic import BaseModel
+import uvicorn
+from typing import Annotated, List, Optional
+from models import Order, OrderItem, Bill  
+from sqlalchemy.orm import Session
+import models as models
+import schemas
+from fastapi import Depends, FastAPI, HTTPException
+import jwt
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jwt.exceptions import InvalidTokenError
+from passlib.context import CryptContext
+from pydantic import BaseModel
+from starlette.responses import JSONResponse
+from typing import Annotated
+from decimal import Decimal
+
 from fastapi import Security, HTTPException, status
 from google.oauth2 import id_token
 from google.auth.transport import requests
@@ -13,6 +39,7 @@ from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+from database import get_db
 
 
 # Environment variables
@@ -174,6 +201,15 @@ def verify_token(token: str = Security(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
         
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    payload = verify_token(token)
+    user_email = payload.get("sub")
+    if not user_email:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid token or user not found")
+    return user
 
 
 # Initialize utility class
