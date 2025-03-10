@@ -1,6 +1,6 @@
 
 from database import engine, Base
-import models 
+import backend.user_management.models as models 
 
 def create_tables():
     Base.metadata.create_all(bind=engine)
