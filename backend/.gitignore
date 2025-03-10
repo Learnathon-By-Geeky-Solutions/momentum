@@ -1,4 +1,7 @@
 venv/
 .env
-__pycache__
-migrations
+backend/__pycache__/
+backend/migrations/
+backend/alembic.ini
+backend/main.py
+backend/user_management/__pycache__/

@@ -2,8 +2,33 @@
 
 
 
-from fastapi import Security, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException,Header, APIRouter, BackgroundTasks, status
+from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
+from database import SessionLocal, engine
+from models import User
+from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
+from datetime import timedelta
+import os
+import dotenv
+from pydantic import BaseModel
+import uvicorn
+from typing import Annotated, List, Optional
+from models import Order, OrderItem, Bill  
+from sqlalchemy.orm import Session
+import models as models
+import schemas
+from fastapi import Depends, FastAPI, HTTPException
+import jwt
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from jwt.exceptions import InvalidTokenError
+from passlib.context import CryptContext
+from pydantic import BaseModel
+from starlette.responses import JSONResponse
+from typing import Annotated
+from decimal import Decimal
 
+from fastapi import Security, HTTPException, status
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from passlib.context import CryptContext
@@ -14,13 +39,14 @@ from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+from database import get_db
 
 
 # Environment variables
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")  # Change this in production
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 100
-
+RESET_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -30,12 +56,11 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
 
 
-print(os.getenv("google_password"))
-conf = ConnectionConfig(
-    MAIL_USERNAME="jamilahmediiuc@gmail.com",
-    MAIL_PASSWORD=os.getenv("google_password"),
 
-    MAIL_FROM="jamilahmediiuc@gmail.com",
+conf = ConnectionConfig(
+    MAIL_USERNAME= os.getenv("mymail"),
+    MAIL_PASSWORD=os.getenv("google_password"),
+    MAIL_FROM= os.getenv("mymail"),
     MAIL_PORT=587,  # 587 for TLS, 465 for SSL
     MAIL_SERVER="smtp.gmail.com",
     MAIL_STARTTLS=True,  # Correct key name
@@ -98,7 +123,20 @@ class AuthUtils:
             raise HTTPException(status_code=400, detail="Failed to fetch access token")
         return response.json()
     
+def create_reset_token(email: str):
+    expire = datetime.utcnow() + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
+    to_encode = {"sub": email, "exp": expire}
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+def verify_reset_token(token: str):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise JWTError("No email found in token")
+        return email
+    except JWTError:
+        return None
 
 def create_email_verification_token(email: str):
     expire = datetime.utcnow() + timedelta(hours=1)
@@ -120,11 +158,23 @@ async def send_verification_email(email: str, token: str):
 
 
 
+async def send_reset_email(email: str, link: str):
+    message = MessageSchema(
+        subject="Reset Your Password",
+        recipients=[email],
+        body=f"Click the link to reset your password: {link}",
+        subtype="html"
+    )
+    fm = FastMail(conf)
+    await fm.send_message(message)
+    
+    
 
 
 
     
 def generate_verification_token(email: str):
+    
     expire = datetime.utcnow() + timedelta(minutes=15)  # Token expires in 15 min
     data = {"sub": email, "exp": expire}
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
@@ -151,10 +201,15 @@ def verify_token(token: str = Security(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
         
-        
-        
-
-
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    payload = verify_token(token)
+    user_email = payload.get("sub")
+    if not user_email:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid token or user not found")
+    return user
 
 
 # Initialize utility class
