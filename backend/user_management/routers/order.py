@@ -89,6 +89,53 @@ async def create_order(
 
 
 
+
+
+
+def place_order(user_id, product_id, size, quantity=1):
+    """
+    Places an order for a product.
+    """
+    session = SessionLocal()
+    try:
+        # Fetch product details
+        product = session.query(Product).filter(
+            Product.product_id == product_id,
+            Product.order_size == size  # Ensure correct size is ordered
+        ).first()
+
+        if not product:
+            return "Product not found or size unavailable."
+
+        # Check stock availability
+        if product.order_quantity < quantity:
+            return f"Sorry, only {product.order_quantity} items left in stock."
+
+        # Create a new order
+        new_order = Order(
+            user_id=user_id,
+            product_id=product_id,
+            size=size,
+            quantity=quantity,
+            total_price=product.price * quantity
+        )
+        session.add(new_order)
+
+        # Reduce product stock
+        product.order_quantity -= quantity
+        session.commit()
+
+        return f"✅ Order placed successfully for {quantity} x {product.product_name} (Size: {size})!"
+
+    except Exception as e:
+        session.rollback()
+        return f"Order placement error: {e}"
+
+    finally:
+        session.close()
+
+
+
 @router.get("/orders/me")
 async def get_my_orders(
     db: Session = Depends(get_db), 

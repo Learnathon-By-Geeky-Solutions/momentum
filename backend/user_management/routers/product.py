@@ -1,5 +1,5 @@
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List
 import schemas, models
@@ -10,7 +10,7 @@ from schemas import ProductCreate, ProductOut  # Pydantic schemas
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-
+from database import SessionLocal
 from database import get_db
 from fastapi import APIRouter
 
@@ -138,3 +138,37 @@ def delete_product(
     return {"detail": "Product deleted successfully."}
 
 
+def get_matching_products(query):
+    """
+    Searches the product table for relevant items.
+    """
+    session = SessionLocal()
+    try:
+        # Search for products matching query in name, category, or description
+        products = session.query(Product).filter(
+            (Product.product_name.ilike(f"%{query}%")) |
+            (Product.category.ilike(f"%{query}%")) |
+            (Product.description.ilike(f"%{query}%"))
+        ).limit(5).all()
+
+        if not products:
+            return "No matching products found."
+
+        response_text = "**Here are the available t-shirts in our collection:**\n\n"
+        for product in products:
+            response_text += (
+                f"**{product.product_name}**\n"
+                f"📝 {product.description}\n"
+                f"💲 Price: ${product.price}\n"
+                f"📦 Available Sizes: {product.order_size}\n"
+                f"📏 Quantity Unit: {product.quantity_unit}\n"
+                f"⭐ Rating: {product.rating or 'N/A'}\n"
+                f"🖼️ Images: {', '.join(product.product_pic) if product.product_pic else 'No images available'}\n"
+                f"📽️ Videos: {', '.join(product.product_video) if product.product_video else 'No videos available'}\n"
+                f"🛒 *Reply with 'Select {product.product_id} {product.order_size}' to place an order.*\n\n"
+            )
+
+        return response_text
+
+    finally:
+        session.close()
