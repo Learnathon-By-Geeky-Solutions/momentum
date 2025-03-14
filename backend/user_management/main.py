@@ -14,10 +14,11 @@ from jose import jwt, JWTError
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
 from models import User, Order, OrderItem, Bill  # adjust as needed
-from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
 from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
 from database import get_db
 
+from routers import auth, brand, product, order, profile, paybill  # Import routers
+from ai.routers import agent
 
 
 
@@ -30,8 +31,6 @@ dotenv.load_dotenv()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-from routers import auth, brand, product, order, profile, paybill  # Import routers
-
 app = FastAPI()
 
 # Include routers with prefixes and tags for organization
@@ -41,6 +40,8 @@ app.include_router(brand.router, prefix="/brands", tags=["Brands"])
 app.include_router(product.router, prefix="/products", tags=["Products"])
 app.include_router(order.router, prefix="/orders", tags=["Orders"])
 app.include_router(paybill.router, prefix="/paybills", tags=["Paybills"])
+app.include_router(agent.router, prefix="/agent", tags=["Agent"])
+
 
 
 
