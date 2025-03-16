@@ -20,6 +20,8 @@ from user_management.models import User, Order, OrderItem, Bill
 from user_management.utils import auth_utils, create_access_token, verify_token
 from user_management.database import get_db
 
+from user_management.routers import auth, brand, product, order, profile, paybill  # Import routers
+from user_management.ai.routers import agent
 
 
 
@@ -40,6 +42,8 @@ app.include_router(brand.router, prefix="/brands", tags=["Brands"])
 app.include_router(product.router, prefix="/products", tags=["Products"])
 app.include_router(order.router, prefix="/orders", tags=["Orders"])
 app.include_router(paybill.router, prefix="/paybills", tags=["Paybills"])
+app.include_router(agent.router, prefix="/agent", tags=["Agent"])
+
 
 
 
