@@ -4,7 +4,7 @@ from fastapi import FastAPI, Depends, HTTPException, Header, APIRouter, Backgrou
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from database import SessionLocal, engine
+from user_management.database import SessionLocal, engine
 from datetime import timedelta
 import os
 import dotenv
@@ -13,10 +13,10 @@ from decimal import Decimal
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
-from models import User, Order, OrderItem, Bill  # adjust as needed
-from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
-from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
-from database import get_db
+from user_management.models import User, Order, OrderItem, Bill  # adjust as needed
+from user_management.schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
+from user_management.utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
+from user_management.database import get_db
 from fastapi import APIRouter
 
 

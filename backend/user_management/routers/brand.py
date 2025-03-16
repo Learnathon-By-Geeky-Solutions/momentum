@@ -1,16 +1,16 @@
 
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-import models, utils
-from database import get_db
-import schemas
-from models import User, Brand
-from schemas import BrandCreate, BrandOut
-from utils import get_current_user  # Adjust the path based on your project structure
+from user_management.database import get_db
+from user_management import schemas
+from user_management.models import User, Brand
+from user_management.schemas import BrandCreate, BrandOut
+from user_management.utils import get_current_user  # Adjust the path based on your project structure
 from typing import List, Optional
 
 from fastapi import APIRouter
 
+import user_management.models as models
 
 router = APIRouter()
 
