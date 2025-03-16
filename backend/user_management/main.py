@@ -1,10 +1,13 @@
 
+from fastapi import FastAPI
+import uvicorn
+import dotenv
+
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import FastAPI, Depends, HTTPException, Header, APIRouter, BackgroundTasks, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from database import SessionLocal, engine
 from datetime import timedelta
 import os
 import dotenv
@@ -12,24 +15,23 @@ from typing import Annotated, List, Optional
 from decimal import Decimal
 from jose import jwt, JWTError
 from passlib.context import CryptContext
-from pydantic import BaseModel, EmailStr
-from models import User, Order, OrderItem, Bill  # adjust as needed
-from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
-from database import get_db
 
-from routers import auth, brand, product, order, profile, paybill  # Import routers
-from ai.routers import agent
+from user_management.models import User, Order, OrderItem, Bill
+from user_management.utils import auth_utils, create_access_token, verify_token
+from user_management.database import get_db
+
+from user_management.routers import auth, brand, product, order, profile, paybill  # Import routers
+from user_management.ai.routers import agent
 
 
 
-from fastapi import FastAPI
-import uvicorn
-import dotenv
 
 dotenv.load_dotenv()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+
+from user_management.routers import auth, brand, product, order, profile, paybill  # Import routers
 
 app = FastAPI()
 

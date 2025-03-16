@@ -4,16 +4,19 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from decimal import Decimal
-import schemas as schemas
-import models as models
-from database import get_db
-from utils import get_current_user  # Adjust path based on your project structure
+
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from decimal import Decimal
 
 from fastapi import APIRouter
+
+from user_management import schemas, models
+from user_management.database import get_db
+from user_management.utils import get_current_user
+
+
 
 
 router = APIRouter()
@@ -161,7 +164,7 @@ async def get_my_orders(
             # Link to view product details for items in this order
             "product_details_url": f"{base_url}/order/{order.order_id}/products"
         }
-        orders_with_links.routerend(order_data)
+        orders_with_links.append(order_data)
         print(order_data)
     
     return orders_with_links
@@ -228,7 +231,7 @@ async def get_order_details(
             "order_size": order_item.size,  # assuming OrderItem has a column 'size'
             "order_quantity": order_item.quantity
         }
-        order_items.routerend(item_data)
+        order_items.append(item_data)
 
     # Construct the output data
     result = {
@@ -286,7 +289,7 @@ async def get_all_order_details(
                 "order_size": order_item.size,  # Adjust if your column name is different
                 "order_quantity": order_item.quantity
             }
-            order_items.routerend(item_data)
+            order_items.append(item_data)
 
         order_data = {
             "order_id": order.order_id,
@@ -296,7 +299,7 @@ async def get_all_order_details(
             "bill_amount": bill.amount if bill else None,
             "order_items": order_items
         }
-        orders_details.routerend(order_data)
+        orders_details.append(order_data)
     
     return orders_details
 

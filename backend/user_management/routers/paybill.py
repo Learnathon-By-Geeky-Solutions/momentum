@@ -2,14 +2,13 @@
 
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-import schemas as schemas, models as models
-from database import get_db
-from models import User, Order, OrderItem, Bill, Product
-from schemas import PayBillRequest
-from utils import get_current_user
 from typing import List, Optional
 
 from fastapi import APIRouter
+
+from user_management import schemas, models
+from user_management.database import get_db
+from user_management.utils import get_current_user
 
 
 router = APIRouter()

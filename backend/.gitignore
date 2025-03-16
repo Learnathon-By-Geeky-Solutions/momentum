@@ -3,5 +3,9 @@ venv/
 backend/__pycache__/
 backend/migrations/
 backend/alembic.ini
-backend/main.py
 backend/user_management/__pycache__/
+__pycache__/
+*.pyc
+*.pyo
+migrations
+.pyc

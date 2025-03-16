@@ -2,13 +2,14 @@
 
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models import User
-from schemas import UserUpdate
-from database import get_db
-from utils import get_current_user  # or from router.auth, depending on your structure
 from typing import List, Optional
 from fastapi import APIRouter
 
+from user_management import schemas, models
+from user_management.database import get_db
+from user_management.utils import get_current_user
+from user_management.models import User
+from user_management.schemas import UserUpdate
 
 router = APIRouter()
 

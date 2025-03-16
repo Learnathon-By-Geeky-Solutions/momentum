@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, HTTPException, Body
-from schemas import ChatRequest, ChatResponse, OrderCreate 
-from ai.llm import get_conversational_response
-from utils import get_current_user  # Ensure proper path for user authenticatio
-from sqlalchemy.orm import Session
-from database import get_db
-from routers.order import create_order
+from user_management.schemas import ChatRequest, ChatResponse, OrderCreate
 
+from sqlalchemy.orm import Session
+from user_management.utils import get_current_user
+from user_management.database import get_db
+from user_management.routers.order import create_order
+from user_management.ai.llm import get_conversational_response
 router = APIRouter()
 
 @router.post("/chat", response_model=ChatResponse)

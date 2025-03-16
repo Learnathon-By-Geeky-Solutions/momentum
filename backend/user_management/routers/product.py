@@ -2,18 +2,18 @@
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List
-import schemas, models
-from database import get_db  # Database session dependency
-from models import User, Product, Brand, Order, OrderItem  # ORM models
-from utils import get_current_user
-from schemas import ProductCreate, ProductOut  # Pydantic schemas
+
+from user_management.utils import get_current_user
+from user_management.database import get_db
+from fastapi import APIRouter   
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from database import SessionLocal
-from database import get_db
 from fastapi import APIRouter
-
+from user_management import schemas, models, utils, database
+from user_management.models import User
+from user_management.database import SessionLocal
+from user_management.models import Product
 
 router = APIRouter()
 
