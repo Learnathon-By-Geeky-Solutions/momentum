@@ -17,6 +17,15 @@ from user_management.database import get_db
 from user_management.routers import auth, brand, product, order, profile, paybill  # Import routers
 from user_management.ai.routers import agent
 
+import sentry_sdk
+
+
+sentry_sdk.init(
+    dsn="https://03bdab86608598f830e7193bd6e4db53@o4508298172497920.ingest.us.sentry.io/4508992259031040",
+    send_default_pii=True,
+    traces_sample_rate=1.0,
+     instrumenter="otel",
+)
 
 
 
@@ -37,7 +46,18 @@ app.include_router(agent.router, prefix="/agent", tags=["Agent"])
 
 
 
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
 
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/sentry-debug")
+def trigger_error():
+    division_by_zero = 1 / 0
 
 # Authenticate user from DB
 def authenticate_user(db: Session, username: str, password: str):
