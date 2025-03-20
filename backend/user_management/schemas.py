@@ -1,8 +1,10 @@
 
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
+from decimal import Decimal
+
 
 class Token(BaseModel):
     access_token: str
@@ -10,6 +12,15 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+    
+    
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+    
 
 class UserCreate(BaseModel):
     username: Optional[str]
@@ -109,3 +120,88 @@ class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     address: Optional[str] = None
     phone: Optional[str] = None
+
+
+
+
+
+
+class OrderItemCreate(BaseModel):  
+    product_id: int  
+    size: Optional[str]  
+    quantity: int  
+   
+  
+class BillCreate(BaseModel):  
+    amount: float  
+    method: str  
+    trx_id: str  
+    status: str  
+ 
+  
+class OrderCreate(BaseModel):  
+    order_items: List[OrderItemCreate]  
+  
+class OrderOut(BaseModel):  
+    order_id: int  
+    user_id: int  
+    status: str  
+   
+  
+    class Config:  
+        from_attributes = True  
+
+
+
+class BillOut(BaseModel):
+    bill_id: int
+    order_id: int
+    amount: int
+    method: str
+    trx_id: Optional[str]
+    status: str
+
+    class Config:
+        orm_mode = True
+
+
+
+
+
+class OrderItemDetail(BaseModel):
+    product_id: int
+    brand_id: int
+    product_name: str
+    brand_name: str
+    order_size: str
+    order_quantity: int
+
+class OrderDetailOut(BaseModel):
+    order_id: int
+    status: str
+    bill_status: Optional[str] = None
+    created_at: datetime
+    bill_amount: Optional[Decimal]  # Using Decimal for currency
+    order_items: List[OrderItemDetail]
+
+    class Config:
+        orm_mode = True
+        
+        
+ 
+
+class PayBillRequest(BaseModel):
+    order_id: int
+    method: str
+    trx_id: str
+
+
+# class Message(BaseModel):
+#     role: str
+#     content: str
+
+class ChatRequest(BaseModel):
+    messages: List[str] 
+    
+class ChatResponse(BaseModel):
+    response: str
