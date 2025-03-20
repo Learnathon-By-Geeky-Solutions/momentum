@@ -24,7 +24,7 @@ from ai.routers import agent
 
 from fastapi import FastAPI
 import uvicorn
-import dotenv
+
 
 dotenv.load_dotenv()
 

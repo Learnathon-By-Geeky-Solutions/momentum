@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 
-from backend.user_management.models import Base  # Import the Base object from your models.py  
+from user_management.models import Base  # Import the Base object from your models.py  
 
 
 # this is the Alembic Config object, which provides

@@ -196,9 +196,12 @@ class PayBillRequest(BaseModel):
     trx_id: str
 
 
+# class Message(BaseModel):
+#     role: str
+#     content: str
 
 class ChatRequest(BaseModel):
-    message: str
-
+    messages: List[str] 
+    
 class ChatResponse(BaseModel):
     response: str
