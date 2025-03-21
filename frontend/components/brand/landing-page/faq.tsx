@@ -43,7 +43,7 @@ export function Faq() {
         <h2 className="text-3xl font-serif font-bold text-center mb-12">Frequently Asked Questions</h2>
         <div className="max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
-            <div key={index} className="mb-4">
+            <div key={faq.id} className="mb-4">
               <button
                 className="flex justify-between items-center w-full text-left p-4 bg-muted rounded-lg focus:outline-none"
                 onClick={() => toggleFAQ(index)}

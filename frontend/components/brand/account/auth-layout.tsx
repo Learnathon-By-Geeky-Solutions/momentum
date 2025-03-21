@@ -1,3 +1,4 @@
+
 import type React from "react"
 
 interface AuthLayoutProps {
@@ -5,9 +6,9 @@ interface AuthLayoutProps {
   title: string
   subtitle: string
   showImage?: boolean
-}
+} 
 
-export function AuthLayout({ children, title, subtitle, showImage = true }: AuthLayoutProps) {
+export function AuthLayout({ children, title, subtitle, showImage = true }: Readonly<AuthLayoutProps>) {
   return (
     <div className="grid min-h-[90vh] w-full lg:grid-cols-2">
       <div className="flex items-center justify-center px-8 py-12 lg:px-12">

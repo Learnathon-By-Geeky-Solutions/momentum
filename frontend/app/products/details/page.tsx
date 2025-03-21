@@ -92,7 +92,7 @@ export default function ProductPage() {
           <div className="mt-4">
             <div className="flex items-center gap-4">
               <p className="text-3xl font-bold">${product.price}</p>
-              {product.originalPrice && (
+              {product.originalPrice>0 && (
                 <>
                   <p className="text-lg text-muted-foreground line-through">${product.originalPrice}</p>
                   <Badge variant="secondary">{product.discount}% OFF</Badge>

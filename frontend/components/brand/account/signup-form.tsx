@@ -13,7 +13,7 @@ interface SignupFormProps {
   onToggleForm: () => void
 }
 
-export default function SignupForm({ onToggleForm }: SignupFormProps) {
+export default function SignupForm({ onToggleForm }: Readonly<SignupFormProps>) {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 

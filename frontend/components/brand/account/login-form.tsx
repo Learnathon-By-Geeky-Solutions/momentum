@@ -13,7 +13,7 @@ interface LoginFormProps {
   onToggleForm: () => void
 }
 
-export function LoginForm({ onToggleForm }: LoginFormProps) {
+export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
   const [showPassword, setShowPassword] = useState(false)
 
   return (
