@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+@layer base {
+  :root {
+    --background: 39 33% 95%;
+    --foreground: 24 12% 24%;
+
+    --card: 39 33% 99%;
+    --card-foreground: 24 12% 24%;
+
+    --popover: 39 33% 99%;
+    --popover-foreground: 24 12% 24%;
+
+    --primary: 11 70% 62%;
+    --primary-foreground: 39 33% 99%;
+
+    --secondary: 158 22% 60%;
+    --secondary-foreground: 39 33% 99%;
+
+    --muted: 39 33% 90%;
+    --muted-foreground: 24 5% 48%;
+
+    --accent: 39 79% 75%;
+    --accent-foreground: 24 12% 24%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 39 33% 99%;
+
+    --border: 24 5% 88%;
+    --input: 24 5% 88%;
+    --ring: 11 70% 62%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 24 12% 8%;
+    --foreground: 39 33% 95%;
+
+    --card: 24 12% 12%;
+    --card-foreground: 39 33% 95%;
+
+    --popover: 24 12% 12%;
+    --popover-foreground: 39 33% 95%;
+
+    --primary: 11 70% 62%;
+    --primary-foreground: 39 33% 99%;
+
+    --secondary: 158 22% 60%;
+    --secondary-foreground: 39 33% 99%;
+
+    --muted: 24 12% 24%;
+    --muted-foreground: 39 33% 70%;
+
+    --accent: 39 79% 75%;
+    --accent-foreground: 24 12% 8%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 39 33% 95%;
+
+    --border: 24 12% 24%;
+    --input: 24 12% 24%;
+    --ring: 11 70% 62%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-playfair);
+}
+
+/* Smooth transitions */
+* {
+  @apply transition-colors duration-200;
+}
+
+/* Custom button styles */
+.btn-primary {
+  @apply bg-primary hover:bg-primary/90 text-primary-foreground;
+}
+
+.btn-secondary {
+  @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground;
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+
+
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
