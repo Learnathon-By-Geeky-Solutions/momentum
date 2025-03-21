@@ -11,16 +11,22 @@ export function MobileCategoryMenu() {
 
   const toggleCategory = (categoryName: string) => {
     setExpandedCategories((prev) =>
-      prev.includes(categoryName) ? prev.filter((name) => name !== categoryName) : [...prev, categoryName],
+      prev.includes(categoryName)
+        ? prev.filter((name) => name !== categoryName)
+        : [...prev, categoryName],
     )
   }
 
-  const isCategoryExpanded = (categoryName: string) => expandedCategories.includes(categoryName)
+  const isCategoryExpanded = (categoryName: string) =>
+    expandedCategories.includes(categoryName)
 
   return (
     <div className="space-y-1">
       {categories.map((category) => (
-        <div key={category.name} className="border-b border-gray-100 last:border-0">
+        <div
+          key={category.name}
+          className="border-b border-gray-100 last:border-0"
+        >
           <button
             onClick={() => toggleCategory(category.name)}
             className={cn(
@@ -30,7 +36,12 @@ export function MobileCategoryMenu() {
           >
             <div className="flex items-center gap-3">
               <category.icon
-                className={cn("h-5 w-5", isCategoryExpanded(category.name) ? "text-primary" : "text-gray-500")}
+                className={cn(
+                  "h-5 w-5",
+                  isCategoryExpanded(category.name)
+                    ? "text-primary"
+                    : "text-gray-500",
+                )}
               />
               <span className="font-medium text-sm">{category.name}</span>
             </div>
@@ -49,7 +60,9 @@ export function MobileCategoryMenu() {
                   href={subcategory.href}
                   className="flex items-center gap-2 p-2 hover:bg-gray-50 rounded-lg transition-colors text-sm"
                 >
-                  {subcategory.icon && <subcategory.icon className="h-4 w-4 text-gray-500" />}
+                  {subcategory.icon && (
+                    <subcategory.icon className="h-4 w-4 text-gray-500" />
+                  )}
                   <span>{subcategory.name}</span>
                 </Link>
               ))}
@@ -60,4 +73,3 @@ export function MobileCategoryMenu() {
     </div>
   )
 }
-

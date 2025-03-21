@@ -71,19 +71,28 @@ export function ProductFilters() {
       <div>
         <h3 className="mb-4 text-sm font-medium">Price Range</h3>
         <div className="space-y-4">
-          <Slider value={priceRange} max={1000} step={1} onValueChange={setPriceRange} />
+          <Slider
+            value={priceRange}
+            max={1000}
+            step={1}
+            onValueChange={setPriceRange}
+          />
           <div className="flex items-center gap-4">
             <Input
               type="number"
               value={priceRange[0]}
-              onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+              onChange={(e) =>
+                setPriceRange([Number(e.target.value), priceRange[1]])
+              }
               className="h-9"
             />
             <span className="text-muted-foreground">to</span>
             <Input
               type="number"
               value={priceRange[1]}
-              onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+              onChange={(e) =>
+                setPriceRange([priceRange[0], Number(e.target.value)])
+              }
               className="h-9"
             />
           </div>
@@ -95,7 +104,10 @@ export function ProductFilters() {
           {brands.map((brand) => (
             <div key={brand.name} className="flex items-center gap-2">
               <Checkbox id={brand.name} />
-              <Label htmlFor={brand.name} className="flex flex-1 items-center justify-between text-sm font-normal">
+              <Label
+                htmlFor={brand.name}
+                className="flex flex-1 items-center justify-between text-sm font-normal"
+              >
                 {brand.name}
                 <span className="text-muted-foreground">({brand.count})</span>
               </Label>
@@ -116,4 +128,3 @@ export function ProductFilters() {
     </div>
   )
 }
-

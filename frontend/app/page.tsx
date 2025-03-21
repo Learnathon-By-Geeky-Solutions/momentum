@@ -1,4 +1,3 @@
-
 import { Benefits } from "@/components/brand/landing-page/benefits"
 import { CategoriesShowcase } from "@/components/brand/landing-page/categories"
 import { Faq } from "@/components/brand/landing-page/faq"
@@ -16,22 +15,19 @@ import { Navigation } from "@/components/brand/navbar/navigation"
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
-     
       <Navigation />
-      <Hero/>
-      <FeaturedProducts/>
-      <HowItWorks/>
-      <Benefits/>
-      <FeaturedArtisans/>
-      <Testimonials/>
-      <CategoriesShowcase/>
-      <PlatformFeatures/>
-      <TrustAndSecurity/>
-      <Faq/>
-      <Newsletter/>
-      <FinalCTA/>
-    
+      <Hero />
+      <FeaturedProducts />
+      <HowItWorks />
+      <Benefits />
+      <FeaturedArtisans />
+      <Testimonials />
+      <CategoriesShowcase />
+      <PlatformFeatures />
+      <TrustAndSecurity />
+      <Faq />
+      <Newsletter />
+      <FinalCTA />
     </div>
   )
 }
-

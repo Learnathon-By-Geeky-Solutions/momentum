@@ -14,7 +14,7 @@ interface Product {
   rating: number
   reviews: number
   image: string
-  badge?:"HOT" | "BEST DEALS" | "SALE" | "NEW" | "TOP RATED"
+  badge?: "HOT" | "BEST DEALS" | "SALE" | "NEW" | "TOP RATED"
   discount?: number
 }
 
@@ -39,7 +39,9 @@ export function ProductCard({ product }: ProductCardProps) {
           </Badge>
         )}
         {product.discount && (
-          <Badge className="absolute right-4 top-4 z-10 bg-orange-500">{product.discount}% OFF</Badge>
+          <Badge className="absolute right-4 top-4 z-10 bg-orange-500">
+            {product.discount}% OFF
+          </Badge>
         )}
         <div className="relative aspect-square overflow-hidden">
           <Image
@@ -68,24 +70,29 @@ export function ProductCard({ product }: ProductCardProps) {
               key={i}
               className={cn(
                 "h-4 w-4",
-                i < Math.floor(product.rating) ? "fill-primary" : "fill-muted stroke-muted-foreground",
+                i < Math.floor(product.rating)
+                  ? "fill-primary"
+                  : "fill-muted stroke-muted-foreground",
               )}
               viewBox="0 0 24 24"
             >
               <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
             </svg>
           ))}
-          <span className="text-sm text-muted-foreground">({product.reviews})</span>
+          <span className="text-sm text-muted-foreground">
+            ({product.reviews})
+          </span>
         </div>
         <h3 className="line-clamp-2 text-sm font-medium">{product.title}</h3>
         <div className="flex items-center gap-2">
           <span className="text-lg font-bold">${product.price}</span>
           {product.originalPrice && (
-            <span className="text-sm text-muted-foreground line-through">${product.originalPrice}</span>
+            <span className="text-sm text-muted-foreground line-through">
+              ${product.originalPrice}
+            </span>
           )}
         </div>
       </CardFooter>
     </Card>
   )
 }
-

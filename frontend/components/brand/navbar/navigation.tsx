@@ -43,9 +43,10 @@ export function Navigation() {
             </Link>
           </nav>
         </div>
-        <div className="hidden md:block text-sm font-medium">+1-202-555-0104</div>
+        <div className="hidden md:block text-sm font-medium">
+          +1-202-555-0104
+        </div>
       </div>
     </div>
   )
 }
-

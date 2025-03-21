@@ -13,7 +13,9 @@ interface SignupFormProps {
   onToggleForm: () => void
 }
 
-export default function SignupForm({ onToggleForm }: Readonly<SignupFormProps>) {
+export default function SignupForm({
+  onToggleForm,
+}: Readonly<SignupFormProps>) {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -71,7 +73,11 @@ export default function SignupForm({ onToggleForm }: Readonly<SignupFormProps>) 
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
-            <Input id="password" type={showPassword ? "text" : "password"} placeholder="Create a password" />
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Create a password"
+            />
             <Button
               type="button"
               variant="ghost"
@@ -79,7 +85,11 @@ export default function SignupForm({ onToggleForm }: Readonly<SignupFormProps>) 
               className="absolute right-2 top-1/2 -translate-y-1/2"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
@@ -98,7 +108,11 @@ export default function SignupForm({ onToggleForm }: Readonly<SignupFormProps>) 
               className="absolute right-2 top-1/2 -translate-y-1/2"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
-              {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showConfirmPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
@@ -127,4 +141,3 @@ export default function SignupForm({ onToggleForm }: Readonly<SignupFormProps>) 
     </div>
   )
 }
-

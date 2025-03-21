@@ -6,7 +6,13 @@ import { Heart, Share2, ShoppingCart } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -15,7 +21,8 @@ import { RelatedProducts } from "@/components/brand/products/related-product"
 
 const product = {
   id: "1",
-  title: "2020 Apple MacBook Pro with Apple M1 Chip (13-inch, 8GB RAM, 256GB SSD Storage) - Space Gray",
+  title:
+    "2020 Apple MacBook Pro with Apple M1 Chip (13-inch, 8GB RAM, 256GB SSD Storage) - Space Gray",
   sku: "SKU567",
   brand: "Apple",
   category: "Electronics",
@@ -34,7 +41,10 @@ const product = {
     "https://www.digitaltrends.com/wp-content/uploads/2024/10/m4-mac-pro-8.jpg?resize=1000%2C600&p=1",
   ],
   colors: ["Space Gray", "Silver"],
-  displayOptions: ["14-inch Liquid Retina XDR display", "16-inch Liquid Retina XDR display"],
+  displayOptions: [
+    "14-inch Liquid Retina XDR display",
+    "16-inch Liquid Retina XDR display",
+  ],
   memoryOptions: ["16GB unified memory", "32GB unified memory"],
   storageOptions: ["512GB SSD", "1TB SSD", "2TB SSD"],
   description: `The most powerful MacBook Pro ever is here. With the blazing-fast M1 Pro or M1 Max 
@@ -76,7 +86,9 @@ export default function ProductPage() {
                   key={i}
                   className={cn(
                     "h-5 w-5",
-                    i < Math.floor(product.rating) ? "fill-primary" : "fill-muted stroke-muted-foreground",
+                    i < Math.floor(product.rating)
+                      ? "fill-primary"
+                      : "fill-muted stroke-muted-foreground",
                   )}
                   viewBox="0 0 24 24"
                 >
@@ -84,28 +96,40 @@ export default function ProductPage() {
                 </svg>
               ))}
             </div>
-            <p className="text-sm text-muted-foreground">({product.reviews} User feedback)</p>
+            <p className="text-sm text-muted-foreground">
+              ({product.reviews} User feedback)
+            </p>
           </div>
 
-          <h1 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">{product.title}</h1>
+          <h1 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">
+            {product.title}
+          </h1>
 
           <div className="mt-4">
             <div className="flex items-center gap-4">
               <p className="text-3xl font-bold">${product.price}</p>
-              {product.originalPrice>0 && (
+              {product.originalPrice > 0 && (
                 <>
-                  <p className="text-lg text-muted-foreground line-through">${product.originalPrice}</p>
+                  <p className="text-lg text-muted-foreground line-through">
+                    ${product.originalPrice}
+                  </p>
                   <Badge variant="secondary">{product.discount}% OFF</Badge>
                 </>
               )}
             </div>
             <div className="mt-4 space-y-6">
               <div className="flex items-center gap-4">
-                <p className="text-sm text-muted-foreground">SKU: {product.sku}</p>
+                <p className="text-sm text-muted-foreground">
+                  SKU: {product.sku}
+                </p>
                 <Separator orientation="vertical" className="h-4" />
-                <p className="text-sm text-muted-foreground">Brand: {product.brand}</p>
+                <p className="text-sm text-muted-foreground">
+                  Brand: {product.brand}
+                </p>
                 <Separator orientation="vertical" className="h-4" />
-                <p className="text-sm text-muted-foreground">Category: {product.category}</p>
+                <p className="text-sm text-muted-foreground">
+                  Category: {product.category}
+                </p>
               </div>
 
               <div className="space-y-4">
@@ -118,8 +142,12 @@ export default function ProductPage() {
                         onClick={() => setSelectedColor(color)}
                         className={cn(
                           "h-8 w-8 rounded-full border-2",
-                          color === "Space Gray" ? "bg-gray-900" : "bg-gray-100",
-                          selectedColor === color ? "ring-2 ring-primary ring-offset-2" : "border-transparent",
+                          color === "Space Gray"
+                            ? "bg-gray-900"
+                            : "bg-gray-100",
+                          selectedColor === color
+                            ? "ring-2 ring-primary ring-offset-2"
+                            : "border-transparent",
                         )}
                       >
                         <span className="sr-only">{color}</span>
@@ -178,16 +206,28 @@ export default function ProductPage() {
 
                 <div className="flex items-center gap-4">
                   <div className="flex items-center">
-                    <Button variant="outline" size="icon" onClick={() => setQuantity(Math.max(1, quantity - 1))}>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    >
                       -
                     </Button>
                     <input
                       type="number"
                       value={quantity}
-                      onChange={(e) => setQuantity(Math.max(1, Number.parseInt(e.target.value) || 1))}
+                      onChange={(e) =>
+                        setQuantity(
+                          Math.max(1, Number.parseInt(e.target.value) || 1),
+                        )
+                      }
                       className="w-16 border-y border-input bg-transparent px-3 py-2 text-center text-sm"
                     />
-                    <Button variant="outline" size="icon" onClick={() => setQuantity(quantity + 1)}>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => setQuantity(quantity + 1)}
+                    >
                       +
                     </Button>
                   </div>
@@ -212,8 +252,18 @@ export default function ProductPage() {
               </div>
 
               <div className="flex items-center gap-4">
-                <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsWishlisted(!isWishlisted)}>
-                  <Heart className={cn("h-4 w-4", isWishlisted && "fill-red-500 text-red-500")} />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2"
+                  onClick={() => setIsWishlisted(!isWishlisted)}
+                >
+                  <Heart
+                    className={cn(
+                      "h-4 w-4",
+                      isWishlisted && "fill-red-500 text-red-500",
+                    )}
+                  />
                   Add to Wishlist
                 </Button>
                 <Button variant="outline" size="sm" className="gap-2">
@@ -259,7 +309,9 @@ export default function ProductPage() {
                 <div className="grid gap-4 sm:grid-cols-2">
                   {Object.entries(product.shipping).map(([method, info]) => (
                     <Card key={method} className="p-4">
-                      <h3 className="font-medium capitalize">{method.replace("_", " ")} Shipping</h3>
+                      <h3 className="font-medium capitalize">
+                        {method.replace("_", " ")} Shipping
+                      </h3>
                       <p className="text-sm text-muted-foreground">{info}</p>
                     </Card>
                   ))}
@@ -267,7 +319,9 @@ export default function ProductPage() {
               </div>
             </TabsContent>
             <TabsContent value="reviews" className="mt-4">
-              <div className="text-center text-muted-foreground">Reviews coming soon...</div>
+              <div className="text-center text-muted-foreground">
+                Reviews coming soon...
+              </div>
             </TabsContent>
           </Tabs>
         </div>
@@ -280,5 +334,3 @@ export default function ProductPage() {
     </div>
   )
 }
-
-

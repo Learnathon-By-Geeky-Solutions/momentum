@@ -66,12 +66,19 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <Label htmlFor="password">Password</Label>
-            <Link href="/account/forgot-password" className="text-sm text-primary hover:underline">
+            <Link
+              href="/account/forgot-password"
+              className="text-sm text-primary hover:underline"
+            >
               Forgot password?
             </Link>
           </div>
           <div className="relative">
-            <Input id="password" type={showPassword ? "text" : "password"} placeholder="Enter your password" />
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter your password"
+            />
             <Button
               type="button"
               variant="ghost"
@@ -79,7 +86,11 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
               className="absolute right-2 top-1/2 -translate-y-1/2"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
@@ -105,4 +116,3 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
     </div>
   )
 }
-

@@ -15,9 +15,15 @@ interface ProductGalleryProps {
 export function ProductGallery({ images }: ProductGalleryProps) {
   const [currentImage, setCurrentImage] = useState(0)
 
-  const next = () => setCurrentImage((current) => (current === images.length - 1 ? 0 : current + 1))
+  const next = () =>
+    setCurrentImage((current) =>
+      current === images.length - 1 ? 0 : current + 1,
+    )
 
-  const previous = () => setCurrentImage((current) => (current === 0 ? images.length - 1 : current - 1))
+  const previous = () =>
+    setCurrentImage((current) =>
+      current === 0 ? images.length - 1 : current - 1,
+    )
 
   return (
     <div className="flex flex-col-reverse gap-4 lg:grid lg:grid-cols-[100px_1fr] lg:gap-6">
@@ -31,17 +37,32 @@ export function ProductGallery({ images }: ProductGalleryProps) {
               currentImage === index ? "border-primary" : "border-transparent",
             )}
           >
-            <Image src={image || "/placeholder.svg"} alt={`Product image ${index + 1}`} fill className="object-cover" />
+            <Image
+              src={image || "/placeholder.svg"}
+              alt={`Product image ${index + 1}`}
+              fill
+              className="object-cover"
+            />
           </button>
         ))}
       </div>
       <div className="relative aspect-square overflow-hidden rounded-lg bg-muted">
         <div className="absolute inset-0 flex items-center justify-between p-4">
-          <Button variant="secondary" size="icon" className="h-8 w-8" onClick={previous}>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="h-8 w-8"
+            onClick={previous}
+          >
             <ChevronLeft className="h-4 w-4" />
             <span className="sr-only">Previous image</span>
           </Button>
-          <Button variant="secondary" size="icon" className="h-8 w-8" onClick={next}>
+          <Button
+            variant="secondary"
+            size="icon"
+            className="h-8 w-8"
+            onClick={next}
+          >
             <ChevronRight className="h-4 w-4" />
             <span className="sr-only">Next image</span>
           </Button>
@@ -68,4 +89,3 @@ export function ProductGallery({ images }: ProductGalleryProps) {
     </div>
   )
 }
-
