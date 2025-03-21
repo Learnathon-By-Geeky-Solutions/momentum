@@ -1,7 +1,5 @@
 
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
-from sqlalchemy.orm import Session
-from typing import List
 import schemas, models
 from database import get_db  # Database session dependency
 from models import User, Product, Brand, Order, OrderItem  # ORM models
@@ -11,7 +9,6 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from database import SessionLocal
-from database import get_db
 from fastapi import APIRouter
 
 

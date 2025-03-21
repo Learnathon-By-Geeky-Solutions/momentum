@@ -1,5 +1,4 @@
 
-from fastapi.security import OAuth2PasswordBearer
 from fastapi import FastAPI, Depends, HTTPException, Header, APIRouter, BackgroundTasks, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm

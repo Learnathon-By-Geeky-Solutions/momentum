@@ -17,7 +17,6 @@ from models import User, Order, OrderItem, Bill  # adjust as needed
 from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
 from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
 from database import get_db
-from fastapi import APIRouter
 
 
 router = APIRouter()

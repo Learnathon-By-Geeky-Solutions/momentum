@@ -8,7 +8,7 @@ import schemas as schemas
 import models as models
 from models import Order, OrderItem, Product, User, Brand
 from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
-from models import Product, Order, User, OrderItem, Bill
+from models import Product
 from database import get_db
 from utils import get_current_user  # Adjust path based on your project structure
 from database import SessionLocal
