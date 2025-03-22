@@ -6,7 +6,6 @@ import { AuthLayout } from "@/components/brand/account/auth-layout"
 import { LoginForm } from "@/components/brand/account/login-form"
 import SignupForm from "@/components/brand/account/signup-form"
 
-
 export default function AccountPage() {
   const [isLogin, setIsLogin] = useState(true)
 
@@ -14,7 +13,9 @@ export default function AccountPage() {
     <AuthLayout
       title={isLogin ? "Welcome Back" : "Create Account"}
       subtitle={
-        isLogin ? "Enter your credentials to access your account" : "Enter your information to create an account"
+        isLogin
+          ? "Enter your credentials to access your account"
+          : "Enter your information to create an account"
       }
     >
       <AnimatePresence mode="wait">
@@ -35,4 +36,3 @@ export default function AccountPage() {
     </AuthLayout>
   )
 }
-

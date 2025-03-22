@@ -1,12 +1,9 @@
-
 import Image from "next/image"
 import { Search, Star, ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 export default function Hero() {
- 
-
   return (
     <div className="relative min-h-screen bg-[#F7F3F0] overflow-hidden">
       {/* Decorative Background Elements */}
@@ -29,8 +26,11 @@ export default function Hero() {
             {/* Social Proof */}
             <div className="inline-flex items-center rounded-full border border-gray-200 bg-white/50 backdrop-blur-sm px-3 py-1 text-sm text-gray-600">
               <div className="flex -space-x-2 mr-2">
-                {[1, 2, 3,4,5].map((i) => (
-                  <div key={i} className="w-6 h-6 rounded-full border-2 border-white overflow-hidden">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className="w-6 h-6 rounded-full border-2 border-white overflow-hidden"
+                  >
                     <Image
                       src="https://avatars.githubusercontent.com/u/58410798?v=4"
                       alt={`Artisan ${i}`}
@@ -53,11 +53,14 @@ export default function Hero() {
             <div className="space-y-6">
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif tracking-tight text-gray-900">
                 <span className="block">Discover</span>
-                <span className="block mt-2 text-[#E07A5F]">Artisan Treasures</span>
+                <span className="block mt-2 text-[#E07A5F]">
+                  Artisan Treasures
+                </span>
               </h1>
 
               <p className="text-xl text-gray-600 max-w-xl">
-                Connect with skilled artisans worldwide. Find unique handcrafted pieces that tell a story.
+                Connect with skilled artisans worldwide. Find unique handcrafted
+                pieces that tell a story.
               </p>
 
               {/* Search Bar */}
@@ -117,7 +120,9 @@ export default function Hero() {
                   key={feature.title}
                   className={`p-6 rounded-2xl bg-gradient-to-br ${feature.gradient} backdrop-blur-sm border border-white/20 transition-transform duration-300 hover:scale-105`}
                 >
-                  <h3 className="font-semibold text-gray-900 mb-1">{feature.title}</h3>
+                  <h3 className="font-semibold text-gray-900 mb-1">
+                    {feature.title}
+                  </h3>
                   <p className="text-sm text-gray-600">{feature.desc}</p>
                 </div>
               ))}
@@ -176,7 +181,9 @@ export default function Hero() {
                   { number: "120+", label: "Countries" },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
-                    <div className="text-xl font-bold text-[#E07A5F]">{stat.number}</div>
+                    <div className="text-xl font-bold text-[#E07A5F]">
+                      {stat.number}
+                    </div>
                     <div className="text-sm text-gray-600">{stat.label}</div>
                   </div>
                 ))}
@@ -188,4 +195,3 @@ export default function Hero() {
     </div>
   )
 }
-

@@ -1,4 +1,10 @@
-import { Laptop, Monitor, Gamepad, ComputerIcon as Desktop, type LucideIcon } from "lucide-react"
+import {
+  Laptop,
+  Monitor,
+  Gamepad,
+  ComputerIcon as Desktop,
+  type LucideIcon,
+} from "lucide-react"
 
 export interface CategoryBrand {
   name: string
@@ -32,9 +38,21 @@ export const categories: Category[] = [
         href: "/category/gaming-desktop",
         icon: Gamepad,
         brands: [
-          { name: "Alienware", href: "/brand/alienware", image: "/placeholder.svg?height=40&width=40" },
-          { name: "ROG", href: "/brand/rog", image: "/placeholder.svg?height=40&width=40" },
-          { name: "MSI", href: "/brand/msi", image: "/placeholder.svg?height=40&width=40" },
+          {
+            name: "Alienware",
+            href: "/brand/alienware",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "ROG",
+            href: "/brand/rog",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "MSI",
+            href: "/brand/msi",
+            image: "/placeholder.svg?height=40&width=40",
+          },
         ],
       },
     ],
@@ -54,14 +72,46 @@ export const categories: Category[] = [
         href: "/category/gaming-laptop",
         icon: Gamepad,
         brands: [
-          { name: "Lenovo", href: "/brand/lenovo", image: "/placeholder.svg?height=40&width=40" },
-          { name: "Asus", href: "/brand/asus", image: "/placeholder.svg?height=40&width=40" },
-          { name: "MSI", href: "/brand/msi", image: "/placeholder.svg?height=40&width=40" },
-          { name: "HP", href: "/brand/hp", image: "/placeholder.svg?height=40&width=40" },
-          { name: "Acer", href: "/brand/acer", image: "/placeholder.svg?height=40&width=40" },
-          { name: "Gigabyte", href: "/brand/gigabyte", image: "/placeholder.svg?height=40&width=40" },
-          { name: "Thunderobot", href: "/brand/thunderobot", image: "/placeholder.svg?height=40&width=40" },
-          { name: "Dell", href: "/brand/dell", image: "/placeholder.svg?height=40&width=40" },
+          {
+            name: "Lenovo",
+            href: "/brand/lenovo",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "Asus",
+            href: "/brand/asus",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "MSI",
+            href: "/brand/msi",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "HP",
+            href: "/brand/hp",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "Acer",
+            href: "/brand/acer",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "Gigabyte",
+            href: "/brand/gigabyte",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "Thunderobot",
+            href: "/brand/thunderobot",
+            image: "/placeholder.svg?height=40&width=40",
+          },
+          {
+            name: "Dell",
+            href: "/brand/dell",
+            image: "/placeholder.svg?height=40&width=40",
+          },
         ],
       },
       {
@@ -87,4 +137,3 @@ export const categories: Category[] = [
     ],
   },
 ]
-

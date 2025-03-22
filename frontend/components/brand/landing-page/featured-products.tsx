@@ -13,11 +13,11 @@ const products = [
     image: "/placeholder.svg?height=200&width=200",
     category: "Weaving",
   },
-  { 
-    id: 2, 
-    name: "Ceramic Vase", 
-    artisan: "Potter John", 
-    price: "$60", 
+  {
+    id: 2,
+    name: "Ceramic Vase",
+    artisan: "Potter John",
+    price: "$60",
     image: "/placeholder.svg?height=200&width=200",
     category: "Pottery",
   },
@@ -62,14 +62,24 @@ export function FeaturedProducts() {
                     className="group-hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="text-white font-medium text-lg">{product.category}</span>
+                    <span className="text-white font-medium text-lg">
+                      {product.category}
+                    </span>
                   </div>
                 </div>
                 <h3 className="font-semibold text-lg mb-1">{product.name}</h3>
-                <p className="text-muted-foreground text-sm mb-2">{product.artisan}</p>
+                <p className="text-muted-foreground text-sm mb-2">
+                  {product.artisan}
+                </p>
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-primary text-lg">{product.price}</span>
-                  <Button variant="outline" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <span className="font-bold text-primary text-lg">
+                    {product.price}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  >
                     View Details
                   </Button>
                 </div>
@@ -78,7 +88,11 @@ export function FeaturedProducts() {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button variant="outline" size="lg" className="hover:bg-primary hover:text-white transition-colors">
+          <Button
+            variant="outline"
+            size="lg"
+            className="hover:bg-primary hover:text-white transition-colors"
+          >
             Explore All Categories
           </Button>
         </div>

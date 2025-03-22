@@ -1,6 +1,15 @@
 "use client"
 
-import { Menu, X, ShoppingCart, User, Package, ListChecks, HeadphonesIcon, HelpCircle } from "lucide-react"
+import {
+  Menu,
+  X,
+  ShoppingCart,
+  User,
+  Package,
+  ListChecks,
+  HeadphonesIcon,
+  HelpCircle,
+} from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -92,4 +101,3 @@ export function MobileNav() {
     </Sheet>
   )
 }
-
