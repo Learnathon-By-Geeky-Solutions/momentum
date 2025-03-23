@@ -1,11 +1,10 @@
-
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List
 
 from user_management.utils import get_current_user
 from user_management.database import get_db
-from fastapi import APIRouter   
+from fastapi import APIRouter
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
@@ -18,22 +17,32 @@ from user_management.models import Product
 router = APIRouter()
 
 
-
 # Post Product (protected route)
 @router.post("/post-product", response_model=schemas.ProductCreate)
-def post_product(product: schemas.ProductCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user), current_user: models.User = Depends(get_current_user)):
-    
-    brand = db.query(models.Brand).filter(models.Brand.user_id == current_user.user_id).first()
+def post_product(
+    product: schemas.ProductCreate,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+    current_user: models.User = Depends(get_current_user),
+):
+
+    brand = (
+        db.query(models.Brand)
+        .filter(models.Brand.user_id == current_user.user_id)
+        .first()
+    )
     print(brand.brand_id)
-     
+
     if not brand:
         raise HTTPException(status_code=400, detail="Brand does not exist.")
     if brand.user_id != user.user_id:
-        raise HTTPException(status_code=403, detail="You do not have permission to add products to this brand.")
+        raise HTTPException(
+            status_code=403,
+            detail="You do not have permission to add products to this brand.",
+        )
 
     new_product = models.Product(
         brand_id=brand.brand_id,
-
         product_name=product.product_name,
         product_pic=product.product_pic,
         product_video=product.product_video,
@@ -42,7 +51,7 @@ def post_product(product: schemas.ProductCreate, db: Session = Depends(get_db), 
         order_size=product.order_size,
         order_quantity=product.order_quantity,
         quantity_unit=product.quantity_unit,
-        price=product.price
+        price=product.price,
     )
 
     db.add(new_product)
@@ -51,20 +60,20 @@ def post_product(product: schemas.ProductCreate, db: Session = Depends(get_db), 
     return new_product
 
 
-
 @router.put("/update-product/{product_id}", response_model=schemas.ProductCreate)
 def update_product(
     product_id: int,
     updated_product: schemas.ProductCreate,
     db: Session = Depends(get_db),
-    user: User = Depends(get_current_user)
+    user: User = Depends(get_current_user),
 ):
-    product = db.query(models.Product).filter(models.Product.product_id == product_id).first()
+    product = (
+        db.query(models.Product).filter(models.Product.product_id == product_id).first()
+    )
 
     if not product:
         raise HTTPException(status_code=404, detail="Product not found.")
-    
-    
+
     # Update product fields
     product.product_name = updated_product.product_name
     product.product_pic = updated_product.product_pic
@@ -81,16 +90,16 @@ def update_product(
     return product
 
 
-
 @router.get("/get-product/{product_id}", response_model=schemas.ProductOut)
-def get_product(product_id: int,db: Session = Depends(get_db)):
-    product = db.query(models.Product).filter(models.Product.product_id == product_id).first()
+def get_product(product_id: int, db: Session = Depends(get_db)):
+    product = (
+        db.query(models.Product).filter(models.Product.product_id == product_id).first()
+    )
 
     if not product:
         raise HTTPException(status_code=404, detail="Product not found.")
 
     return product
-
 
 
 @router.get("/get-all-products", response_model=List[schemas.ProductOut])
@@ -103,38 +112,45 @@ def get_all_products(db: Session = Depends(get_db)):
 def delete_product(
     product_id: int,
     db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
+    current_user: models.User = Depends(get_current_user),
 ):
     # Retrieve the product by its ID
-    product = db.query(models.Product).filter(models.Product.product_id == product_id).first()
+    product = (
+        db.query(models.Product).filter(models.Product.product_id == product_id).first()
+    )
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    
+
     # Retrieve the brand associated with the product
-    brand = db.query(models.Brand).filter(models.Brand.brand_id == product.brand_id).first()
+    brand = (
+        db.query(models.Brand).filter(models.Brand.brand_id == product.brand_id).first()
+    )
     # Ensure the current user owns this brand
     if not brand or brand.user_id != current_user.user_id:
-        raise HTTPException(status_code=403, detail="You do not have permission to delete this product")
-    
+        raise HTTPException(
+            status_code=403, detail="You do not have permission to delete this product"
+        )
+
     # Check for any pending order items for this product.
     # This joins OrderItem and Order, and checks if there is any order with status "Pending"
     pending_order_item = (
         db.query(models.OrderItem)
-          .join(models.Order, models.OrderItem.order_id == models.Order.order_id)
-          .filter(
-              models.OrderItem.product_id == product_id,
-              models.Order.status == "Pending"
-          )
-          .first()
+        .join(models.Order, models.OrderItem.order_id == models.Order.order_id)
+        .filter(
+            models.OrderItem.product_id == product_id, models.Order.status == "Pending"
+        )
+        .first()
     )
-    
+
     if pending_order_item:
-        raise HTTPException(status_code=400, detail="Complete the order before deleting this product.")
-    
+        raise HTTPException(
+            status_code=400, detail="Complete the order before deleting this product."
+        )
+
     # If no pending order is found, delete the product.
     db.delete(product)
     db.commit()
-    
+
     return {"detail": "Product deleted successfully."}
 
 
@@ -145,11 +161,16 @@ def get_matching_products(query):
     session = SessionLocal()
     try:
         # Search for products matching query in name, category, or description
-        products = session.query(Product).filter(
-            (Product.product_name.ilike(f"%{query}%")) |
-            (Product.category.ilike(f"%{query}%")) |
-            (Product.description.ilike(f"%{query}%"))
-        ).limit(5).all()
+        products = (
+            session.query(Product)
+            .filter(
+                (Product.product_name.ilike(f"%{query}%"))
+                | (Product.category.ilike(f"%{query}%"))
+                | (Product.description.ilike(f"%{query}%"))
+            )
+            .limit(5)
+            .all()
+        )
 
         if not products:
             return "No matching products found."
