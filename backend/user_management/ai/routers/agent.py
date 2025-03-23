@@ -6,7 +6,9 @@ from user_management.utils import get_current_user
 from user_management.database import get_db
 from user_management.routers.order import create_order
 from user_management.ai.llm import get_conversational_response
+
 router = APIRouter()
+
 
 @router.post("/chat", response_model=ChatResponse)
 async def chat_with_agent(request: ChatRequest, current_user=Depends(get_current_user)):
@@ -17,23 +19,21 @@ async def chat_with_agent(request: ChatRequest, current_user=Depends(get_current
     # Build conversation context. In a real system, you might store conversation history.
     messages = [
         {"role": "system", "content": "You are a helpful product ordering assistant."},
-        {"role": "user", "content": request.message}
+        {"role": "user", "content": request.message},
     ]
     try:
         answer = get_conversational_response(messages)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
     return ChatResponse(response=answer)
-
-
 
 
 @router.post("/agent/order")
 async def agent_create_order(
     conversation: list = Body(...),  # The conversation history (list of messages)
     current_user=Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     A combined endpoint that takes a conversation history,
@@ -49,10 +49,13 @@ async def agent_create_order(
         # Assume the LLM response is a JSON string containing order details:
         # e.g., {"product_id": 123, "quantity": 2, "size": "L"}
         import json
+
         order_data = json.loads(llm_response)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing conversation: {str(e)}")
-    
+        raise HTTPException(
+            status_code=500, detail=f"Error processing conversation: {str(e)}"
+        )
+
     # Create an order using the extracted order_data
     order_create = OrderCreate(**order_data)
     new_order = create_order(order_create, db=db, current_user=current_user)

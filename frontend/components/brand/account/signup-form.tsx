@@ -3,19 +3,97 @@
 import Link from "next/link"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { useMutation } from "@tanstack/react-query"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import api from "@/lib/axios"
 
 interface SignupFormProps {
   onToggleForm: () => void
 }
 
-export default function SignupForm({ onToggleForm }: SignupFormProps) {
+export default function SignupForm({
+  onToggleForm,
+}: Readonly<SignupFormProps>) {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    full_name: "",
+    address: "",
+    phone: "",
+  })
+  const [error, setError] = useState("")
+  const [verificationSent, setVerificationSent] = useState(false)
+
+  const signupMutation = useMutation({
+    mutationKey: ["signup"],
+    mutationFn: async (data: {
+      username: string
+      email: string
+      password: string
+      full_name: string
+      address: string
+      phone: string
+    }) => {
+      return api.post("/auth/register", data)
+    },
+    onSuccess: () => {
+      setVerificationSent(true)
+    },
+    onError: (error) => {
+      setError(error.message || "Registration failed")
+    },
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData({
+      ...formData,
+      [id === "name" ? "full_name" : id]: value,
+    })
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
+
+    await signupMutation.mutateAsync(formData)
+  }
+
+  if (verificationSent) {
+    return (
+      <div className="space-y-6 text-center">
+        <div className="rounded-lg bg-green-50 p-6 border border-green-200">
+          <h3 className="text-xl font-semibold text-green-800 mb-2">
+            Verification Email Sent
+          </h3>
+          <p className="text-green-700">
+            We&apos;ve sent a verification link to{" "}
+            <strong>{formData.email}</strong>. Please check your inbox and click
+            the link to activate your account.
+          </p>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Didn&apos;t receive the email? Check your spam folder
+        </p>
+        <Button onClick={onToggleForm} className="mt-4">
+          Return to Login
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -59,19 +137,70 @@ export default function SignupForm({ onToggleForm }: SignupFormProps) {
           <span className="bg-background px-2 text-muted-foreground">or</span>
         </div>
       </div>
-      <div className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && <div className="text-red-500 text-sm">{error}</div>}
+        <div className="space-y-2">
+          <Label htmlFor="username">Username</Label>
+          <Input
+            id="username"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="johndoe123"
+            required
+          />
+        </div>
         <div className="space-y-2">
           <Label htmlFor="name">Full Name</Label>
-          <Input id="name" placeholder="John Doe" />
+          <Input
+            id="name"
+            value={formData.full_name}
+            onChange={handleChange}
+            placeholder="John Doe"
+            required
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email address</Label>
-          <Input id="email" placeholder="name@example.com" type="email" />
+          <Input
+            id="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="name@example.com"
+            type="email"
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="phone">Phone Number</Label>
+          <Input
+            id="phone"
+            value={formData.phone}
+            onChange={handleChange}
+            placeholder="+1 (555) 123-4567"
+            required
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="address">Address</Label>
+          <Input
+            id="address"
+            value={formData.address}
+            onChange={handleChange}
+            placeholder="123 Main St, City, State"
+            required
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="password">Password</Label>
           <div className="relative">
-            <Input id="password" type={showPassword ? "text" : "password"} placeholder="Create a password" />
+            <Input
+              id="password"
+              value={formData.password}
+              onChange={handleChange}
+              type={showPassword ? "text" : "password"}
+              placeholder="Create a password"
+              required
+            />
             <Button
               type="button"
               variant="ghost"
@@ -79,17 +208,24 @@ export default function SignupForm({ onToggleForm }: SignupFormProps) {
               className="absolute right-2 top-1/2 -translate-y-1/2"
               onClick={() => setShowPassword(!showPassword)}
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirm-password">Confirm Password</Label>
+          <Label htmlFor="confirmPassword">Confirm Password</Label>
           <div className="relative">
             <Input
-              id="confirm-password"
+              id="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm your password"
+              required
             />
             <Button
               type="button"
@@ -98,26 +234,34 @@ export default function SignupForm({ onToggleForm }: SignupFormProps) {
               className="absolute right-2 top-1/2 -translate-y-1/2"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
             >
-              {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showConfirmPassword ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </Button>
           </div>
         </div>
-      </div>
-      <div className="flex items-center space-x-2">
-        <Checkbox id="terms" />
-        <label
-          htmlFor="terms"
-          className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        <div className="flex items-center space-x-2">
+          <Checkbox id="terms" required />
+          <label
+            htmlFor="terms"
+            className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            I agree to the{" "}
+            <Link href="/terms" className="text-primary hover:underline">
+              Terms & Privacy
+            </Link>
+          </label>
+        </div>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={signupMutation.isPending}
         >
-          I agree to the{" "}
-          <Link href="/terms" className="text-primary hover:underline">
-            Terms & Privacy
-          </Link>
-        </label>
-      </div>
-      <Button type="submit" className="w-full">
-        Create Account
-      </Button>
+          {signupMutation.isPending ? "Creating Account..." : "Create Account"}
+        </Button>
+      </form>
       <p className="text-center text-sm text-muted-foreground">
         Already have an account?{" "}
         <button onClick={onToggleForm} className="text-primary hover:underline">
@@ -127,4 +271,3 @@ export default function SignupForm({ onToggleForm }: SignupFormProps) {
     </div>
   )
 }
-

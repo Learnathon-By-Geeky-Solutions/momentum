@@ -13,6 +13,7 @@ openai.api_key = os.getenv("API_KEY")
 # Azure Deployment Name (NOT the model name, but the deployment name set in Azure)
 DEPLOYMENT_NAME = "gpt-4o-3"
 
+
 def get_conversational_response(messages: list, user_id) -> str:
     """
     Processes user messages to search for products or place orders.
@@ -36,9 +37,7 @@ def get_conversational_response(messages: list, user_id) -> str:
     # Otherwise, continue conversation with OpenAI
     try:
         response = openai.ChatCompletion.create(
-            engine=DEPLOYMENT_NAME,
-            messages=messages,
-            temperature=0.7
+            engine=DEPLOYMENT_NAME, messages=messages, temperature=0.7
         )
         return response["choices"][0]["message"]["content"].strip()
 
