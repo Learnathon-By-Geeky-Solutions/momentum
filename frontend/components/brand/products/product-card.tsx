@@ -8,21 +8,43 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 
 interface Product {
   id: string
-  title: string
+  product_name: string
+  product_pic: string[]
+  product_video: string[]
+  category: string
+  description: string
+  order_size: string
+  order_quantity: number
+  quantity_unit: string
   price: number
-  originalPrice?: number
   rating: number
-  reviews: number
-  image: string
+  approved: boolean
   badge?: "HOT" | "BEST DEALS" | "SALE" | "NEW" | "TOP RATED"
   discount?: number
 }
 
 interface ProductCardProps {
-  product: Product
+  product: Product | null
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  if (!product) {
+    return (
+      <Card className="flex h-full flex-col items-center justify-center p-6 text-center">
+        <div className="mb-4 rounded-full bg-muted p-3">
+          <ShoppingCart className="h-6 w-6 text-muted-foreground" />
+        </div>
+        <h3 className="mb-2 font-medium">Product Not Found</h3>
+        <p className="text-sm text-muted-foreground">
+          The requested product could not be found or is no longer available.
+        </p>
+        <Button className="mt-4" variant="outline" size="sm">
+          Return to Products
+        </Button>
+      </Card>
+    )
+  }
+
   return (
     <Card className="group relative overflow-hidden">
       <CardContent className="p-0">
@@ -45,8 +67,8 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
         <div className="relative aspect-square overflow-hidden">
           <Image
-            src={product.image || "/placeholder.svg"}
-            alt={product.title}
+            src={product.product_pic[0] || "/placeholder.svg"}
+            alt={product.product_name}
             fill
             className="object-cover transition-transform group-hover:scale-105"
           />
@@ -80,17 +102,14 @@ export function ProductCard({ product }: ProductCardProps) {
             </svg>
           ))}
           <span className="text-sm text-muted-foreground">
-            ({product.reviews})
+            ({product.order_quantity})
           </span>
         </div>
-        <h3 className="line-clamp-2 text-sm font-medium">{product.title}</h3>
+        <h3 className="line-clamp-2 text-sm font-medium">
+          {product.product_name}
+        </h3>
         <div className="flex items-center gap-2">
           <span className="text-lg font-bold">${product.price}</span>
-          {product.originalPrice && (
-            <span className="text-sm text-muted-foreground line-through">
-              ${product.originalPrice}
-            </span>
-          )}
         </div>
       </CardFooter>
     </Card>

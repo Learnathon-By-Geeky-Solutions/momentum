@@ -1,6 +1,5 @@
 "use client"
 
-import { AuthContextType, User } from "@/types"
 import React, {
   createContext,
   useCallback,
@@ -8,6 +7,7 @@ import React, {
   useEffect,
   useReducer,
 } from "react"
+import { AuthContextType, User } from "./types"
 
 // Define action types
 type AuthAction =
@@ -138,7 +138,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     async (token: string, userData: User) => {
       dispatch({ type: "LOGIN_START" })
       try {
-        // await new Promise((resolve) => setTimeout(resolve, 1000));
         localStorage.setItem("token", token)
         localStorage.setItem("user", JSON.stringify(userData))
         dispatch({

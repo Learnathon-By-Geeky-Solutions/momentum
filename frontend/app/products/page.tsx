@@ -1,17 +1,55 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Filter, Search, SlidersHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ProductFilters } from "@/components/brand/products/product-filter"
-import { products } from "@/components/brand/products/data"
 import { ProductCard } from "@/components/brand/products/product-card"
+
+interface Product {
+  product_id: number
+  product_name: string
+  product_pic: string[]
+  product_video: string[]
+  category: string
+  description: string
+  order_size: string
+  order_quantity: number
+  quantity_unit: string
+  price: number
+  rating: number
+  approved: boolean
+}
 
 export default function ProductsPage() {
   const [openFilter, setOpenFilter] = useState(false)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await fetch("/products/get-all-producs")
+        if (!response.ok) {
+          throw new Error("Failed to fetch products")
+        }
+        const data = await response.json()
+        setProducts(data)
+        setLoading(false)
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred",
+        )
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
+  }, [])
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -72,17 +110,45 @@ export default function ProductsPage() {
               ))}
             </div>
             <div className="text-sm text-muted-foreground">
-              65,867 Results found
+              {products.length} Results found
             </div>
           </div>
-          <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-          <Button className="mt-8 w-full" size="lg">
-            Load More Products
-          </Button>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <p>Loading products...</p>
+            </div>
+          ) : error ? (
+            <div className="flex justify-center items-center h-64">
+              <p className="text-red-500">Error: {error}</p>
+            </div>
+          ) : (
+            <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {products.map((product) => (
+                <ProductCard
+                  key={product.product_id}
+                  product={{
+                    id: product.product_id.toString(),
+                    product_name: product.product_name,
+                    price: product.price,
+                    category: product.category,
+                    description: product.description,
+                    rating: product.rating,
+                    product_pic: product.product_pic,
+                    product_video: product.product_video,
+                    order_size: product.order_size,
+                    order_quantity: product.order_quantity,
+                    quantity_unit: product.quantity_unit,
+                    approved: product.approved,
+                  }}
+                />
+              ))}
+            </div>
+          )}
+          {!loading && !error && products.length > 0 && (
+            <Button className="mt-8 w-full" size="lg">
+              Load More Products
+            </Button>
+          )}
         </div>
       </div>
     </div>

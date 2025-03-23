@@ -3,18 +3,58 @@
 import Link from "next/link"
 import { useState } from "react"
 import { Eye, EyeOff } from "lucide-react"
+import { useMutation } from "@tanstack/react-query"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import api from "@/lib/axios"
+import { useAuth } from "@/provider/useAuth"
+import { useRouter } from "next/navigation"
 
 interface LoginFormProps {
   onToggleForm: () => void
 }
 
 export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
+  const { login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  })
+  const [error, setError] = useState("")
+  const router = useRouter()
+
+  const loginMutation = useMutation({
+    mutationKey: ["login"],
+    mutationFn: async (data: { email: string; password: string }) => {
+      return api.post("/auth/login", data)
+    },
+    onSuccess: (response) => {
+      login(response.data.access_token, response.data.user)
+
+      router.push("/dashboard")
+    },
+    onError: (error) => {
+      setError(error.message || "Login failed")
+    },
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData({
+      ...formData,
+      [id]: value,
+    })
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+    loginMutation.mutate(formData)
+  }
 
   return (
     <div className="space-y-6">
@@ -58,10 +98,18 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
           <span className="bg-background px-2 text-muted-foreground">or</span>
         </div>
       </div>
-      <div className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && <div className="text-sm text-red-500">{error}</div>}
         <div className="space-y-2">
           <Label htmlFor="email">Email address</Label>
-          <Input id="email" placeholder="name@example.com" type="email" />
+          <Input
+            id="email"
+            placeholder="name@example.com"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
         </div>
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -78,6 +126,9 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
             />
             <Button
               type="button"
@@ -94,25 +145,32 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
             </Button>
           </div>
         </div>
-      </div>
-      <div className="flex items-center space-x-2">
-        <Checkbox id="remember" />
-        <label
-          htmlFor="remember"
-          className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        <div className="flex items-center space-x-2">
+          <Checkbox id="remember" />
+          <label
+            htmlFor="remember"
+            className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Remember me
+          </label>
+        </div>
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={loginMutation.isPending}
         >
-          Remember me
-        </label>
-      </div>
-      <Button type="submit" className="w-full">
-        Login
-      </Button>
-      <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{" "}
-        <button onClick={onToggleForm} className="text-primary hover:underline">
-          Sign up
-        </button>
-      </p>
+          {loginMutation.isPending ? "Logging in..." : "Login"}
+        </Button>
+        <p className="text-center text-sm text-muted-foreground">
+          Don&apos;t have an account?{" "}
+          <button
+            onClick={onToggleForm}
+            className="text-primary hover:underline"
+          >
+            Sign up
+          </button>
+        </p>
+      </form>
     </div>
   )
 }
