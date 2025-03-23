@@ -16,3 +16,42 @@ def get_current_admin(token: str = Depends(oauth2_scheme), db: Session = Depends
     if not user or user.role != 'admin':
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions")
     return user
+
+# User Management
+class UserUpdate(BaseModel):
+    username: str
+    email: str
+    full_name: str
+    address: str
+    phone: str
+
+
+class PromoteUser(BaseModel):
+    role: str
+
+# Promote user to admin
+@router.put("/users/promote/{user_id}")
+async def promote_user(
+    user_id: int,
+    role_data: PromoteUser,
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin)
+):
+    
+    role = role_data.role.lower()
+    
+    if role_data.role != 'admin':
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid role. Only 'admin' is allowed."
+        )
+    
+    user = db.query(User).filter(User.user_id == user_id).first()
+    
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    
+    user.role = role_data.role  # Promote user to admin
+    db.commit()
+    db.refresh(user)
+    return {"detail": f"User {user.username} is now an admin"}
