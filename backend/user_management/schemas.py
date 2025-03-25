@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
-
+import re
 
 class Token(BaseModel):
     access_token: str
@@ -19,8 +19,13 @@ class ForgotPasswordRequest(BaseModel):
 
 class ResetPasswordRequest(BaseModel):
     token: str
-    new_password: str
+    new_password: str = Field(..., min_length=8, max_length=50, description="Password must be between 8-50 characters.")
     
+    @validator("new_password")
+    def validate_password(cls, value):
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$', value):
+            raise ValueError("Password must contain at least one letter, one number, and one special character.")
+        return value
 
 class UserCreate(BaseModel):
     username: Optional[str]
