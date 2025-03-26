@@ -115,19 +115,12 @@ class UserUpdate(BaseModel):
 class OrderItemCreate(BaseModel):  
     product_id: int  
     size: Optional[str]  
-    quantity: int  
+    quantity: int = Field(..., ge=1)
    
-  
-class BillCreate(BaseModel):  
-    amount: float  
-    method: str  
-    trx_id: str  
-    status: str  
- 
-  
 class OrderCreate(BaseModel):  
-    order_items: List[OrderItemCreate]  
-  
+    order_items: List[OrderItemCreate]
+    
+
 class OrderOut(BaseModel):  
     order_id: int  
     user_id: int  
@@ -135,9 +128,15 @@ class OrderOut(BaseModel):
    
   
     class Config:  
-        from_attributes = True  
+        from_attributes = True
+        
 
-
+class BillCreate(BaseModel):  
+    amount: float = Field(..., gt=0)
+    method: str = Field(..., min_length=3)
+    trx_id: str = Field(..., min_length=5, max_length=50)
+    status: str  
+ 
 
 class BillOut(BaseModel):
     bill_id: int
@@ -151,7 +150,10 @@ class BillOut(BaseModel):
         orm_mode = True
 
 
-
+class PayBillRequest(BaseModel):
+    order_id: int
+    method: str
+    trx_id: str = Field(..., min_length=5, max_length=50)
 
 
 class OrderItemDetail(BaseModel):
@@ -171,20 +173,11 @@ class OrderDetailOut(BaseModel):
     order_items: List[OrderItemDetail]
 
     class Config:
-        orm_mode = True
-        
-        
- 
-
-class PayBillRequest(BaseModel):
-    order_id: int
-    method: str
-    trx_id: str
-
+        orm_mode = True        
 
 
 class ChatRequest(BaseModel):
-    message: str
+    message: str = Field(..., min_length=1, max_length=1000)
 
 class ChatResponse(BaseModel):
     response: str
