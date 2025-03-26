@@ -28,12 +28,13 @@ class ResetPasswordRequest(BaseModel):
         return value
 
 class UserCreate(BaseModel):
-    username: Optional[str]
-    email: str
-    password: str
-    full_name: Optional[str]
-    address: Optional[str]
-    phone: Optional[str]
+    username: Optional[str] = Field(None, min_length=3, max_length=50)
+    email: EmailStr  # Ensures valid email format
+    password: str = Field(..., min_length=8, max_length=50)
+    full_name: Optional[str] = Field(None, max_length=100)
+    address: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, regex=r'^(?:\+88|01)?(?:\d{9,10})$', description="Must be a valid BD phone number.")
+    role: str = Field(..., description="User role must be specified.")
 
 class UserOut(BaseModel):
     user_id: int
@@ -48,13 +49,9 @@ class UserOut(BaseModel):
         from_attributes = True  # Pydantic v2 update
         
 
-
-
 class LoginRequest(BaseModel):
-    email: str
-    password: str
-
-
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=50)
 
 
 class BrandCreate(BaseModel):
