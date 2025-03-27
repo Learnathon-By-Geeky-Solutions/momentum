@@ -163,7 +163,7 @@ async def get_my_orders(
 
 
 
-@router.get("/order/{order_id}/bill", response_model=schemas.BillOut)
+@router.get("/orders/{order_id}/bill", response_model=schemas.BillOut)
 async def get_bill_for_order(order_id: int, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     """
     Retrieve the bill information for a given order.
@@ -182,7 +182,7 @@ async def get_bill_for_order(order_id: int, db: Session = Depends(get_db), curre
 
   
   
-@router.get("/order/{order_id}/details", response_model=schemas.OrderDetailOut)
+@router.get("/orders/{order_id}/details", response_model=schemas.OrderDetailOut)
 async def get_order_details(
     order_id: int,
     db: Session = Depends(get_db),
@@ -300,7 +300,7 @@ async def get_all_order_details(
     return orders_details
 
 
-@router.delete("/order/{order_id}")
+@router.delete("/orders/{order_id}")
 async def delete_order(
     order_id: int,
     db: Session = Depends(get_db),

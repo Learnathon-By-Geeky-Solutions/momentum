@@ -91,10 +91,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(db_user)
 
-    # ✅ Generate verification token
     token = create_email_verification_token(user.email)
-
-    # ✅ Send verification email
     await send_verification_email(user.email, token)
 
     return JSONResponse(status_code=200, content={"message": "Verification email sent. Please check your inbox."})

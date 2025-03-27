@@ -71,10 +71,10 @@ class AgentService:
     
     def _search_products(self, state: AgentState) -> Dict[str, Any]:
         # Extract the search query from the last message
-        query = state.chat_history[-1].content
+        query = state.chat_history[-1].content if state.chat_history else ""
         
-        # Use the search_products tool
-        search_results = self.tools.search_products(query)
+        # Use the search_products tool with the query string directly
+        search_results = self.tools.search_products(query=query)
         state.search_results = search_results
         
         if not search_results:

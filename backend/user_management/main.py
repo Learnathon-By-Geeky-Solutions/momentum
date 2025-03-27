@@ -33,13 +33,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 app = FastAPI()
 
 # Include routers with prefixes and tags for organization
-app.include_router(auth.router, prefix="/auth", tags=["Auth"])
-app.include_router(profile.router, prefix="/profiles", tags=["Profile"])
-app.include_router(brand.router, prefix="/brands", tags=["Brands"])
-app.include_router(product.router, prefix="/products", tags=["Products"])
-app.include_router(order.router, prefix="/orders", tags=["Orders"])
-app.include_router(paybill.router, prefix="/paybills", tags=["Paybills"])
-app.include_router(agent.router, prefix="/agent", tags=["Agent"])
+app.include_router(auth.router, prefix="", tags=["Auth"])
+app.include_router(profile.router, prefix="", tags=["Profile"])
+app.include_router(brand.router, prefix="", tags=["Brands"])
+app.include_router(product.router, prefix="", tags=["Products"])
+app.include_router(order.router, prefix="", tags=["Orders"])
+app.include_router(paybill.router, prefix="", tags=["Paybills"])
+#app.include_router(agent.router, prefix="/agent", tags=["Agent"])
 
 
 

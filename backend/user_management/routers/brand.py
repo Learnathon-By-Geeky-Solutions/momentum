@@ -56,7 +56,7 @@ async def get_my_brand(db: Session = Depends(get_db), current_user: models.User 
 
 
 
-@router.put("/updatebrands/me", response_model=schemas.BrandOut)
+@router.put("/brands/me", response_model=schemas.BrandOut)
 async def update_brand(brand: schemas.BrandCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
     
 

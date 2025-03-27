@@ -26,7 +26,7 @@ async def get_profile(user: User = Depends(get_current_user)):
     }
 
 # Update Profile
-@router.put("/update-profile")
+@router.put("/profile")
 async def update_profile(user_update: UserUpdate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     db_user = db.query(User).filter(User.user_id == user.user_id).first()
     if not db_user:

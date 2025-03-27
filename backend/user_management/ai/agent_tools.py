@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from typing import List, Dict, Any, Optional
 from models import Product, Order, OrderItem, Bill
-from user_management.schemas import OrderCreate, OrderItemCreate, BillCreate
+from schemas import OrderCreate, OrderItemCreate, BillCreate
 from database import get_db
 import re
 
@@ -11,7 +11,7 @@ class AgentTools:
     def __init__(self, db: Session):
         self.db = db
 
-    @tool
+    @tool(name="search_products")
     def search_products(self, query: str) -> List[Dict[str, Any]]:
         """
         Search for products in the database based on a query string.
@@ -23,6 +23,9 @@ class AgentTools:
         Returns:
             A list of products that match the search criteria
         """
+        if not query or not isinstance(query, str):
+            return []
+            
         # Extract key terms from the query
         search_terms = re.findall(r'\w+', query.lower())
         

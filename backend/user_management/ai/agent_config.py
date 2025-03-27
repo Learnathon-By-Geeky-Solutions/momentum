@@ -1,25 +1,32 @@
 import os
 from dotenv import load_dotenv
-from langchain_core import AzureChatOpenAI
+#from langchain_core import AzureChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 
-# Load environment variables
+from langchain_openai import AzureChatOpenAI
+
+
 load_dotenv()
 
 # Azure OpenAI Configuration
-AZURE_OPENAI_API_KEY = os.getenv("AZURE_OPENAI_API_KEY")
-AZURE_OPENAI_ENDPOINT = os.getenv("AZURE_OPENAI_ENDPOINT")
-AZURE_OPENAI_API_VERSION = os.getenv("AZURE_OPENAI_API_VERSION", "2023-05-15")
+AZURE_OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+AZURE_OPENAI_ENDPOINT = os.getenv("API_BASE")
+AZURE_OPENAI_API_VERSION = os.getenv("API_VERSION")
 AZURE_DEPLOYMENT_NAME = os.getenv("AZURE_DEPLOYMENT_NAME")
 
-# Initialize Azure OpenAI client
 llm = AzureChatOpenAI(
-    azure_deployment=AZURE_DEPLOYMENT_NAME,
-    openai_api_version=AZURE_OPENAI_API_VERSION,
     azure_endpoint=AZURE_OPENAI_ENDPOINT,
-    api_key=AZURE_OPENAI_API_KEY,
-    temperature=0.5,
+    azure_deployment= AZURE_DEPLOYMENT_NAME,
+    openai_api_version= AZURE_OPENAI_API_VERSION
 )
+# Initialize Azure OpenAI client
+# llm = AzureChatOpenAI(
+#     azure_deployment=AZURE_DEPLOYMENT_NAME,
+#     openai_api_version=AZURE_OPENAI_API_VERSION,
+#     azure_endpoint=AZURE_OPENAI_ENDPOINT,
+#     api_key=AZURE_OPENAI_API_KEY,
+#     temperature=0.5,
+# )
 
 # System prompt for the AI agent
 SYSTEM_PROMPT = """
