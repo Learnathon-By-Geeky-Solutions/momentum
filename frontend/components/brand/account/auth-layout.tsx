@@ -16,7 +16,7 @@ export function AuthLayout({
   return (
     <div className="grid min-h-[90vh] w-full lg:grid-cols-2">
       <div className="flex items-center justify-center px-8 py-12 lg:px-12">
-        <div className="mx-auto w-full max-w-sm">
+        <div className="mx-auto w-full max-w-7xl">
           <div className="mb-8">
             <div className="h-8 w-8">
               <svg
@@ -41,14 +41,17 @@ export function AuthLayout({
       </div>
       {showImage && (
         <div className="hidden bg-secondary lg:block">
-          <div className="flex h-full flex-col justify-between p-12 text-white">
+          <div className="flex h-full flex-col justify-between p-12">
             <div className="space-y-2">
               <h2 className="text-3xl font-bold">
                 The simplest way to manage your workforce
               </h2>
-              <p className="text-primary-foreground/80">
+              <p className="text-primary">
                 Enter your credentials to access your account
               </p>
+            </div>
+            <div className="h-100">
+              <img src="/momentum/hero-craft-1.jpg" alt="Auth" />
             </div>
           </div>
         </div>
