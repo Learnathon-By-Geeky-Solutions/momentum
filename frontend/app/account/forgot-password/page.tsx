@@ -1,30 +1,36 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, CheckCircle2, Loader2 } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, Loader2 } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
-
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { AuthLayout } from "@/components/brand/account/auth-layout"
+import api from "@/lib/axios"
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+  const [error, setError] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    
-    setIsLoading(false)
-    setIsSuccess(true)
+    setError("")
+
+    try {
+      await api.post("/auth/forgot-password", { email })
+      setIsSuccess(true)
+    } catch (err) {
+      setError("Failed to send reset instructions. Please try again.")
+      console.error("Password reset request failed:", err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -54,6 +60,11 @@ export default function ForgotPasswordPage() {
                   required
                 />
               </div>
+              {error && (
+                <div className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+                  {error}
+                </div>
+              )}
               <Button
                 type="submit"
                 className="w-full"

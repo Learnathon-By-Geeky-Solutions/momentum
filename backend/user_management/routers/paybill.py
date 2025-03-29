@@ -21,7 +21,7 @@ router = APIRouter()
 
 
 
-@router.post("/paybill")
+@router.post("/paybills")
 def pay_bill(
     paybill_data: schemas.PayBillRequest,
     db: Session = Depends(get_db),

@@ -1,7 +1,5 @@
 
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
-from sqlalchemy.orm import Session
-from typing import List
 import schemas, models
 from database import get_db  # Database session dependency
 from models import User, Product, Brand, Order, OrderItem  # ORM models
@@ -11,7 +9,6 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from database import SessionLocal
-from database import get_db
 from fastapi import APIRouter
 
 
@@ -20,7 +17,7 @@ router = APIRouter()
 
 
 # Post Product (protected route)
-@router.post("/post-product", response_model=schemas.ProductCreate)
+@router.post("/products", response_model=schemas.ProductCreate)
 def post_product(product: schemas.ProductCreate, db: Session = Depends(get_db), user: User = Depends(get_current_user), current_user: models.User = Depends(get_current_user)):
     
     brand = db.query(models.Brand).filter(models.Brand.user_id == current_user.user_id).first()
@@ -52,7 +49,7 @@ def post_product(product: schemas.ProductCreate, db: Session = Depends(get_db), 
 
 
 
-@router.put("/update-product/{product_id}", response_model=schemas.ProductCreate)
+@router.put("/products/{product_id}", response_model=schemas.ProductCreate)
 def update_product(
     product_id: int,
     updated_product: schemas.ProductCreate,
@@ -82,7 +79,7 @@ def update_product(
 
 
 
-@router.get("/get-product/{product_id}", response_model=schemas.ProductOut)
+@router.get("/products/{product_id}", response_model=schemas.ProductOut)
 def get_product(product_id: int,db: Session = Depends(get_db)):
     product = db.query(models.Product).filter(models.Product.product_id == product_id).first()
 
@@ -93,7 +90,7 @@ def get_product(product_id: int,db: Session = Depends(get_db)):
 
 
 
-@router.get("/get-all-products", response_model=List[schemas.ProductOut])
+@router.get("/products", response_model=List[schemas.ProductOut])
 def get_all_products(db: Session = Depends(get_db)):
     products = db.query(models.Product).all()
     return products

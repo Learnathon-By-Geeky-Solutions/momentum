@@ -6,6 +6,7 @@ from database import get_db
 
 router = APIRouter()
 
+
 @router.post("/agent", response_model=ChatResponse)
 def chat_with_ai(chat_request: ChatRequest, db: Session = Depends(get_db)):
     user_message = " ".join(chat_request.messages)

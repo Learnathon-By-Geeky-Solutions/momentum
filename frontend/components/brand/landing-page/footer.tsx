@@ -9,12 +9,10 @@ export function Footer() {
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-primary">
-                HandiCraft
-            </h3>
+            <h3 className="text-lg font-semibold text-primary">HandiCraft</h3>
             <p className="text-sm">
-              Connecting artisans with art lovers worldwide. Discover unique, handcrafted treasures and support skilled
-              creators.
+              Connecting artisans with art lovers worldwide. Discover unique,
+              handcrafted treasures and support skilled creators.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-muted-foreground hover:text-primary">
@@ -110,10 +108,14 @@ export function Footer() {
 
         <div className="mt-8 pt-8 border-t border-muted-foreground/20">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-sm mb-4 md:mb-0">&copy; 2025 HandiCraft. All rights reserved. 
-                <p>
-                    Developed by <span className="text-primary font-semibold">Team MOMENTUM</span>
-                </p>
+            <div className="text-sm mb-4 md:mb-0">
+              &copy; 2025 HandiCraft. All rights reserved.
+              <p>
+                Developed by{" "}
+                <span className="text-primary font-semibold">
+                  Team MOMENTUM
+                </span>
+              </p>
             </div>
             <div className="flex space-x-4 text-sm">
               <Link href="#" className="hover:text-primary">
@@ -131,9 +133,15 @@ export function Footer() {
 
         <div className="mt-8 pt-8 border-t border-muted-foreground/20">
           <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-sm mb-4 md:mb-0">Stay updated with new artisans and unique crafts</div>
+            <div className="text-sm mb-4 md:mb-0">
+              Stay updated with new artisans and unique crafts
+            </div>
             <div className="flex w-full md:w-auto">
-              <Input type="email" placeholder="Enter your email" className="rounded-r-none md:w-64" />
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                className="rounded-r-none md:w-64"
+              />
               <Button type="submit" className="rounded-l-none">
                 Subscribe
               </Button>
@@ -144,4 +152,3 @@ export function Footer() {
     </footer>
   )
 }
-
