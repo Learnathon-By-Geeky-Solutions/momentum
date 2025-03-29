@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 
 from pydantic import BaseModel, EmailStr, field_validator, Field
@@ -5,10 +6,13 @@ from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
 
+=======
+from pydantic import BaseModel, EmailStr
+from typing import Optional, List
+from datetime import datetime
+from decimal import Decimal
+>>>>>>> backend
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
 
 class TokenData(BaseModel):
     email: Optional[str] = None
@@ -21,6 +25,16 @@ class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str
     
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
 
 class UserCreate(BaseModel):
     username: Optional[str]
@@ -40,6 +54,7 @@ class UserCreate(BaseModel):
         return value
 
 
+
 class UserOut(BaseModel):
     user_id: int
     username: Optional[str]
@@ -48,11 +63,15 @@ class UserOut(BaseModel):
     address: Optional[str]
     phone: Optional[str]
     role: str  # New field in response
+    is_verified: bool
+
+
+class Token(BaseModel):
+    access_token: str
+    user: UserOut
 
     class Config:
         from_attributes = True  # Pydantic v2 update
-        
-
 
 
 class LoginRequest(BaseModel):
@@ -60,13 +79,16 @@ class LoginRequest(BaseModel):
     password: str
 
 
+class VerifyEmailRequest(BaseModel):
+    token: str
 
 
 class BrandCreate(BaseModel):
-    #user_id: int  # Ensure the user exists before creating a brand
+    # user_id: int  # Ensure the user exists before creating a brand
     brand_name: str
     brand_description: Optional[str]
     logo: Optional[str]
+
 
 class BrandOut(BaseModel):
     brand_id: int
@@ -79,8 +101,9 @@ class BrandOut(BaseModel):
     class Config:
         from_attributes = True  # Pydantic v2 update
 
+
 class ProductCreate(BaseModel):
-    #brand_id: int  # Ensure the brand exists before creating a product
+    # brand_id: int  # Ensure the brand exists before creating a product
     product_name: str
     product_pic: List[str]  # Array of image storage links
     product_video: List[str]  # Array of video storage links
@@ -91,9 +114,10 @@ class ProductCreate(BaseModel):
     quantity_unit: Optional[str]
     price: float
 
+
 class ProductOut(BaseModel):
     product_id: int
-    #brand_id: int
+    # brand_id: int
     product_name: str
     product_pic: List[str]
     product_video: List[str]
@@ -108,7 +132,7 @@ class ProductOut(BaseModel):
 
     class Config:
         from_attributes = True  # Pydantic v2 update
-        
+
 
 class ProductUpdate(BaseModel):
     product_id: int
@@ -124,14 +148,15 @@ class ProductUpdate(BaseModel):
     price: float
     rating: Optional[float]  # Given by buyers, not the product creator
     approved: bool  # Fulfilled by admin
-        
-        
+
+
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     address: Optional[str] = None
     phone: Optional[str] = None
 
 
+<<<<<<< HEAD
 
 
 
@@ -162,6 +187,33 @@ class OrderOut(BaseModel):
         from_attributes = True  
 
 
+=======
+class OrderItemCreate(BaseModel):
+    product_id: int
+    size: Optional[str]
+    quantity: int
+
+
+class BillCreate(BaseModel):
+    amount: float
+    method: str
+    trx_id: str
+    status: str
+
+
+class OrderCreate(BaseModel):
+    order_items: List[OrderItemCreate]
+
+
+class OrderOut(BaseModel):
+    order_id: int
+    user_id: int
+    status: str
+
+    class Config:
+        from_attributes = True
+
+>>>>>>> backend
 
 class BillOut(BaseModel):
     bill_id: int
@@ -175,9 +227,12 @@ class BillOut(BaseModel):
         orm_mode = True
 
 
+<<<<<<< HEAD
 
 
 
+=======
+>>>>>>> backend
 class OrderItemDetail(BaseModel):
     product_id: int
     brand_id: int
@@ -186,6 +241,10 @@ class OrderItemDetail(BaseModel):
     order_size: str
     order_quantity: int
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> backend
 class OrderDetailOut(BaseModel):
     order_id: int
     status: str
@@ -196,9 +255,13 @@ class OrderDetailOut(BaseModel):
 
     class Config:
         orm_mode = True
+<<<<<<< HEAD
         
         
  
+=======
+
+>>>>>>> backend
 
 class PayBillRequest(BaseModel):
     order_id: int
@@ -206,6 +269,10 @@ class PayBillRequest(BaseModel):
     trx_id: str
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> backend
 # class Message(BaseModel):
 #     role: str
 #     content: str
@@ -213,5 +280,16 @@ class PayBillRequest(BaseModel):
 class ChatRequest(BaseModel):
     messages: List[str] 
     
+<<<<<<< HEAD
 class ChatResponse(BaseModel):
     response: str
+=======
+=======
+class ChatRequest(BaseModel):
+    message: str
+
+
+>>>>>>> 54066bc9f1766879eb45177911b2216d15f00273
+class ChatResponse(BaseModel):
+    response: str
+>>>>>>> backend

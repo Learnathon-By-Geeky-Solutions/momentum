@@ -16,17 +16,37 @@ import Link from "next/link"
 import { cn } from "@/lib/utils"
 
 const categories = [
-  { name: "Computer & Laptop", icon: Laptop, href: "/category/computer-laptop" },
-  { name: "Computer Accessories", icon: Laptop, href: "/category/computer-accessories" },
+  {
+    name: "Computer & Laptop",
+    icon: Laptop,
+    href: "/category/computer-laptop",
+  },
+  {
+    name: "Computer Accessories",
+    icon: Laptop,
+    href: "/category/computer-accessories",
+  },
   { name: "SmartPhone", icon: Smartphone, href: "/category/smartphone" },
   { name: "Headphone", icon: Headphones, href: "/category/headphone" },
-  { name: "Mobile Accessories", icon: Smartphone, href: "/category/mobile-accessories" },
+  {
+    name: "Mobile Accessories",
+    icon: Smartphone,
+    href: "/category/mobile-accessories",
+  },
   { name: "Gaming Console", icon: Gamepad, href: "/category/gaming-console" },
   { name: "Camera & Photo", icon: Camera, href: "/category/camera-photo" },
   { name: "TV & Homes Appliances", icon: Tv, href: "/category/tv-appliances" },
   { name: "Watchs & Accessories", icon: Watch, href: "/category/watches" },
-  { name: "GPS & Navigation", icon: Navigation, href: "/category/gps-navigation" },
-  { name: "Wearable Technology", icon: Watch2, href: "/category/wearable-tech" },
+  {
+    name: "GPS & Navigation",
+    icon: Navigation,
+    href: "/category/gps-navigation",
+  },
+  {
+    name: "Wearable Technology",
+    icon: Watch2,
+    href: "/category/wearable-tech",
+  },
 ]
 
 interface CategoryListProps {
@@ -52,4 +72,3 @@ export function CategoryList({ className }: Readonly<CategoryListProps>) {
     </div>
   )
 }
-

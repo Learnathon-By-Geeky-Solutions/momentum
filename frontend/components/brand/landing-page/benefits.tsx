@@ -1,12 +1,42 @@
 import { Shield, Globe, Award, Heart, Users, Gift } from "lucide-react"
 
 const benefits = [
-  { id: 1, icon: Shield, title: "Quality Guaranteed", description: "Every item is vetted for quality" },
-  { id: 2, icon: Globe, title: "Worldwide Shipping", description: "Deliver to doorsteps globally" },
-  { id: 3, icon: Award, title: "Unique Handcrafted Items", description: "One-of-a-kind pieces" },
-  { id: 4, icon: Heart, title: "Support Local Artisans", description: "Empower creators worldwide" },
-  { id: 5, icon: Users, title: "Global Artisan Community", description: "Connect with skilled craftspeople" },
-  { id: 6, icon: Gift, title: "Perfect for Gifts", description: "Find something special for everyone" },
+  {
+    id: 1,
+    icon: Shield,
+    title: "Quality Guaranteed",
+    description: "Every item is vetted for quality",
+  },
+  {
+    id: 2,
+    icon: Globe,
+    title: "Worldwide Shipping",
+    description: "Deliver to doorsteps globally",
+  },
+  {
+    id: 3,
+    icon: Award,
+    title: "Unique Handcrafted Items",
+    description: "One-of-a-kind pieces",
+  },
+  {
+    id: 4,
+    icon: Heart,
+    title: "Support Local Artisans",
+    description: "Empower creators worldwide",
+  },
+  {
+    id: 5,
+    icon: Users,
+    title: "Global Artisan Community",
+    description: "Connect with skilled craftspeople",
+  },
+  {
+    id: 6,
+    icon: Gift,
+    title: "Perfect for Gifts",
+    description: "Find something special for everyone",
+  },
 ]
 
 export function Benefits() {
@@ -18,7 +48,8 @@ export function Benefits() {
             Why Choose ArtisanMarket
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover the unique advantages of shopping with our global artisan marketplace
+            Discover the unique advantages of shopping with our global artisan
+            marketplace
           </p>
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -34,8 +65,12 @@ export function Benefits() {
                   <benefit.icon className="h-8 w-8 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-xl mb-3 text-gray-900">{benefit.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">{benefit.description}</p>
+                  <h3 className="font-bold text-xl mb-3 text-gray-900">
+                    {benefit.title}
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    {benefit.description}
+                  </p>
                 </div>
               </div>
             </div>
