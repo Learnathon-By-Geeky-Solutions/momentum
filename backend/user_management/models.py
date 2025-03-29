@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-from sqlalchemy import Column, Integer, String, Text, Boolean, DECIMAL, ARRAY, ForeignKey, TIMESTAMP, func
-from sqlalchemy.orm import relationship
-from database import Base
-
-=======
 from sqlalchemy import (
     Column,
     Integer,
@@ -18,7 +12,6 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 from user_management.database import Base
->>>>>>> backend
 
 
 class User(Base):
@@ -35,36 +28,21 @@ class User(Base):
     role = Column(String, nullable=False, default="customer")
     created_at = Column(TIMESTAMP, server_default=func.now())
     updated_at = Column(TIMESTAMP, server_default=func.now(), onupdate=func.now())
-<<<<<<< HEAD
-    is_verified = Column(Boolean, default=False)  
-
-
-    brands = relationship("Brand", back_populates="user") 
-  
-    # Add this relationship for Order  
-    orders = relationship("Order", back_populates="user")  
-   
-=======
     is_verified = Column(Boolean, default=False)
 
     brands = relationship("Brand", back_populates="user")
 
     # Add this relationship for Order
     orders = relationship("Order", back_populates="user")
->>>>>>> backend
 
 
 class Brand(Base):
     __tablename__ = "brand"
 
     brand_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-<<<<<<< HEAD
-    user_id = Column(Integer, ForeignKey("user.user_id", ondelete="CASCADE"), nullable=False)
-=======
     user_id = Column(
         Integer, ForeignKey("user.user_id", ondelete="CASCADE"), nullable=False
     )
->>>>>>> backend
     brand_name = Column(String(255), nullable=False)
     brand_description = Column(Text)
     logo = Column(Text, nullable=True)
@@ -73,21 +51,14 @@ class Brand(Base):
     user = relationship("User", back_populates="brands")
     products = relationship("Product", back_populates="brand")
 
-<<<<<<< HEAD
-=======
 
->>>>>>> backend
 class Product(Base):
     __tablename__ = "product"
 
     product_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-<<<<<<< HEAD
-    brand_id = Column(Integer, ForeignKey("brand.brand_id", ondelete="CASCADE"), nullable=False)
-=======
     brand_id = Column(
         Integer, ForeignKey("brand.brand_id", ondelete="CASCADE"), nullable=False
     )
->>>>>>> backend
     product_name = Column(String(255), nullable=False)
     product_pic = Column(ARRAY(Text))  # Array of image storage links
     product_video = Column(ARRAY(Text))  # Array of video storage links
@@ -104,44 +75,6 @@ class Product(Base):
     brand = relationship("Brand", back_populates="products")
 
 
-<<<<<<< HEAD
-
-class Order(Base):  
-    __tablename__ = "orders"  
-    order_id = Column(Integer, primary_key=True, index=True, autoincrement=True)  
-    user_id = Column(Integer, ForeignKey("user.user_id", ondelete="CASCADE"), nullable=False)  
-    status = Column(String(50), nullable=False)  
-    created_at = Column(TIMESTAMP, server_default=func.now())  
-  
-    user = relationship("User", back_populates="orders")  
-    order_items = relationship("OrderItem", back_populates="order", cascade="all, delete-orphan")  
-    bill = relationship("Bill", back_populates="order", cascade="all, delete-orphan", uselist=False)  # One-to-one relationship  
-    
-  
-  
-class OrderItem(Base):  
-    __tablename__ = "order_items"  
-    order_item_id = Column(Integer, primary_key=True, index=True, autoincrement=True)  
-    order_id = Column(Integer, ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False)  
-    product_id = Column(Integer, ForeignKey("product.product_id", ondelete="CASCADE"), nullable=False)  
-    size = Column(String(50), nullable=True)  
-    quantity = Column(Integer, nullable=False)  
-  
-    order = relationship("Order", back_populates="order_items")  
-    product = relationship("Product")  
-  
-class Bill(Base):  
-    __tablename__ = "bills"  
-    bill_id = Column(Integer, primary_key=True, index=True, autoincrement=True)  
-    order_id = Column(Integer, ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False)  
-    amount = Column(DECIMAL(10, 2), nullable=False)  
-    method = Column(String(50), nullable=False)  
-    trx_id = Column(String(100), nullable=False)  
-    status = Column(String(50), nullable=False)  
-    created_at = Column(TIMESTAMP, server_default=func.now())  
-  
-    order = relationship("Order", back_populates="bill")  
-=======
 class Order(Base):
     __tablename__ = "orders"
     order_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
@@ -189,4 +122,3 @@ class Bill(Base):
     created_at = Column(TIMESTAMP, server_default=func.now())
 
     order = relationship("Order", back_populates="bill")
->>>>>>> backend
