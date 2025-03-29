@@ -31,6 +31,10 @@ async def create_brand(brand: schemas.BrandCreate, db: Session = Depends(get_db)
     
     if existing_brand:
         raise HTTPException(status_code=400, detail="You can create only one brand.")
+    
+    
+    if user.role == "customer":
+        raise HTTPException(status_code=400, detail="Need to register as Artisan. ")
 
 
     new_brand = models.Brand(

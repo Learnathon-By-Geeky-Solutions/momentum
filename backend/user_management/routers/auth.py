@@ -1,6 +1,6 @@
 
 
-from fastapi import FastAPI, Depends, HTTPException, Header, APIRouter, BackgroundTasks, status
+from fastapi import FastAPI, Depends, HTTPException, Header, APIRouter, BackgroundTasks, status, Request
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -12,11 +12,14 @@ from typing import Annotated, List, Optional
 from decimal import Decimal
 from jose import jwt, JWTError
 from passlib.context import CryptContext
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ValidationError
 from models import User, Order, OrderItem, Bill  # adjust as needed
 from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
 from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
 from database import get_db
+from starlette.responses import JSONResponse
+from routers import auth 
+app = FastAPI()
 
 
 router = APIRouter()
@@ -25,6 +28,7 @@ router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
 
 
+app.include_router(auth.router)
 
 
 @router.post("/forgot-password")
@@ -74,9 +78,11 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
 
     if existing_user:
         raise HTTPException(status_code=400, detail="User with this email or username already exists.")
+    
 
     hashed_password = auth_utils.hash_password(user.password)
 
+    
     db_user = User(
         username=user.username,
         email=user.email,
@@ -84,6 +90,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         full_name=user.full_name,
         address=user.address,
         phone=user.phone,
+        role=user.role,  # Role is now validated
         is_verified=False  
     )
 

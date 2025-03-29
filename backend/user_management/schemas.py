@@ -1,6 +1,6 @@
 
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
@@ -29,6 +29,16 @@ class UserCreate(BaseModel):
     full_name: Optional[str]
     address: Optional[str]
     phone: Optional[str]
+    role: Optional[str] = "customer"
+    
+    @field_validator("role")
+    @classmethod
+    def validate_role(cls, value):
+        value = value.lower()
+        if value not in ["customer", "artisan"]:
+            raise ValueError("Invalid role. Allowed values: 'customer' or 'artisan'.")
+        return value
+
 
 class UserOut(BaseModel):
     user_id: int
