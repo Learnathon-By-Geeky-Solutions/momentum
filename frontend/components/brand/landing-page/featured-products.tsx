@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
 
 const products = [
   {
@@ -10,7 +11,7 @@ const products = [
     name: "Handwoven Basket",
     artisan: "Emma Craft",
     price: "$45",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "/momentum/hero-craft-1.jpg",
     category: "Weaving",
   },
   {
@@ -18,7 +19,7 @@ const products = [
     name: "Ceramic Vase",
     artisan: "Potter John",
     price: "$60",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "/momentum/hero-craft-1.jpg",
     category: "Pottery",
   },
   {
@@ -26,7 +27,7 @@ const products = [
     name: "Wooden Sculpture",
     artisan: "Carver Mike",
     price: "$120",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "/momentum/hero-craft-1.jpg",
     category: "Woodwork",
   },
   {
@@ -34,7 +35,7 @@ const products = [
     name: "Macrame Wall Hanging",
     artisan: "Knot Master",
     price: "$80",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "/momentum/hero-craft-1.jpg",
     category: "Textile Arts",
   },
 ]
@@ -62,9 +63,9 @@ export function FeaturedProducts() {
                     className="group-hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <span className="text-white font-medium text-lg">
+                    <Badge variant="outline" className="text-white font-medium">
                       {product.category}
-                    </span>
+                    </Badge>
                   </div>
                 </div>
                 <h3 className="font-semibold text-lg mb-1">{product.name}</h3>
