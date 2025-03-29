@@ -1,11 +1,30 @@
-from pydantic import BaseModel, EmailStr
+<<<<<<< HEAD
+
+
+from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
 
+=======
+from pydantic import BaseModel, EmailStr
+from typing import Optional, List
+from datetime import datetime
+from decimal import Decimal
+>>>>>>> backend
+
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+    
+    
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+    
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -24,6 +43,16 @@ class UserCreate(BaseModel):
     full_name: Optional[str]
     address: Optional[str]
     phone: Optional[str]
+    role: Optional[str] = "customer"
+    
+    @field_validator("role")
+    @classmethod
+    def validate_role(cls, value):
+        value = value.lower()
+        if value not in ["customer", "artisan"]:
+            raise ValueError("Invalid role. Allowed values: 'customer' or 'artisan'.")
+        return value
+
 
 
 class UserOut(BaseModel):
@@ -127,6 +156,38 @@ class UserUpdate(BaseModel):
     phone: Optional[str] = None
 
 
+<<<<<<< HEAD
+
+
+
+
+class OrderItemCreate(BaseModel):  
+    product_id: int  
+    size: Optional[str]  
+    quantity: int  
+   
+  
+class BillCreate(BaseModel):  
+    amount: float  
+    method: str  
+    trx_id: str  
+    status: str  
+ 
+  
+class OrderCreate(BaseModel):  
+    order_items: List[OrderItemCreate]  
+  
+class OrderOut(BaseModel):  
+    order_id: int  
+    user_id: int  
+    status: str  
+   
+  
+    class Config:  
+        from_attributes = True  
+
+
+=======
 class OrderItemCreate(BaseModel):
     product_id: int
     size: Optional[str]
@@ -152,6 +213,7 @@ class OrderOut(BaseModel):
     class Config:
         from_attributes = True
 
+>>>>>>> backend
 
 class BillOut(BaseModel):
     bill_id: int
@@ -165,6 +227,12 @@ class BillOut(BaseModel):
         orm_mode = True
 
 
+<<<<<<< HEAD
+
+
+
+=======
+>>>>>>> backend
 class OrderItemDetail(BaseModel):
     product_id: int
     brand_id: int
@@ -173,7 +241,10 @@ class OrderItemDetail(BaseModel):
     order_size: str
     order_quantity: int
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> backend
 class OrderDetailOut(BaseModel):
     order_id: int
     status: str
@@ -184,7 +255,13 @@ class OrderDetailOut(BaseModel):
 
     class Config:
         orm_mode = True
+<<<<<<< HEAD
+        
+        
+ 
+=======
 
+>>>>>>> backend
 
 class PayBillRequest(BaseModel):
     order_id: int
@@ -192,9 +269,27 @@ class PayBillRequest(BaseModel):
     trx_id: str
 
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> backend
+# class Message(BaseModel):
+#     role: str
+#     content: str
+
+class ChatRequest(BaseModel):
+    messages: List[str] 
+    
+<<<<<<< HEAD
+class ChatResponse(BaseModel):
+    response: str
+=======
+=======
 class ChatRequest(BaseModel):
     message: str
 
 
+>>>>>>> 54066bc9f1766879eb45177911b2216d15f00273
 class ChatResponse(BaseModel):
     response: str
+>>>>>>> backend

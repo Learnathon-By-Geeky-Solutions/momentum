@@ -1,5 +1,21 @@
-import uvicorn
+<<<<<<< HEAD
+
+from fastapi import FastAPI, Depends, HTTPException, Header, APIRouter, BackgroundTasks, status
+from fastapi.responses import JSONResponse
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
+from database import SessionLocal, engine, get_db
+from datetime import timedelta
 import dotenv
+from typing import Annotated
+from models import User
+from utils import auth_utils, create_access_token, verify_token
+
+from routers import auth, brand, product, order, profile, paybill  # Import routers
+import uvicorn
+=======
+import uvicorn
+
 
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -31,12 +47,30 @@ sentry_sdk.init(
     traces_sample_rate=1.0,
     instrumenter="otel",
 )
+>>>>>>> backend
 
 
 dotenv.load_dotenv()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
+<<<<<<< HEAD
+
+app = FastAPI()
+
+# Include routers with prefixes and tags for organization
+app.include_router(auth.router, prefix="", tags=["Auth"])
+app.include_router(profile.router, prefix="", tags=["Profile"])
+app.include_router(brand.router, prefix="", tags=["Brands"])
+app.include_router(product.router, prefix="", tags=["Products"])
+app.include_router(order.router, prefix="", tags=["Orders"])
+app.include_router(paybill.router, prefix="", tags=["Paybills"])
+#app.include_router(agent.router, prefix="/agent", tags=["Agent"])
+
+
+
+
+=======
 app = FastAPI()
 
 # Include routers with prefixes and tags for organization
@@ -72,6 +106,7 @@ def health():
 def trigger_error():
     division_by_zero = 1 / 0
 
+>>>>>>> backend
 
 # Authenticate user from DB
 def authenticate_user(db: Session, username: str, password: str):
@@ -81,10 +116,16 @@ def authenticate_user(db: Session, username: str, password: str):
     return user
 
 
+<<<<<<< HEAD
+
+# Get current user from token
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+=======
 # Get current user from token
 def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
+>>>>>>> backend
     payload = verify_token(token)
     user_email = payload.get("sub")
     if not user_email:
@@ -94,12 +135,17 @@ def get_current_user(
         raise HTTPException(status_code=401, detail="Invalid token or user not found")
     return user
 
+<<<<<<< HEAD
+@app.post("/token")
+async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()], db: Session = Depends(get_db)):
+=======
 
 @app.post("/token")
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
 ):
+>>>>>>> backend
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -113,5 +159,10 @@ async def login_for_access_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> backend
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
