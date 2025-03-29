@@ -13,7 +13,7 @@ export function CategoryMenu() {
     <div className="flex bg-white rounded-lg overflow-hidden shadow-lg">
       <div className="w-72 bg-gray-50 border-r border-gray-200 max-h-[calc(100vh-200px)] overflow-y-auto">
         {categories.map((category) => (
-            <div
+          <div
             key={category.name}
             className="relative"
             role="button"
@@ -22,13 +22,16 @@ export function CategoryMenu() {
             onFocus={() => setActiveCategory(category.name)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
-              setActiveCategory(category.name)
+                setActiveCategory(category.name)
               }
             }}
-            ><Link
+          >
+            <Link
               href={category.href}
               className={`flex items-center justify-between p-4 hover:bg-gray-100 transition-all duration-200 ${
-                activeCategory === category.name ? "bg-primary/10 text-primary border-r-2 border-primary" : ""
+                activeCategory === category.name
+                  ? "bg-primary/10 text-primary border-r-2 border-primary"
+                  : ""
               }`}
             >
               <div className="flex items-center gap-3">
@@ -63,7 +66,11 @@ export function CategoryMenu() {
                       )}
                       {subcategory.name}
                     </Link>
-                    {subcategory.description && <p className="text-sm text-gray-500 mt-1">{subcategory.description}</p>}
+                    {subcategory.description && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        {subcategory.description}
+                      </p>
+                    )}
                   </div>
                   {subcategory.brands && (
                     <div className="grid grid-cols-2 gap-3">
@@ -96,4 +103,3 @@ export function CategoryMenu() {
     </div>
   )
 }
-

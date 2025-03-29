@@ -1,14 +1,13 @@
-
-
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from models import User
-from schemas import UserUpdate
-from database import get_db
-from utils import get_current_user  # or from router.auth, depending on your structure
 from typing import List, Optional
 from fastapi import APIRouter
 
+from user_management import schemas, models
+from user_management.database import get_db
+from user_management.utils import get_current_user
+from user_management.models import User
+from user_management.schemas import UserUpdate
 
 router = APIRouter()
 
@@ -25,9 +24,14 @@ async def get_profile(user: User = Depends(get_current_user)):
         "phone": user.phone,
     }
 
+
 # Update Profile
 @router.put("/update-profile")
-async def update_profile(user_update: UserUpdate, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+async def update_profile(
+    user_update: UserUpdate,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
     db_user = db.query(User).filter(User.user_id == user.user_id).first()
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
