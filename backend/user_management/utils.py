@@ -1,36 +1,23 @@
-from fastapi import (
-    FastAPI,
-    Depends,
-    HTTPException,
-    Header,
-    APIRouter,
-    BackgroundTasks,
-    status,
-)
+
+
+
+
+from fastapi import FastAPI, Depends, HTTPException,Header, APIRouter, BackgroundTasks, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from user_management.database import SessionLocal, engine
-from user_management.models import User
-from user_management.schemas import (
-    UserCreate,
-    Token,
-    LoginRequest,
-    UserUpdate,
-    OrderOut,
-    OrderCreate,
-    PayBillRequest,
-    ForgotPasswordRequest,
-    ResetPasswordRequest,
-)
+from database import SessionLocal, engine
+from models import User
+from schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
 from datetime import timedelta
 import os
 import dotenv
 from pydantic import BaseModel
 import uvicorn
 from typing import Annotated, List, Optional
-from user_management.models import Order, OrderItem, Bill
+from models import Order, OrderItem, Bill  
 from sqlalchemy.orm import Session
-import user_management.models as models
+import models as models
+import schemas
 from fastapi import Depends, FastAPI, HTTPException
 import jwt
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -52,7 +39,7 @@ from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
-from user_management.database import get_db
+from database import get_db
 
 
 # Environment variables
@@ -69,15 +56,16 @@ GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
 
 
+
 conf = ConnectionConfig(
-    MAIL_USERNAME=os.getenv("mymail"),
+    MAIL_USERNAME= os.getenv("mymail"),
     MAIL_PASSWORD=os.getenv("google_password"),
-    MAIL_FROM=os.getenv("mymail"),
+    MAIL_FROM= os.getenv("mymail"),
     MAIL_PORT=587,  # 587 for TLS, 465 for SSL
     MAIL_SERVER="smtp.gmail.com",
     MAIL_STARTTLS=True,  # Correct key name
     MAIL_SSL_TLS=False,  # Correct key name
-    USE_CREDENTIALS=True,
+    USE_CREDENTIALS=True
 )
 
 
@@ -88,13 +76,8 @@ class AuthUtils:
     def verify_google_token(self, token: str):
         """Verify Google OAuth token."""
         try:
-            id_info = id_token.verify_oauth2_token(
-                token, requests.Request(), GOOGLE_CLIENT_ID
-            )
-            if id_info["iss"] not in [
-                "accounts.google.com",
-                "https://accounts.google.com",
-            ]:
+            id_info = id_token.verify_oauth2_token(token, requests.Request(), GOOGLE_CLIENT_ID)
+            if id_info["iss"] not in ["accounts.google.com", "https://accounts.google.com"]:
                 raise ValueError("Invalid issuer")
             if id_info["aud"] != GOOGLE_CLIENT_ID:
                 raise ValueError("Invalid audience")
@@ -106,9 +89,7 @@ class AuthUtils:
                 "full_name": id_info.get("name"),
             }
         except ValueError as e:
-            raise HTTPException(
-                status_code=400, detail=f"Token verification failed: {str(e)}"
-            )
+            raise HTTPException(status_code=400, detail=f"Token verification failed: {str(e)}")
 
     def hash_password(self, password: str) -> str:
         """Hash a plain text password."""
@@ -141,13 +122,11 @@ class AuthUtils:
         if response.status_code != 200:
             raise HTTPException(status_code=400, detail="Failed to fetch access token")
         return response.json()
-
-
+    
 def create_reset_token(email: str):
     expire = datetime.utcnow() + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
     to_encode = {"sub": email, "exp": expire}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
 
 def verify_reset_token(token: str):
     try:
@@ -159,23 +138,24 @@ def verify_reset_token(token: str):
     except JWTError:
         return None
 
-
 def create_email_verification_token(email: str):
     expire = datetime.utcnow() + timedelta(hours=1)
     to_encode = {"sub": email, "exp": expire}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-
 async def send_verification_email(email: str, token: str):
-    verification_link = f"http://localhost:3000/verify-email?token={token}"
+    verification_link = f"http://localhost:8000/verify-email?token={token}"
     message = MessageSchema(
         subject="Verify Your Email",
         recipients=[email],
         body=f"Click the link to verify your email: {verification_link}",
-        subtype="html",
+        subtype="html"
     )
     fm = FastMail(conf)
     await fm.send_message(message)
+
+
+
 
 
 async def send_reset_email(email: str, link: str):
@@ -183,45 +163,45 @@ async def send_reset_email(email: str, link: str):
         subject="Reset Your Password",
         recipients=[email],
         body=f"Click the link to reset your password: {link}",
-        subtype="html",
+        subtype="html"
     )
     fm = FastMail(conf)
     await fm.send_message(message)
+    
+    
 
 
+
+    
 def generate_verification_token(email: str):
-
+    
     expire = datetime.utcnow() + timedelta(minutes=15)  # Token expires in 15 min
     data = {"sub": email, "exp": expire}
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+    
+
 
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     """Create a JWT access token."""
     to_encode = data.copy()
-    expire = datetime.utcnow() + (
-        expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    )
+    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
 
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
 
 def verify_token(token: str = Security(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         return payload  # Return decoded data if valid
-    except JWTError as exc:
+    except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
-        ) from exc
-
-
-def get_current_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
-):
+        )
+        
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     payload = verify_token(token)
     user_email = payload.get("sub")
     if not user_email:
@@ -234,3 +214,21 @@ def get_current_user(
 
 # Initialize utility class
 auth_utils = AuthUtils()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
