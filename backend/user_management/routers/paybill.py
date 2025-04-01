@@ -1,7 +1,9 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from user_management import schemas, models
+import user_management.schemas as schemas, user_management.models as models
 from user_management.database import get_db
+from user_management.models import User, Order, OrderItem, Bill, Product
+from user_management.schemas import PayBillRequest
 from user_management.utils import get_current_user
 from typing import List, Optional
 

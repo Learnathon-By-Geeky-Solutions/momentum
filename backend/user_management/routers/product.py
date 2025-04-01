@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
-from user_management import schemas, models
+import user_management.schemas as schemas
+import user_management.models as models
 from user_management.database import get_db  # Database session dependency
 from user_management.models import User, Product, Brand, Order, OrderItem  # ORM models
 from user_management.utils import get_current_user
@@ -7,7 +8,7 @@ from user_management.schemas import ProductCreate, ProductOut  # Pydantic schema
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from user_management.database import get_db
+from user_management.database import SessionLocal
 from fastapi import APIRouter
 
 
