@@ -45,5 +45,3 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: backend
-          sonar.organization: learnathon-by-geeky-solutions
-          sonar.projectKey: Learnathon-By-Geeky-Solutions_momentum

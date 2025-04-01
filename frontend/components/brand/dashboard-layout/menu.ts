@@ -1,4 +1,4 @@
-import { Box, Cog, Home, ShoppingCart, User } from "lucide-react"
+import { Box, Cog, Home, ShoppingCart, User, ChartBar } from "lucide-react"
 
 export const dashboardMenu = [
   {
@@ -23,7 +23,31 @@ export const dashboardMenu = [
     label: "Customers",
     href: "/dashboard/customers",
     icon: User,
-    role: ["customer", "artisan"],
+    role: ["artisan"],
+  },
+  {
+    label: "Inventory",
+    href: "/dashboard/inventory",
+    icon: Box,
+    role: ["artisan"],
+  },
+  {
+    label: "Analytics",
+    href: "/dashboard/analytics",
+    icon: ChartBar,
+    role: ["artisan"],
+  },
+  {
+    label: "Discounts & Coupons",
+    href: "/dashboard/discounts",
+    icon: ChartBar,
+    role: ["artisan"],
+  },
+  {
+    label: "Reviews & Feedback",
+    href: "/dashboard/reviews",
+    icon: ChartBar,
+    role: ["artisan"],
   },
   {
     label: "Settings",

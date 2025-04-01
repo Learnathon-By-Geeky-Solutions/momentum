@@ -21,39 +21,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Detect package manager
-        id: detect-package-manager
-        run: |
-          if [ -f "${{ github.workspace }}/frontend/bun.lockb" ]; then
-            echo "manager=bun" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=bun" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/frontend/yarn.lock" ]; then
-            echo "manager=yarn" >> $GITHUB_OUTPUT
-            echo "command=install" >> $GITHUB_OUTPUT
-            echo "runner=yarn" >> $GITHUB_OUTPUT
-            exit 0
-          elif [ -f "${{ github.workspace }}/frontend/package.json" ]; then
-            echo "manager=npm" >> $GITHUB_OUTPUT
-            echo "command=ci" >> $GITHUB_OUTPUT
-            echo "runner=npx --no-install" >> $GITHUB_OUTPUT
-            exit 0
-          else
-            echo "Unable to determine package manager"
-            exit 1
-          fi
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          # Remove cache for bun as it's not supported
-          cache: ${{ steps.detect-package-manager.outputs.manager != 'bun' && steps.detect-package-manager.outputs.manager || '' }}
-          cache-dependency-path: frontend
 
       - name: Setup Bun
-        if: steps.detect-package-manager.outputs.manager == 'bun'
         uses: oven-sh/setup-bun@v1
         with:
           bun-version: latest
@@ -68,16 +41,16 @@ jobs:
         with:
           path: |
             frontend/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/**/package-lock.json', 'frontend/**/yarn.lock', 'frontend/**/bun.lockb') }}-${{ hashFiles('frontend/**.[jt]s', 'frontend/**.[jt]sx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('frontend/**/bun.lockb') }}-${{ hashFiles('frontend/**.[jt]s', 'frontend/**.[jt]sx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('frontend/**/package-lock.json', 'frontend/**/yarn.lock', 'frontend/**/bun.lockb') }}-
+            ${{ runner.os }}-nextjs-${{ hashFiles('frontend/**/bun.lockb') }}-
 
       - name: Install dependencies
-        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        run: bun install
         working-directory: frontend
 
       - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
+        run: bun run next build
         working-directory: frontend
 
       - name: Upload artifact

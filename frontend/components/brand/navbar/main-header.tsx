@@ -112,7 +112,7 @@ export function MainHeader() {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href="/login" className="hover:text-gray-200">
+            <Link href="/account" className="hover:text-gray-200">
               <User className="h-6 w-6" />
             </Link>
           )}
