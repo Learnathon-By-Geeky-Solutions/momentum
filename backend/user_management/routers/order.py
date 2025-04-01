@@ -4,11 +4,11 @@ from fastapi import FastAPI, Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from typing import List, Annotated
 from decimal import Decimal
-import schemas as schemas
-import models as models
-from models import Order, OrderItem, Product, User, Brand
-from database import get_db, SessionLocal
-from utils import get_current_user  
+import user_management.schemas as schemas
+import user_management.models as models
+from user_management.models import Order, OrderItem, Product, User, Brand
+from user_management.database import get_db, SessionLocal
+from user_management.utils import get_current_user  
 
 
 
