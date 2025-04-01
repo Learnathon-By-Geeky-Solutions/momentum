@@ -3,16 +3,16 @@ import Image from "next/image"
 import Link from "next/link"
 
 const categories = [
-  { id: 1, name: "Jewelry", image: "/momentum/hero-craft-1.jpg" },
-  { id: 2, name: "Pottery", image: "/momentum/hero-craft-1.jpg" },
-  { id: 3, name: "Textiles", image: "/momentum/hero-craft-1.jpg" },
+  { id: 1, name: "Jewelry", image: "/hero-craft-1.jpg" },
+  { id: 2, name: "Pottery", image: "/hero-craft-1.jpg" },
+  { id: 3, name: "Textiles", image: "/hero-craft-1.jpg" },
   {
     id: 4,
     name: "Wood Crafts",
-    image: "/momentum/hero-craft-1.jpg",
+    image: "/hero-craft-1.jpg",
   },
-  { id: 5, name: "Paintings", image: "/momentum/hero-craft-1.jpg" },
-  { id: 6, name: "Sculptures", image: "/momentum/hero-craft-1.jpg" },
+  { id: 5, name: "Paintings", image: "/hero-craft-1.jpg" },
+  { id: 6, name: "Sculptures", image: "/hero-craft-1.jpg" },
 ]
 
 export function CategoriesShowcase() {
@@ -29,7 +29,7 @@ export function CategoriesShowcase() {
               className="group relative overflow-hidden rounded-lg"
             >
               <Image
-                src={category.image || "/momentum/hero-craft-1.jpg"}
+                src={category.image || "/hero-craft-1.jpg"}
                 alt={category.name}
                 width={200}
                 height={200}

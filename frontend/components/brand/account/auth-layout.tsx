@@ -51,7 +51,7 @@ export function AuthLayout({
               </p>
             </div>
             <div className="h-100">
-              <img src="/momentum/hero-craft-1.jpg" alt="Auth" />
+              <img src="/hero-craft-1.jpg" alt="Auth" />
             </div>
           </div>
         </div>

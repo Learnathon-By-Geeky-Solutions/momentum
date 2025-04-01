@@ -11,7 +11,7 @@ const products = [
     name: "Handwoven Basket",
     artisan: "Emma Craft",
     price: "$45",
-    image: "/momentum/hero-craft-1.jpg",
+    image: "/hero-craft-1.jpg",
     category: "Weaving",
   },
   {
@@ -19,7 +19,7 @@ const products = [
     name: "Ceramic Vase",
     artisan: "Potter John",
     price: "$60",
-    image: "/momentum/hero-craft-1.jpg",
+    image: "/hero-craft-1.jpg",
     category: "Pottery",
   },
   {
@@ -27,7 +27,7 @@ const products = [
     name: "Wooden Sculpture",
     artisan: "Carver Mike",
     price: "$120",
-    image: "/momentum/hero-craft-1.jpg",
+    image: "/hero-craft-1.jpg",
     category: "Woodwork",
   },
   {
@@ -35,7 +35,7 @@ const products = [
     name: "Macrame Wall Hanging",
     artisan: "Knot Master",
     price: "$80",
-    image: "/momentum/hero-craft-1.jpg",
+    image: "/hero-craft-1.jpg",
     category: "Textile Arts",
   },
 ]
