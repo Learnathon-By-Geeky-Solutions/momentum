@@ -7,12 +7,12 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from typing import Annotated, List, Optional
 from passlib.context import CryptContext
-from models import User, Order, OrderItem, Bill  # adjust as needed
-from schemas import UserCreate, Token, LoginRequest, ForgotPasswordRequest, ResetPasswordRequest
-from utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
-from database import get_db
+from user_management.models import User, Order, OrderItem, Bill  # adjust as needed
+from user_management.schemas import UserCreate, Token, LoginRequest, ForgotPasswordRequest, ResetPasswordRequest
+from user_management.utils import auth_utils, create_access_token, verify_token, create_email_verification_token, send_verification_email, verify_reset_token, create_reset_token, send_reset_email
+from user_management.database import get_db
 from starlette.responses import JSONResponse
-from routers import auth 
+from user_management.routers import auth 
 
 
 
