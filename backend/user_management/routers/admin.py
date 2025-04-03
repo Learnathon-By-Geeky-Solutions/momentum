@@ -83,3 +83,39 @@ async def delete_user(user_id: int, db: Session = Depends(get_db), current_admin
     db.delete(user)
     db.commit()
     return {"detail": "User deleted successfully"}
+
+#Add product management functionality for admin
+class ProductUpdate(BaseModel):
+    product_name: str
+    category: str
+    description: str
+    price: float
+    approved: bool
+
+@router.get("/products")
+async def get_all_products(db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)):
+    products = db.query(Product).all()
+    return products
+
+@router.put("/products/{product_id}")
+async def update_product(product_id: int, product_data: ProductUpdate, db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)):
+    product = db.query(Product).filter(Product.product_id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+
+    for key, value in product_data.dict(exclude_unset=True).items():
+        setattr(product, key, value)
+
+    db.commit()
+    db.refresh(product)
+    return product
+
+@router.delete("/products/{product_id}")
+async def delete_product(product_id: int, db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)):
+    product = db.query(Product).filter(Product.product_id == product_id).first()
+    if not product:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
+
+    db.delete(product)
+    db.commit()
+    return {"detail": "Product deleted successfully"}
