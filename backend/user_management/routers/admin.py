@@ -119,3 +119,35 @@ async def delete_product(product_id: int, db: Session = Depends(get_db), current
     db.delete(product)
     db.commit()
     return {"detail": "Product deleted successfully"}
+
+#Add order management functionality for admin
+class OrderUpdate(BaseModel):
+    status: str
+
+@router.get("/orders")
+async def get_all_orders(db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)):
+    orders = db.query(Order).all()
+    return orders
+
+@router.put("/orders/{order_id}")
+async def update_order(order_id: int, order_data: OrderUpdate, db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)):
+    order = db.query(Order).filter(Order.order_id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+
+    for key, value in order_data.dict(exclude_unset=True).items():
+        setattr(order, key, value)
+
+    db.commit()
+    db.refresh(order)
+    return order
+
+@router.delete("/orders/{order_id}")
+async def delete_order(order_id: int, db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)):
+    order = db.query(Order).filter(Order.order_id == order_id).first()
+    if not order:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
+
+    db.delete(order)
+    db.commit()
+    return {"detail": "Order deleted successfully"}
