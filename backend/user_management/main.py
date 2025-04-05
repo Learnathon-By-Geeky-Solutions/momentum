@@ -10,6 +10,7 @@ from typing import Annotated
 from user_management.models import User
 from user_management.utils import auth_utils, create_access_token, verify_token
 from user_management.database import get_db
+from user_management.minio.routers import upload
 import dotenv
 
 from user_management.routers import (
@@ -45,6 +46,7 @@ app.include_router(auth.router, prefix="", tags=["Auth"])
 app.include_router(profile.router, prefix="", tags=["Profile"])
 app.include_router(brand.router, prefix="", tags=["Brands"])
 app.include_router(product.router, prefix="", tags=["Products"])
+app.include_router(upload.router, prefix="", tags=["Upload"])
 app.include_router(order.router, prefix="", tags=["Orders"])
 app.include_router(paybill.router, prefix="", tags=["Paybills"])
 #app.include_router(agent.router, prefix="/agent", tags=["Agent"])
@@ -92,3 +94,5 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
+
+

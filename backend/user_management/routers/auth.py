@@ -23,6 +23,7 @@ router = APIRouter()
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/token")
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 app.include_router(auth.router)
