@@ -1,10 +1,13 @@
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from user_management.database import Base, get_db  
+from user_management.database import Base, get_db
+import dotenv
+import os
+dotenv.load_dotenv()
 
 # Set up the test database URL
-SQLALCHEMY_TEST_DATABASE_URL = "postgresql+psycopg2://postgres:1234@localhost/handicraft"
+SQLALCHEMY_TEST_DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Set up the engine and session for testing
 engine = create_engine(SQLALCHEMY_TEST_DATABASE_URL)
