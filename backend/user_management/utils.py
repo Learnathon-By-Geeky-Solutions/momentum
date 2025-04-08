@@ -2,39 +2,19 @@
 
 
 
-from fastapi import FastAPI, Depends, HTTPException,Header, APIRouter, BackgroundTasks, status
+from fastapi import FastAPI, Depends, HTTPException, status, Security
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
-from user_management.database import SessionLocal, engine
 from user_management.models import User
-from user_management.schemas import UserCreate, Token, LoginRequest, UserUpdate, OrderOut, OrderCreate, PayBillRequest, ForgotPasswordRequest, ResetPasswordRequest
-from datetime import timedelta
 import os
-import dotenv
-from pydantic import BaseModel
-import uvicorn
-from typing import Annotated, List, Optional
-from sqlalchemy.orm import Session
-from fastapi import Depends, FastAPI, HTTPException
 import jwt
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
-from pydantic import BaseModel
-from starlette.responses import JSONResponse
-from typing import Annotated
-from decimal import Decimal
-
-from fastapi import Security, HTTPException, status
 from google.oauth2 import id_token
 from google.auth.transport import requests
 from passlib.context import CryptContext
-from fastapi import HTTPException
-import os
 import requests as http_requests
 from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
-from fastapi.security import OAuth2PasswordBearer
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from user_management.database import get_db
 
@@ -200,15 +180,11 @@ def verify_token(token: str = Security(oauth2_scheme)):
         
         
 
-
-
-# Authenticate user from DB
 def authenticate_user(db: Session, username: str, password: str):
     user = db.query(User).filter(User.username == username).first()
     if not user or not auth_utils.verify_password(password, user.password):
         return False
     return user
-
 
 
 # Get current user from token
@@ -221,8 +197,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if not user:
         raise HTTPException(status_code=401, detail="Invalid token or user not found")
     return user
-
-
 
 
 # Initialize utility class
