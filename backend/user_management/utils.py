@@ -198,6 +198,20 @@ def verify_token(token: str = Security(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
         
+        
+
+
+
+# Authenticate user from DB
+def authenticate_user(db: Session, username: str, password: str):
+    user = db.query(User).filter(User.username == username).first()
+    if not user or not auth_utils.verify_password(password, user.password):
+        return False
+    return user
+
+
+
+# Get current user from token
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     payload = verify_token(token)
     user_email = payload.get("sub")
@@ -207,6 +221,8 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if not user:
         raise HTTPException(status_code=401, detail="Invalid token or user not found")
     return user
+
+
 
 
 # Initialize utility class
