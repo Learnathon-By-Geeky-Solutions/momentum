@@ -18,7 +18,7 @@ Follow these instructions to run the FastAPI project:
 
 2. **Create and activate a virtual environment:**
     ```bash
-    python -m venv venv
+    python3 -m venv venv #For Linux
     source .venv/bin/activate  # On Windows use `venv\Scripts\activate`
     ```
 
