@@ -125,13 +125,11 @@ class ProductUpdate(BaseModel):
     rating: Optional[float]  # Given by buyers, not the product creator
     approved: bool  # Fulfilled by admin
         
-        
+
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None
     address: Optional[str] = None
     phone: Optional[str] = None
-
-
 
 
 
