@@ -12,6 +12,4 @@ migrations
 
 backend/.__pycache__/
 .migrations/
-alembic.ini
-backend/main.py
 .__pycache__/
