@@ -1,5 +1,3 @@
-
-
 from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Optional, List
 from datetime import datetime
@@ -10,17 +8,19 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     email: Optional[str] = None
-    
-    
+
+
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+
 
 class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str
-    
+
 
 class UserCreate(BaseModel):
     username: Optional[str]
@@ -30,7 +30,7 @@ class UserCreate(BaseModel):
     address: Optional[str]
     phone: Optional[str]
     role: Optional[str] = "customer"
-    
+
     @field_validator("role")
     @classmethod
     def validate_role(cls, value):
@@ -51,8 +51,6 @@ class UserOut(BaseModel):
 
     class Config:
         from_attributes = True  # Pydantic v2 update
-        
-
 
 
 class LoginRequest(BaseModel):
@@ -60,13 +58,12 @@ class LoginRequest(BaseModel):
     password: str
 
 
-
-
 class BrandCreate(BaseModel):
-    #user_id: int  # Ensure the user exists before creating a brand
+    # user_id: int  # Ensure the user exists before creating a brand
     brand_name: str
     brand_description: Optional[str]
     logo: Optional[str]
+
 
 class BrandOut(BaseModel):
     brand_id: int
@@ -79,8 +76,9 @@ class BrandOut(BaseModel):
     class Config:
         from_attributes = True  # Pydantic v2 update
 
+
 class ProductCreate(BaseModel):
-    #brand_id: int  # Ensure the brand exists before creating a product
+    # brand_id: int  # Ensure the brand exists before creating a product
     product_name: str
     product_pic: List[str]  # Array of image storage links
     product_video: List[str]  # Array of video storage links
@@ -91,9 +89,10 @@ class ProductCreate(BaseModel):
     quantity_unit: Optional[str]
     price: float
 
+
 class ProductOut(BaseModel):
     product_id: int
-    #brand_id: int
+    # brand_id: int
     product_name: str
     product_pic: List[str]
     product_video: List[str]
@@ -108,7 +107,7 @@ class ProductOut(BaseModel):
 
     class Config:
         from_attributes = True  # Pydantic v2 update
-        
+
 
 class ProductUpdate(BaseModel):
     product_id: int
@@ -124,7 +123,7 @@ class ProductUpdate(BaseModel):
     price: float
     rating: Optional[float]  # Given by buyers, not the product creator
     approved: bool  # Fulfilled by admin
-        
+
 
 class UserUpdate(BaseModel):
     full_name: Optional[str] = None
@@ -132,33 +131,30 @@ class UserUpdate(BaseModel):
     phone: Optional[str] = None
 
 
+class OrderItemCreate(BaseModel):
+    product_id: int
+    size: Optional[str]
+    quantity: int
 
 
-class OrderItemCreate(BaseModel):  
-    product_id: int  
-    size: Optional[str]  
-    quantity: int  
-   
-  
-class BillCreate(BaseModel):  
-    amount: float  
-    method: str  
-    trx_id: str  
-    status: str  
- 
-  
-class OrderCreate(BaseModel):  
-    order_items: List[OrderItemCreate]  
-  
-class OrderOut(BaseModel):  
-    order_id: int  
-    user_id: int  
-    status: str  
-   
-  
-    class Config:  
-        from_attributes = True  
+class BillCreate(BaseModel):
+    amount: float
+    method: str
+    trx_id: str
+    status: str
 
+
+class OrderCreate(BaseModel):
+    order_items: List[OrderItemCreate]
+
+
+class OrderOut(BaseModel):
+    order_id: int
+    user_id: int
+    status: str
+
+    class Config:
+        from_attributes = True
 
 
 class BillOut(BaseModel):
@@ -173,9 +169,6 @@ class BillOut(BaseModel):
         orm_mode = True
 
 
-
-
-
 class OrderItemDetail(BaseModel):
     product_id: int
     brand_id: int
@@ -183,6 +176,7 @@ class OrderItemDetail(BaseModel):
     brand_name: str
     order_size: str
     order_quantity: int
+
 
 class OrderDetailOut(BaseModel):
     order_id: int
@@ -194,9 +188,7 @@ class OrderDetailOut(BaseModel):
 
     class Config:
         orm_mode = True
-        
-        
- 
+
 
 class PayBillRequest(BaseModel):
     order_id: int
@@ -208,8 +200,10 @@ class PayBillRequest(BaseModel):
 #     role: str
 #     content: str
 
+
 class ChatRequest(BaseModel):
-    messages: List[str] 
-    
+    messages: List[str]
+
+
 class ChatResponse(BaseModel):
     response: str

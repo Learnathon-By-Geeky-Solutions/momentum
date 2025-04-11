@@ -1,4 +1,4 @@
-from user_management.models import User
+from app.models import User
 def test_register(client, db_session):
     # Sample data to register a new user
     user_data = {

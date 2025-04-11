@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from user_management.models import Base 
+from app.models import Base 
 
 sys.path.append(str(Path(__file__).parent.parent))
 
