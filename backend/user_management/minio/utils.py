@@ -1,16 +1,15 @@
-
 from fastapi import UploadFile, HTTPException
 
 from fastapi import UploadFile
 from user_management.minio.config import MINIO_CLIENT, BUCKET_NAME
 from minio.error import S3Error
 from urllib.parse import urlparse
+from typing import List
 
+PRODUCT_PHOTO = "product photo"
+PRODUCT_VIDEO = "product video"
 
-
-                             
-
-VALID_TYPES = ["profile", "product photo", "product video"]
+VALID_TYPES = ["profile", PRODUCT_PHOTO, PRODUCT_VIDEO]
 ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"]
 ALLOWED_VIDEO_TYPES = ["video/mp4", "video/mpeg"]
 MAX_FILE_SIZE_MB = 5  # 5 MB
@@ -30,10 +29,10 @@ async def upload_to_minio(file: UploadFile, folder: str):
 
 
 def validate_file_type(content_type: str, upload_type: str) -> None:
-    if upload_type in ["profile", "product photo"]:
+    if upload_type in ["profile", PRODUCT_PHOTO]:
         if content_type not in ALLOWED_IMAGE_TYPES:
             raise HTTPException(status_code=400, detail=f"Invalid file type: {content_type}. Only JPEG and PNG images are allowed.")
-    elif upload_type == "product video":
+    elif upload_type == PRODUCT_VIDEO:
         if content_type not in ALLOWED_VIDEO_TYPES:
             raise HTTPException(status_code=400, detail=f"Invalid file type: {content_type}. Only MP4 and MPEG videos are allowed.")
 
@@ -78,9 +77,9 @@ def validate_files(files: List[UploadFile], file_type: str):
         file_size = len(contents)
         file.file.seek(0)
 
-        if file_type in ["profile", "product photo"] and content_type not in ALLOWED_IMAGE_TYPES:
+        if file_type in ["profile", PRODUCT_PHOTO] and content_type not in ALLOWED_IMAGE_TYPES:
             raise HTTPException(status_code=400, detail=f"Invalid image file type: {content_type}")
-        if file_type == "product video" and content_type not in ALLOWED_VIDEO_TYPES:
+        if file_type == PRODUCT_VIDEO and content_type not in ALLOWED_VIDEO_TYPES:
             raise HTTPException(status_code=400, detail=f"Invalid video file type: {content_type}")
         if file_size > MAX_FILE_SIZE_MB * 1024 * 1024:
             raise HTTPException(status_code=400, detail=f"File size exceeds {MAX_FILE_SIZE_MB}MB")
