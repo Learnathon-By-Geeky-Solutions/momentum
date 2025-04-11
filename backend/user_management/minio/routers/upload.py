@@ -1,20 +1,20 @@
-
-
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
 from user_management.database import get_db
 from user_management.models import Product
 from user_management.minio.utils import upload_to_minio
-from user_management.minio.schemas import ProductPhotoUploadResponse, ProductVideoUploadResponse
+from user_management.minio.schemas import (
+    ProductPhotoUploadResponse,
+    ProductVideoUploadResponse,
+)
 
 router = APIRouter()
 
+
 @router.post("/upload/photos/{product_id}", response_model=ProductPhotoUploadResponse)
 async def upload_photos(
-    product_id: int, 
-    files: List[UploadFile] = File(...), 
-    db: Session = Depends(get_db)
+    product_id: int, files: List[UploadFile] = File(...), db: Session = Depends(get_db)
 ):
     product = db.query(Product).filter(Product.product_id == product_id).first()
     if not product:
@@ -25,11 +25,10 @@ async def upload_photos(
     db.commit()
     return {"message": "Photos uploaded successfully", "urls": urls}
 
+
 @router.post("/upload/videos/{product_id}", response_model=ProductVideoUploadResponse)
 async def upload_videos(
-    product_id: int, 
-    files: List[UploadFile] = File(...), 
-    db: Session = Depends(get_db)
+    product_id: int, files: List[UploadFile] = File(...), db: Session = Depends(get_db)
 ):
     product = db.query(Product).filter(Product.product_id == product_id).first()
     if not product:

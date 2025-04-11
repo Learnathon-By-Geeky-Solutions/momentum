@@ -1,7 +1,3 @@
-
-
-
-
 from fastapi import FastAPI, Depends, HTTPException, status, Security
 from fastapi import (
     FastAPI,
@@ -192,8 +188,7 @@ def verify_token(token: str = Security(oauth2_scheme)):
             detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
-        
-        
+
 
 def authenticate_user(db: Session, username: str, password: str):
     user = db.query(User).filter(User.username == username).first()
@@ -203,7 +198,9 @@ def authenticate_user(db: Session, username: str, password: str):
 
 
 # Get current user from token
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+):
     payload = verify_token(token)
     user_email = payload.get("sub")
     if not user_email:
