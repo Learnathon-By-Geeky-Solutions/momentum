@@ -163,7 +163,10 @@ class BillOut(BaseModel):
         orm_mode = True
 
 
-
+class PayBillRequest(BaseModel):
+    order_id: int
+    method: str
+    trx_id: str = Field(..., min_length=5, max_length=50)
 
 
 class OrderItemDetail(BaseModel):
@@ -188,10 +191,7 @@ class OrderDetailOut(BaseModel):
         
  
 
-class PayBillRequest(BaseModel):
-    order_id: int
-    method: str
-    trx_id: str
+
 
 
 # class Message(BaseModel):
@@ -199,7 +199,7 @@ class PayBillRequest(BaseModel):
 #     content: str
 
 class ChatRequest(BaseModel):
-    messages: List[str] 
+    message: str = Field(..., min_length=1, max_length=1000) 
     
 class ChatResponse(BaseModel):
     response: str
