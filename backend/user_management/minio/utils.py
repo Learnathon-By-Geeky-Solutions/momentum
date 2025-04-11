@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 
 
-
+                             
 
 VALID_TYPES = ["profile", "product photo", "product video"]
 ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"]
@@ -65,3 +65,22 @@ def extract_minio_object_key(url: str) -> str:
     if len(parts) >= 2:
         return "/".join(parts[1:])  # Skip the bucket name
     return parts[-1]
+
+
+
+
+
+
+def validate_files(files: List[UploadFile], file_type: str):
+    for file in files:
+        content_type = file.content_type
+        contents = file.file.read()
+        file_size = len(contents)
+        file.file.seek(0)
+
+        if file_type in ["profile", "product photo"] and content_type not in ALLOWED_IMAGE_TYPES:
+            raise HTTPException(status_code=400, detail=f"Invalid image file type: {content_type}")
+        if file_type == "product video" and content_type not in ALLOWED_VIDEO_TYPES:
+            raise HTTPException(status_code=400, detail=f"Invalid video file type: {content_type}")
+        if file_size > MAX_FILE_SIZE_MB * 1024 * 1024:
+            raise HTTPException(status_code=400, detail=f"File size exceeds {MAX_FILE_SIZE_MB}MB")
