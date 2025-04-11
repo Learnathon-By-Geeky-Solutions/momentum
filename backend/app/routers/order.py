@@ -9,6 +9,7 @@ from app.database import get_db, SessionLocal
 from app.utils import get_current_user
 
 
+ORDER_NOT_FOUND = "Order not found"
 router = APIRouter()
 
 
@@ -178,7 +179,7 @@ async def get_bill_for_order(
     """
     order = db.query(models.Order).filter(models.Order.order_id == order_id).first()
     if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(status_code=404, detail=ORDER_NOT_FOUND)
     if order.user_id != current_user.user_id:
         raise HTTPException(
             status_code=403,
@@ -207,7 +208,7 @@ async def get_order_details(
         .first()
     )
     if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(status_code=404, detail=ORDER_NOT_FOUND)
 
     # Get the bill for this order
     bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
@@ -324,7 +325,7 @@ async def delete_order(
         .first()
     )
     if not order:
-        raise HTTPException(status_code=404, detail="Order not found")
+        raise HTTPException(status_code=404, detail=ORDER_NOT_FOUND)
 
     # Retrieve the associated bill for this order
     bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()

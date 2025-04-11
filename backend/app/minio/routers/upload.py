@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Depends
-from typing import List, Tuple, Optional
+from typing import List
 from app.minio.utils import (
     upload_to_minio,
     VALID_TYPES,
@@ -10,21 +10,16 @@ from app.minio.utils import (
     validate_file_size,
     PRODUCT_PHOTO,
     PRODUCT_VIDEO,
+    get_folder_for_type,
+    find_product_and_url,
 )
-from app.minio.schemas import ProductPhotoUploadResponse, SimpleResponse
+from app.minio.schemas import ProductPhotoUploadResponse
 from app.utils import get_current_user
 from app.models import User, Product
 from app.database import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy import any_
 
-
-def get_folder_for_type(upload_type: str) -> str:
-    if upload_type == "profile":
-        return "profile"
-    if upload_type == PRODUCT_PHOTO:
-        return "photos"
-    return "videos"
 
 
 router = APIRouter()
@@ -88,16 +83,6 @@ async def update_uploaded_files(
 
     return {"message": f"{upload_type.capitalize()} updated successfully", "urls": urls}
 
-
-def find_product_and_url(
-    products: List[Product], product_field: str, file_name: str
-) -> Tuple[Optional[Product], Optional[str]]:
-    for product in products:
-        file_urls = getattr(product, product_field, [])
-        for url in file_urls:
-            if file_name in url:
-                return product, url
-    return None, None
 
 
 @router.delete(

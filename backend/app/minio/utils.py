@@ -1,5 +1,6 @@
 from fastapi import UploadFile, HTTPException
-
+from typing import List, Tuple, Optional
+from app.models import Product
 from fastapi import UploadFile
 from app.minio.config import MINIO_CLIENT, BUCKET_NAME
 from minio.error import S3Error
@@ -94,3 +95,25 @@ def validate_files(files: List[UploadFile], file_type: str):
             raise HTTPException(
                 status_code=400, detail=f"File size exceeds {MAX_FILE_SIZE_MB}MB"
             )
+
+
+
+
+def get_folder_for_type(upload_type: str) -> str:
+    if upload_type == "profile":
+        return "profile"
+    if upload_type == PRODUCT_PHOTO:
+        return "photos"
+    return "videos"
+
+
+
+def find_product_and_url(
+    products: List[Product], product_field: str, file_name: str
+) -> Tuple[Optional[Product], Optional[str]]:
+    for product in products:
+        file_urls = getattr(product, product_field, [])
+        for url in file_urls:
+            if file_name in url:
+                return product, url
+    return None, None

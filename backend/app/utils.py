@@ -3,14 +3,12 @@ from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.models import User
 import os
-import jwt
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 from google.oauth2 import id_token
 from google.auth.transport import requests
-from passlib.context import CryptContext
 import requests as http_requests
 from datetime import datetime, timedelta, timezone
-from jose import JWTError, jwt
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from app.database import get_db
 
@@ -103,27 +101,19 @@ class AuthUtils:
         return response.json()
 
 
-def create_reset_token(email: str):
-    expire = datetime.utcnow() + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
-    to_encode = {"sub": email, "exp": expire}
+def create_token(data: dict, expires_minutes: int):
+    """Generic function to create JWT tokens."""
+    expire = datetime.utcnow() + timedelta(minutes=expires_minutes)
+    to_encode = {**data, "exp": expire}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def verify_reset_token(token: str):
-    try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
-            raise JWTError("No email found in token")
-        return email
-    except JWTError:
-        return None
+def create_reset_token(email: str):
+    return create_token({"sub": email}, RESET_TOKEN_EXPIRE_MINUTES)
 
 
 def create_email_verification_token(email: str):
-    expire = datetime.utcnow() + timedelta(hours=1)
-    to_encode = {"sub": email, "exp": expire}
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return create_token({"sub": email}, 60)  # 1 hour expiration
 
 
 async def send_verification_email(email: str, token: str):
@@ -158,12 +148,10 @@ def generate_verification_token(email: str):
 
 def create_access_token(data: dict, expires_delta: timedelta = None):
     """Create a JWT access token."""
-    to_encode = data.copy()
     expire = datetime.utcnow() + (
         expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
-
-    to_encode.update({"exp": expire})
+    to_encode = {**data, "exp": expire}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
