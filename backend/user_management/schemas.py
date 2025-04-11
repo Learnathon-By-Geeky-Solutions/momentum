@@ -21,7 +21,8 @@ class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str = Field(..., min_length=8, max_length=50, description="Password must be between 8-50 characters.")
     
-    @validator("new_password")
+    @field_validator("new_password")
+    @classmethod
     def validate_password(cls, value):
         if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$', value):
             raise ValueError("Password must contain at least one letter, one number, and one special character.")
@@ -33,7 +34,7 @@ class UserCreate(BaseModel):
     password: str = Field(..., min_length=8, max_length=50)
     full_name: Optional[str] = Field(None, max_length=100)
     address: Optional[str] = Field(None, max_length=255)
-    phone: Optional[str] = Field(None, regex=r'^(?:\+88|01)?(?:\d{9,10})$', description="Must be a valid BD phone number.")
+    phone: Optional[str] = Field(None, pattern=r'^(?:\+88|01)?(?:\d{9,10})$', description="Must be a valid BD phone number.")
     role: str = Field(..., description="User role must be specified.")
     
     @field_validator("role")
@@ -70,7 +71,7 @@ class BrandCreate(BaseModel):
     #user_id: int  # Ensure the user exists before creating a brand
     brand_name: str = Field(..., min_length=3, max_length=100)
     brand_description: Optional[str] = Field(None, max_length=255)
-    logo: Optional[str] = Field(None, regex=r'^(http|https):\/\/.+\.(jpg|jpeg|png)$', description="Must be a valid image URL.")
+    logo: Optional[str] = Field(None, pattern=r'^(http|https):\/\/.+\.(jpg|jpeg|png)$', description="Must be a valid image URL.")
 
 class BrandOut(BaseModel):
     brand_id: int
@@ -121,7 +122,7 @@ class ProductUpdate(ProductCreate):
 class UserUpdate(BaseModel):
     full_name: Optional[str] = Field(None, max_length=100)
     address: Optional[str] = Field(None, max_length=255)
-    phone: Optional[str] = Field(None, regex=r'^(?:\+88|01)?(?:\d{9,10})$')
+    phone: Optional[str] = Field(None, pattern=r'^(?:\+88|01)?(?:\d{9,10})$')
 
 
 class OrderItemCreate(BaseModel):  
