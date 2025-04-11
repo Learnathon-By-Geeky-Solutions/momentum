@@ -60,7 +60,9 @@ INVALID_TOKEN_PAYLOAD = "Invalid token payload"
 INVALID_RESET_TOKEN = "Invalid or expired token"
 USER_ALREADY_EXISTS = "User with this email or username already exists."
 PASSWORD_RESET_EMAIL_SENT = "If the email exists, a password reset link has been sent."
-PASSWORD_RESET_SUCCESS = "Password reset successful. You can now log in with your new password."
+PASSWORD_RESET_SUCCESS = (
+    "Password reset successful. You can now log in with your new password."
+)
 VERIFICATION_EMAIL_SENT = "Verification email sent. Please check your inbox."
 
 
@@ -125,9 +127,7 @@ async def reset_password(
     user.password = hashed_password
     db.commit()
 
-    return {
-        "message": PASSWORD_RESET_SUCCESS
-    }
+    return {"message": PASSWORD_RESET_SUCCESS}
 
 
 @router.post("/register", response_model=Token)
@@ -141,9 +141,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     )
 
     if existing_user:
-        raise HTTPException(
-            status_code=400, detail=USER_ALREADY_EXISTS
-        )
+        raise HTTPException(status_code=400, detail=USER_ALREADY_EXISTS)
 
     hashed_password = auth_utils.hash_password(user.password)
 

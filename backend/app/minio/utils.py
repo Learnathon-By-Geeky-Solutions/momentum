@@ -97,15 +97,12 @@ def validate_files(files: List[UploadFile], file_type: str):
             )
 
 
-
-
 def get_folder_for_type(upload_type: str) -> str:
     if upload_type == "profile":
         return "profile"
     if upload_type == PRODUCT_PHOTO:
         return "photos"
     return "videos"
-
 
 
 def find_product_and_url(

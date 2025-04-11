@@ -21,7 +21,6 @@ from sqlalchemy.orm import Session
 from sqlalchemy import any_
 
 
-
 router = APIRouter()
 
 
@@ -82,7 +81,6 @@ async def update_uploaded_files(
     urls = [await upload_to_minio(file, folder) for file in files]
 
     return {"message": f"{upload_type.capitalize()} updated successfully", "urls": urls}
-
 
 
 @router.delete(
