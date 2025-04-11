@@ -28,13 +28,13 @@ class ResetPasswordRequest(BaseModel):
         return value
 
 class UserCreate(BaseModel):
-    username: Optional[str]
-    email: str
-    password: str
-    full_name: Optional[str]
-    address: Optional[str]
-    phone: Optional[str]
-    role: Optional[str] = "customer"
+    username: Optional[str] = Field(None, min_length=3, max_length=50)
+    email: EmailStr  # Ensures valid email format
+    password: str = Field(..., min_length=8, max_length=50)
+    full_name: Optional[str] = Field(None, max_length=100)
+    address: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, regex=r'^(?:\+88|01)?(?:\d{9,10})$', description="Must be a valid BD phone number.")
+    role: str = Field(..., description="User role must be specified.")
     
     @field_validator("role")
     @classmethod
@@ -61,17 +61,16 @@ class UserOut(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    email: str
-    password: str
-
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=50)
 
 
 
 class BrandCreate(BaseModel):
     #user_id: int  # Ensure the user exists before creating a brand
-    brand_name: str
-    brand_description: Optional[str]
-    logo: Optional[str]
+    brand_name: str = Field(..., min_length=3, max_length=100)
+    brand_description: Optional[str] = Field(None, max_length=255)
+    logo: Optional[str] = Field(None, regex=r'^(http|https):\/\/.+\.(jpg|jpeg|png)$', description="Must be a valid image URL.")
 
 class BrandOut(BaseModel):
     brand_id: int
@@ -86,15 +85,15 @@ class BrandOut(BaseModel):
 
 class ProductCreate(BaseModel):
     #brand_id: int  # Ensure the brand exists before creating a product
-    product_name: str
-    product_pic: List[str]  # Array of image storage links
-    product_video: List[str]  # Array of video storage links
-    category: str
-    description: Optional[str]
+    product_name: str = Field(..., min_length=3, max_length=100)
+    product_pic: List[str]
+    product_video: List[str]
+    category: str = Field(..., min_length=3, max_length=50)
+    description: Optional[str] = Field(None, max_length=500)
     order_size: Optional[str]
-    order_quantity: Optional[int]
+    order_quantity: Optional[int] = Field(None, ge=1)
     quantity_unit: Optional[str]
-    price: float
+    price: float = Field(..., gt=0)
 
 class ProductOut(BaseModel):
     product_id: int
@@ -115,48 +114,26 @@ class ProductOut(BaseModel):
         from_attributes = True  # Pydantic v2 update
         
 
-class ProductUpdate(BaseModel):
+class ProductUpdate(ProductCreate):
     product_id: int
-    brand_id: int
-    product_name: str
-    product_pic: List[str]
-    product_video: List[str]
-    category: str
-    description: Optional[str]
-    order_size: Optional[str]
-    order_quantity: Optional[int]
-    quantity_unit: Optional[str]
-    price: float
-    rating: Optional[float]  # Given by buyers, not the product creator
-    approved: bool  # Fulfilled by admin
         
         
 class UserUpdate(BaseModel):
-    full_name: Optional[str] = None
-    address: Optional[str] = None
-    phone: Optional[str] = None
-
-
-
-
+    full_name: Optional[str] = Field(None, max_length=100)
+    address: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, regex=r'^(?:\+88|01)?(?:\d{9,10})$')
 
 
 class OrderItemCreate(BaseModel):  
     product_id: int  
     size: Optional[str]  
-    quantity: int  
+    quantity: int = Field(..., ge=1)  
    
   
-class BillCreate(BaseModel):  
-    amount: float  
-    method: str  
-    trx_id: str  
-    status: str  
- 
-  
 class OrderCreate(BaseModel):  
-    order_items: List[OrderItemCreate]  
-  
+    order_items: List[OrderItemCreate]
+
+
 class OrderOut(BaseModel):  
     order_id: int  
     user_id: int  
@@ -164,8 +141,14 @@ class OrderOut(BaseModel):
    
   
     class Config:  
-        from_attributes = True  
+        from_attributes = True
 
+
+class BillCreate(BaseModel):  
+    amount: float = Field(..., gt=0)
+    method: str = Field(..., min_length=3)
+    trx_id: str = Field(..., min_length=5, max_length=50)
+    status: str  
 
 
 class BillOut(BaseModel):
