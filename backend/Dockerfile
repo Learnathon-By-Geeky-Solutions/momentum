@@ -1,45 +1,48 @@
-FROM python:3.11-slim
+FROM python:3.11-slim AS builder
 
-WORKDIR /app/
-
-# Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PIP_NO_CACHE_DIR=1
+    PIP_NO_CACHE_DIR=1 \
+    POETRY_VIRTUALENVS_CREATE=false
 
-# Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     libpq-dev \
     curl \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    # Create a non-root user
-    && groupadd -r appuser && useradd -r -g appuser -s /bin/bash -d /home/appuser appuser \
-    && mkdir -p /home/appuser \
-    && chown -R appuser:appuser /home/appuser
+    && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements file
+WORKDIR /build/
 COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --upgrade pip 
+FROM python:3.11-slim
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Copy only what's needed for the application
-COPY user_management/ user_management/
-COPY alembic/ alembic/
-COPY alembic.ini .
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    curl \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd -r appuser && useradd -r -g appuser -s /bin/bash -d /home/appuser appuser
 
-# Change ownership of the application directory to the non-root user
-RUN chown -R appuser:appuser /app
+COPY --from=builder /usr/local/lib/python3.11/site-packages/ /usr/local/lib/python3.11/site-packages/
+COPY --from=builder /usr/local/bin/ /usr/local/bin/
 
-# Switch to non-root user
+WORKDIR /app/
+
+COPY --chown=appuser:appuser user_management/ user_management/
+COPY --chown=appuser:appuser alembic/ alembic/
+COPY --chown=appuser:appuser alembic.ini .
+
 USER appuser
 
-# Expose the port
 EXPOSE 8000
 
-# Command to run the application
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
 CMD ["uvicorn", "user_management.main:app", "--host", "0.0.0.0", "--port", "8000"]
