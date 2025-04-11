@@ -24,6 +24,7 @@ from user_management.routers import (
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import dotenv 
+import sentry_sdk
 
 # Fix CORS error
 app = FastAPI()
