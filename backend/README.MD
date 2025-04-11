@@ -50,14 +50,14 @@ Follow these instructions to run the FastAPI project:
 
 1. **Run the tests:**
     ```bash
-    pytest
+    pytest -v 
     ```
 
 ## Additional Commands
 
 - **To deactivate the virtual environment:**
   ```bash
-  deactivate
+   pytest -v
   ```
 
 - **To install new dependencies:**

@@ -1,9 +1,28 @@
-import { Heart, Search, ShoppingCart, User } from "lucide-react"
+"use client"
+import {
+  Heart,
+  Home,
+  LogOut,
+  Plus,
+  Search,
+  ShoppingCart,
+  User,
+} from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useAuth } from "@/provider/useAuth"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export function MainHeader() {
+  const { user, isLoggedIn, logout } = useAuth()
   return (
     <div className="bg-primary text-white p-4">
       <div className="container mx-auto flex items-center justify-between gap-4">
@@ -36,9 +55,67 @@ export function MainHeader() {
               0
             </span>
           </Link>
-          <Link href="/account" className="hover:text-gray-200">
-            <User className="h-6 w-6" />
-          </Link>
+          {isLoggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <User className="h-6 w-6" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel className="p-1 font-normal">
+                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                      <span className="truncate font-medium">
+                        {user?.full_name}
+                      </span>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {user?.email}
+                      </span>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {user?.role.toUpperCase()}
+                      </span>
+                    </div>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Link
+                    href="/dashboard"
+                    className="w-full text-left flex items-center gap-2"
+                  >
+                    <Home className="h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                {user?.role === "customer" && (
+                  <DropdownMenuItem>
+                    <Link
+                      href="/become-artisan"
+                      className="w-full text-left flex items-center gap-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      Become an artisan
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <Button
+                    onClick={logout}
+                    className="w-full text-left"
+                    variant="outline"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    Logout
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Link href="/account" className="hover:text-gray-200">
+              <User className="h-6 w-6" />
+            </Link>
+          )}
         </div>
       </div>
     </div>
