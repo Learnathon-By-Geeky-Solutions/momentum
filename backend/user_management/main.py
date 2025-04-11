@@ -22,8 +22,27 @@ from user_management.routers import (
     paybill,
 )  # Import routers
 
-import sentry_sdk
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import dotenv
+import sentry_sdk
+
+# Fix CORS error
+app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "https://fastapi-user-management.herokuapp.com",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 sentry_sdk.init(
@@ -49,12 +68,8 @@ app.include_router(product.router, prefix="", tags=["Products"])
 app.include_router(upload.router, prefix="", tags=["Upload"])
 app.include_router(order.router, prefix="", tags=["Orders"])
 app.include_router(paybill.router, prefix="", tags=["Paybills"])
-#app.include_router(agent.router, prefix="/agent", tags=["Agent"])
-
-
+# app.include_router(agent.router, prefix="/agent", tags=["Agent"])
 
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
-
-

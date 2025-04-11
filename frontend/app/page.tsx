@@ -8,7 +8,6 @@ import Hero from "@/components/brand/landing-page/hero"
 import { HowItWorks } from "@/components/brand/landing-page/how-it-works"
 import { Newsletter } from "@/components/brand/landing-page/newsletter"
 import { PlatformFeatures } from "@/components/brand/landing-page/platform-features"
-import { Testimonials } from "@/components/brand/landing-page/testimonial"
 import { TrustAndSecurity } from "@/components/brand/landing-page/trust-and-security"
 import { Navigation } from "@/components/brand/navbar/navigation"
 
@@ -21,7 +20,7 @@ export default function Home() {
       <HowItWorks />
       <Benefits />
       <FeaturedArtisans />
-      <Testimonials />
+      {/* <Testimonials /> */}
       <CategoriesShowcase />
       <PlatformFeatures />
       <TrustAndSecurity />

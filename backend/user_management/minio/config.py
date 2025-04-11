@@ -7,9 +7,9 @@ load_dotenv()
 
 MINIO_CLIENT = Minio(
     endpoint="localhost:9000",  # MinIO URL
-    access_key=os.getenv("MINIO_ACCESS_KEY"), 
+    access_key=os.getenv("MINIO_ACCESS_KEY"),
     secret_key=os.getenv("MINIO_SECRET_KEY"),
-    secure=False  # Set to True if using HTTPS
+    secure=False,  # Set to True if using HTTPS
 )
 
 BUCKET_NAME = "media"

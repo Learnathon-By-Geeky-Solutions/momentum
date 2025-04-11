@@ -1,4 +1,4 @@
-name: black
+name: Black Code Formatter
 
 on:
   push:
@@ -9,21 +9,28 @@ on:
       - '*'
   
 jobs:
-  build:
+  black:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Install black
         run: pip install black
       - name: Run black
-        run: black --check --diff --color backend/user_management
         id: black
+        run: |
+          black --check backend/user_management || echo "::set-output name=is_formatted::true"
       - name: Create Pull Request
-        if: steps.black.outputs.is_formatted == 'true'
-        uses: peter-evans/create-pull-request@v3
+        if: ${{ failure() && steps.black.outputs.is_formatted == 'true' }}
+        uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Apply black formatting"
           title: "Format code with black"
           body: "This pull request updates the code to conform to the black formatting standard."
           branch: "black-formatted"
-          draft: false
+          base: ${{ github.ref }}
+          delete-branch: true

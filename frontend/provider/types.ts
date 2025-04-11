@@ -24,5 +24,5 @@ export interface AuthContextType {
   isInitializing: boolean
   logout: () => void
   hasRole: (role: string) => boolean
-  login: (token: string, user: User) => void
+  login: (token: string, data: User) => void
 }

@@ -12,13 +12,14 @@ import { Checkbox } from "@/components/ui/checkbox"
 import api from "@/lib/axios"
 import { useAuth } from "@/provider/useAuth"
 import { useRouter } from "next/navigation"
+import { AxiosError } from "axios"
 
 interface LoginFormProps {
   onToggleForm: () => void
 }
 
 export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
-  const { login } = useAuth()
+  const { loginError, login } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
@@ -37,8 +38,10 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
 
       router.push("/dashboard")
     },
-    onError: (error) => {
-      setError(error.message || "Login failed")
+    onError: (error: AxiosError) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      setError(error?.response?.data?.detail || "Login failed")
     },
   })
 
@@ -80,15 +83,6 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
           </svg>
           Log in with Google
         </Button>
-        <Button variant="outline" className="gap-2">
-          <svg className="h-5 w-5" viewBox="0 0 24 24">
-            <path
-              d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"
-              fill="currentColor"
-            />
-          </svg>
-          Log in with Apple
-        </Button>
       </div>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -100,6 +94,8 @@ export function LoginForm({ onToggleForm }: Readonly<LoginFormProps>) {
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && <div className="text-sm text-red-500">{error}</div>}
+
+        {loginError && <div className="text-sm text-red-500">{loginError}</div>}
         <div className="space-y-2">
           <Label htmlFor="email">Email address</Label>
           <Input

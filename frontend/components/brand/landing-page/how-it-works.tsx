@@ -107,7 +107,7 @@ export function HowItWorks() {
               {sellerSteps.map((step, index) => (
                 <div key={step.id} className="flex mb-8 relative">
                   <div className="flex-none">
-                    <div className="bg-background w-12 h-12 rounded-full flex items-center justify-center z-10 relative border-2 border-secondary">
+                    <div className="bg-primary w-12 h-12 rounded-full flex items-center justify-center z-10 relative border-2 border-secondary">
                       <step.icon className="h-6 w-6 text-secondary" />
                     </div>
                     {index !== sellerSteps.length - 1 && (
