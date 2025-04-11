@@ -1,4 +1,3 @@
-
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from user_management.database import get_db
@@ -58,19 +57,21 @@ async def get_my_brand(db: Session = Depends(get_db), current_user: models.User 
     return brand
 
 
-
-@router.put("/brands/me", response_model=schemas.BrandOut)
-async def update_brand(brand: schemas.BrandCreate, db: Session = Depends(get_db), current_user: models.User = Depends(get_current_user)):
-    
-
+@router.patch("/brands/me", response_model=schemas.BrandOut)
+async def update_brand(
+    brand: schemas.BrandCreate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
     db_brand = db.query(models.Brand).filter(models.Brand.user_id == current_user.user_id).first()
     
     if not db_brand:
         raise HTTPException(status_code=404, detail="Brand not found")
 
-    db_brand.brand_name = brand.brand_name
-    db_brand.brand_description = brand.brand_description
-    db_brand.logo = brand.logo
+    update_data = brand.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(db_brand, key, value)
 
     db.commit()
     db.refresh(db_brand)

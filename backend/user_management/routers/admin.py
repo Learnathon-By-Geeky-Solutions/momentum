@@ -67,7 +67,7 @@ async def update_user(user_id: int, user_data: UserUpdate, db: Session = Depends
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
 
-    for key, value in user_data.dict(exclude_unset=True).items():
+    for key, value in user_data.model_dump(exclude_unset=True).items():
         setattr(user, key, value)
 
     db.commit()
@@ -103,7 +103,7 @@ async def update_product(product_id: int, product_data: ProductUpdate, db: Sessi
     if not product:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Product not found")
 
-    for key, value in product_data.dict(exclude_unset=True).items():
+    for key, value in product_data.model_dump(exclude_unset=True).items():
         setattr(product, key, value)
 
     db.commit()
@@ -135,7 +135,7 @@ async def update_order(order_id: int, order_data: OrderUpdate, db: Session = Dep
     if not order:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Order not found")
 
-    for key, value in order_data.dict(exclude_unset=True).items():
+    for key, value in order_data.model_dump(exclude_unset=True).items():
         setattr(order, key, value)
 
     db.commit()

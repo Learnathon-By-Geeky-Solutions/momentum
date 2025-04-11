@@ -10,3 +10,7 @@ class ProductPhotoUploadResponse(BaseModel):
 class ProductVideoUploadResponse(BaseModel):
     message: str
     urls: List[str]
+
+
+class SimpleResponse(BaseModel):
+    message: str
