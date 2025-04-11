@@ -63,8 +63,7 @@ services:
       db:
         condition: service_healthy
     restart: on-failure
-    profiles: ["dev"]
-
+    
 volumes:
   postgres_data:
   pgadmin_data:
