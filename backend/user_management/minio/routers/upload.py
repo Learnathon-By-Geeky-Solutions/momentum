@@ -1,16 +1,12 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form, Depends
 from typing import List, Tuple, Optional
-from user_management.minio.utils import upload_to_minio
+from user_management.minio.utils import upload_to_minio, VALID_TYPES, delete_from_minio, extract_minio_object_key, validate_files, validate_file_type, validate_file_size, PRODUCT_PHOTO, PRODUCT_VIDEO
 from user_management.minio.schemas import ProductPhotoUploadResponse, SimpleResponse
-from user_management.utils import get_current_user  # Updated auth dependency
+from user_management.utils import get_current_user
 from user_management.models import User, Product
-from user_management.minio.utils import validate_file_type, validate_file_size, VALID_TYPES, delete_from_minio, extract_minio_object_key, validate_files
 from user_management.database import get_db
 from sqlalchemy.orm import Session
 from sqlalchemy import any_
-
-PRODUCT_VIDEO = "product video"
-PRODUCT_PHOTO = "product photo"
 
 def get_folder_for_type(upload_type: str) -> str:
     if upload_type == "profile":
