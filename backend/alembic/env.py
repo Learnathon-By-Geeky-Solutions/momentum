@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from user_management.models import Base 
+from app.models import Base
 
 sys.path.append(str(Path(__file__).parent.parent))
 
@@ -13,14 +13,13 @@ from alembic import context
 from dotenv import load_dotenv
 
 
-
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
-config = context.config 
+config = context.config
 
 
 config.set_main_option("sqlalchemy.url", DATABASE_URL)
@@ -34,7 +33,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = Base.metadata # type: ignore
+target_metadata = Base.metadata  # type: ignore
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -80,9 +79,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

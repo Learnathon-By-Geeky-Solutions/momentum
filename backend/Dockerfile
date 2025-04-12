@@ -26,7 +26,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy only what's needed for the application
-COPY user_management/ user_management/
+COPY app/ app/
 COPY alembic/ alembic/
 COPY alembic.ini .
 
@@ -40,4 +40,4 @@ USER appuser
 EXPOSE 8000
 
 # Command to run the application
-CMD ["uvicorn", "user_management.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
