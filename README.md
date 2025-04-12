@@ -1,7 +1,29 @@
-# 🧶 Handicraft – *From Rural Hands to Global Hearts*
+# 🧶 Handicraft
+
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/postgresql-blue?style=for-the-badge&logo=postgresql&logoColor=blue&labelColor=black)](https://www.postgresql.org/)
+[![ShadCn](https://img.shields.io/badge/Shadcn%2FUi%20-%20black?style=for-the-badge&logo=shadcnui)](https://ui.shadcn.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Next.Js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=%23000000)](https://nextjs.org/docs)
+[![Github Action](https://img.shields.io/badge/Github%20Actions%20-%20black?style=for-the-badge&logo=githubactions&logoColor=blue&labelColor=white&color=black)](https://github.com/features/actions)
+[![Typescript](https://img.shields.io/badge/Typescript%20-%20black?style=for-the-badge&logo=Typescript)]()
+
 
 <p align="center">
   <img src="images/banner.jpg" alt="Handicraft Banner" />
+</p>
+
+<h2 align="center">🌾 From Rural Hands to Global Hearts 🌍</h2>
+
+<p align="center">
+  <b>Handicraft</b> is a purpose-driven e-commerce platform that connects rural artisans directly with global customers — empowering local creators and delivering authentic, handcrafted goods with transparency and trust.
+</p>
+
+# 🔍 What is Handicraft?
+
+<p align="center">
+  <img src="images/logo.jpg" alt="Handicraft Logo" width="20%" />
 </p>
 
 **Handicraft** is a purpose-driven e-commerce platform that bridges the gap between **rural artisans** and **global customers**.  
