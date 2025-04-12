@@ -54,8 +54,43 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 
 - [![Static Badge](https://img.shields.io/badge/MD.%20Arif%20Istiake%20Sunny%20-%20Mentor%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black)](https://github.com/Sunny1509006)
 
-## Project Description
-Add your project description here.
+
+## 📖 Table of Contents
+
+ - [**Features**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Tech Stack**](https://github.com/matiassingers/awesome-readme)
+ - [**Project Structure**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+ - [**Getting Started**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+ - [**API Documentation**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+ - [**Environment Variables**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Running Tests**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Deployment with Docker**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Contributing**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Licence**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+
+
+## ✨ Features
+
+### 🧑‍🎨 Artisan Features
+
+- ***Post Creation:*** Ability to create and manage product listings.
+
+- ***Brand Creation:*** Create and manage their own brand profile.
+
+- ***Profile Creation:*** Set up and personalize an artisan profile.
+
+- ***Price Comparison:*** View prices of similar products to stay competitive in the market.
+
+### 👨‍💻 Customer Features
+- ***Profile Creation:*** Create and manage their customer profile.
+- ***Product/Posts Viewing:*** Browse products or artisan posts.
+- ***Order and Purchase:*** Place orders and make purchases directly through the platform.
+
+### 🛠️ Admin Features
+- ***Monitor Platform Activities:*** Track and oversee all activities of customers and artisans.
+- ***Vulnerability Prevention:*** Ensure the platform's security and smooth functioning by identifying and fixing potential issues.
+- ***Content Moderation:*** Review and approve posts from artisans and customers to ensure quality and compliance with platform standards.
+
 
 ## Getting Started
 1. Clone the repository
