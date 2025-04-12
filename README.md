@@ -134,6 +134,73 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 
 
 ## Getting Started
+**Prerequisites**
+- Python 3.9+
+- Node.js 14+
+- PostgreSQL
+- Docker (optional)
+
+**Backend Setup**
+```bash
+  cd backend
+  python -m venv venv
+  source venv/bin/activate
+  pip install -r requirements.txt
+  uvicorn app.main:app --reload
+```
+**Frontend Setup**
+```bash
+  cd frontend
+  npm install
+  npm start
+```
+
+
+## 🔐 Environment Variables
+
+Create a .env file in both backend/ and frontend/ directories with the following variables:
+
+**Backend (.env)**
+```env
+  DATABASE_URL=postgresql://user:password@localhost:5432/momentum_db
+  SECRET_KEY=your_secret_key
+  ALGORITHM=HS256
+  ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+**Frontend (.env)**
+```env
+  REACT_APP_API_URL=http://localhost:8000
+```
+
+
+## 🧪 Running Tests
+
+To run tests, run the following command
+
+**Backend Tests**
+```bash
+  cd backend
+  pytest
+```
+
+**Frontend Tests**
+```bash
+  cd frontend
+  npm test
+```
+
+
+## 📦 Deployment with Docker
+
+To deploy the application using Docker:
+
+```bash
+  docker-compose up --build
+
+```
+
+
+## Getting Started
 1. Clone the repository
 2. Install dependencies
 3. Start development
