@@ -200,18 +200,16 @@ To deploy the application using Docker:
 ```
 
 
-## Getting Started
-1. Clone the repository
-2. Install dependencies
-3. Start development
+## 🤝 Contributing
 
-## Development Guidelines
-1. Create feature branches
-2. Make small, focused commits
-3. Write descriptive commit messages
-4. Create pull requests for review
+- Fork the repository.
+- Create a new branch: git checkout -b feature/your-feature-name.
+- Commit your changes: git commit -m 'Add your message'.
+- Push to the branch: git push origin feature/your-feature-name.
+- Open a pull request.
 
-## Resources
-- [Project Documentation](docs/)
-- [Development Setup](docs/setup.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
+
+
+## 📄 License
+
+This project is licensed under the **MIT License** – see the [LICENSE](./LICENSE) file for details.
