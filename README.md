@@ -92,6 +92,47 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 - ***Content Moderation:*** Review and approve posts from artisans and customers to ensure quality and compliance with platform standards.
 
 
+## 🛠️ Tech Stack
+
+### Frontend 
+- ***ReactJS:***  A JavaScript library for building fast, dynamic user interfaces with reusable components.
+- ***NextJs:*** A React framework for server-side rendering and static site generation, optimizing performance and SEO.
+- ***Typescript:***  A superset of JavaScript that adds static typing, improving code quality and error prevention.
+- ***TailwindCSS:*** A utility-first CSS framework for rapid UI development with customizable design systems.
+- ***ShadcnUi:*** A UI component library focused on accessibility and design, providing ready-to-use components.
+- ***Tanstack Query:*** A data-fetching library that simplifies managing and syncing server data in React apps.
+- ***Axios:*** A promise-based HTTP client for making API requests, handling responses, and managing errors.
+
+### Backend
+- ***FastAPI:*** A modern, fast web framework for building APIs with Python, based on standard Python type hints and asynchronous programming.
+- ***SQLAlchemy:*** A powerful SQL toolkit and Object-Relational Mapping (ORM) library for Python, enabling easy database interaction and management.
+- ***PostgreSQL:*** An open-source, highly extensible relational database system, known for its reliability, data integrity, and support for complex queries.
+
+### Authentication 
+- ***JWT Tokens:*** JSON Web Tokens (JWT) are a compact, URL-safe way to represent claims between two parties. Used for secure user authentication and data exchange, JWTs are commonly used in API authentication systems.
+
+### DevOps
+- ***Docker:*** A platform that automates the deployment of applications inside lightweight, portable containers, ensuring consistency across environments.
+- ***GitHub Actions:*** A CI/CD tool integrated with GitHub for automating workflows like testing, building, and deploying code directly from your repository.
+
+## 📁 Project Structure
+
+```bash
+  momentum/
+  ├── backend/               # FastAPI application
+  │   ├── app/               # Main application code
+  │   ├── tests/             # Backend tests
+  │   └── requirements.txt   # Python dependencies
+  ├── frontend/              # React application
+  │   ├── src/               # Frontend source code
+  │   └── package.json       # Frontend dependencies and scripts
+  ├── docs/                  # Documentation and diagrams
+  ├── daily-activity/        # Daily progress logs
+  ├── .github/workflows/     # GitHub Actions for CI/CD
+  └── README.md              # Project documentation
+```
+
+
 ## Getting Started
 1. Clone the repository
 2. Install dependencies
