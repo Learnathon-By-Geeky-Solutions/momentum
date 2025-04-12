@@ -1,5 +1,9 @@
 # 🧶 Handicraft – *From Rural Hands to Global Hearts*
 
+<p align="center">
+  <img src="images/banner.png" alt="Handicraft Banner" />
+</p>
+
 **Handicraft** is a purpose-driven e-commerce platform that bridges the gap between **rural artisans** and **global customers**.  
 By removing middlemen, we ensure that the true creators — the talented hands behind each product — receive fair recognition and value for their craftsmanship.
 
