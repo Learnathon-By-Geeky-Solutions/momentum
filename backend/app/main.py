@@ -7,13 +7,13 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from typing import Annotated
 
-from user_management.models import User
-from user_management.utils import auth_utils, create_access_token, verify_token
-from user_management.database import get_db
-from user_management.minio.routers import upload
+from app.models import User
+from app.utils import auth_utils, create_access_token, verify_token
+from app.database import get_db
+from app.minio.routers import upload
 import dotenv
 
-from user_management.routers import (
+from app.routers import (
     auth,
     brand,
     product,

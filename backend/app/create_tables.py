@@ -1,5 +1,5 @@
 from database import engine, Base
-import backend.user_management.models as models
+import backend.app.models as models
 
 
 def create_tables():

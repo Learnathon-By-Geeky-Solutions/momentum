@@ -22,7 +22,7 @@ jobs:
       - name: Run black
         id: black
         run: |
-          black --check backend/user_management || echo "::set-output name=is_formatted::true"
+          black --check backend/app || echo "::set-output name=is_formatted::true"
       - name: Create Pull Request
         if: ${{ failure() && steps.black.outputs.is_formatted == 'true' }}
         uses: peter-evans/create-pull-request@v5

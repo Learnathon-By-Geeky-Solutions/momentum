@@ -1,10 +1,10 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
 from sqlalchemy.orm import Session
 from typing import List
-from user_management.database import get_db
-from user_management.models import Product
-from user_management.minio.utils import upload_to_minio
-from user_management.minio.schemas import (
+from app.database import get_db
+from app.models import Product
+from app.minio.utils import upload_to_minio
+from app.minio.schemas import (
     ProductPhotoUploadResponse,
     ProductVideoUploadResponse,
 )

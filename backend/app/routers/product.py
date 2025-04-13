@@ -1,14 +1,14 @@
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
-import user_management.schemas as schemas
-import user_management.models as models
-from user_management.database import get_db  # Database session dependency
-from user_management.models import User, Product, Brand, Order, OrderItem  # ORM models
-from user_management.utils import get_current_user
-from user_management.schemas import ProductCreate, ProductOut  # Pydantic schemas
+import app.schemas as schemas
+import app.models as models
+from app.database import get_db  # Database session dependency
+from app.models import User, Product, Brand, Order, OrderItem  # ORM models
+from app.utils import get_current_user
+from app.schemas import ProductCreate, ProductOut  # Pydantic schemas
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from user_management.database import SessionLocal
+from app.database import SessionLocal
 from fastapi import APIRouter
 
 
@@ -58,7 +58,7 @@ def post_product(
     return new_product
 
 
-@router.put("/products/{product_id}", response_model=schemas.ProductCreate)
+@router.patch("/products/{product_id}", response_model=schemas.ProductCreate)
 def update_product(
     product_id: int,
     updated_product: schemas.ProductCreate,
@@ -72,16 +72,10 @@ def update_product(
     if not product:
         raise HTTPException(status_code=404, detail="Product not found.")
 
-    # Update product fields
-    product.product_name = updated_product.product_name
-    product.product_pic = updated_product.product_pic
-    product.product_video = updated_product.product_video
-    product.category = updated_product.category
-    product.description = updated_product.description
-    product.order_size = updated_product.order_size
-    product.order_quantity = updated_product.order_quantity
-    product.quantity_unit = updated_product.quantity_unit
-    product.price = updated_product.price
+    update_data = updated_product.model_dump(exclude_unset=True)
+
+    for key, value in update_data.items():
+        setattr(product, key, value)
 
     db.commit()
     db.refresh(product)

@@ -1,5 +1,5 @@
 from fastapi import UploadFile
-from user_management.minio.config import MINIO_CLIENT, BUCKET_NAME
+from app.minio.config import MINIO_CLIENT, BUCKET_NAME
 
 
 async def upload_to_minio(file: UploadFile, folder: str):

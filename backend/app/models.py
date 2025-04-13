@@ -11,8 +11,7 @@ from sqlalchemy import (
     func,
 )
 from sqlalchemy.orm import relationship
-from user_management.database import Base
-
+from app.database import Base
 
 class User(Base):
     __tablename__ = "user"
