@@ -44,3 +44,17 @@ async def update_profile(
     db.commit()
     db.refresh(db_user)
     return {"message": "Profile updated successfully"}
+
+
+
+@router.put("/become-artisan")
+async def become_artisan(
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+):
+    if user.role == "artisan":
+        raise HTTPException(status_code=400, detail="You are already an artisan")
+    user.role = "artisan"
+    db.commit()
+    db.refresh(user)
+    return {"message": "You are now an artisan"}

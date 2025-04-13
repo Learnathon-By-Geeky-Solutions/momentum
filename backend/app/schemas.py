@@ -3,10 +3,19 @@ from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
 
+class User(BaseModel):
+    email: str
+    username: str
+    full_name: str
+    address: str
+    phone: str
+    role: str
+    is_verified: bool
+
 
 class Token(BaseModel):
     access_token: str
-    token_type: str
+    user: User
 
 
 class TokenData(BaseModel):

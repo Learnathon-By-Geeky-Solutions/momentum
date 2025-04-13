@@ -117,7 +117,8 @@ def create_email_verification_token(email: str):
 
 
 async def send_verification_email(email: str, token: str):
-    verification_link = f"http://localhost:8000/verify-email?token={token}"
+    BASE_URL = os.getenv("FRONTEND_BASE_URL", "http://localhost:3000")
+    verification_link = f"{BASE_URL}/verify-email?token={token}"
     message = MessageSchema(
         subject="Verify Your Email",
         recipients=[email],
@@ -166,6 +167,16 @@ def verify_token(token: str = Security(oauth2_scheme)):
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+def verify_reset_token(token: str) -> str:
+    """Verify a reset token and return the email if valid."""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=400, detail="Invalid token")
+        return email
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
 
 def authenticate_user(db: Session, username: str, password: str):
     user = db.query(User).filter(User.username == username).first()

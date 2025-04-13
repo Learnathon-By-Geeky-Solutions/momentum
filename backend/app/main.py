@@ -20,28 +20,37 @@ from app.routers import (
     order,
     profile,
     paybill,
-)  # Import routers
+)  
 
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 import dotenv
 import sentry_sdk
+import os
 
-# Fix CORS error
 app = FastAPI()
+
 
 origins = [
     "http://localhost:3000",
-    "http://localhost:8000",
-    "https://fastapi-user-management.herokuapp.com",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+    allow_headers=[
+        "Content-Type",
+        "Authorization",
+        "Accept",
+        "Origin",
+        "X-Requested-With",
+        "Access-Control-Request-Method",
+        "Access-Control-Request-Headers",
+    ],
+    expose_headers=["Content-Range", "X-Content-Range"],
+    max_age=600,
 )
 
 
@@ -58,10 +67,9 @@ dotenv.load_dotenv()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
-app = FastAPI()
 
 # Include routers with prefixes and tags for organization
-app.include_router(auth.router, prefix="", tags=["Auth"])
+app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(profile.router, prefix="", tags=["Profile"])
 app.include_router(brand.router, prefix="", tags=["Brands"])
 app.include_router(product.router, prefix="", tags=["Products"])

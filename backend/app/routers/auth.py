@@ -28,7 +28,6 @@ from app.utils import (
     verify_token,
     create_email_verification_token,
     send_verification_email,
-    verify_reset_token,
     create_reset_token,
     send_reset_email,
     get_current_user,
@@ -134,6 +133,10 @@ async def reset_password(
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     """Register a new user and send a verification email"""
 
+   
+    if "@" not in user.email or ".com" not in user.email:
+        raise HTTPException(status_code=400, detail="Invalid email")
+
     existing_user = (
         db.query(User)
         .filter((User.email == user.email) | (User.username == user.username))
@@ -180,4 +183,29 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=timedelta(minutes=30)
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    data = {
+        "email": user.email,
+        "username": user.username,
+        "full_name": user.full_name,
+        "address": user.address,
+        "phone": user.phone,
+        "role": user.role,
+        "is_verified": user.is_verified,
+    }
+    return {"access_token": access_token, "user": data}
+
+
+@router.post("/verify-email")
+async def verify_email(token: str, db: Session = Depends(get_db)):
+    payload = verify_token(token)
+    email: str = payload.get("sub")
+    if email is None:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    user = db.query(User).filter(User.email == email).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="User not found")
+    user.is_verified = True
+    db.commit()
+    db.refresh(user)
+    return {"message": "Email verified successfully"}
