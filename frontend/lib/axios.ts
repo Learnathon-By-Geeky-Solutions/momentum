@@ -20,10 +20,12 @@ api.interceptors.response.use(
       localStorage.removeItem("token")
       localStorage.removeItem("user")
       localStorage.clear()
-      // window.location.href = "/"
+      window.location.href = "/"
     }
     return Promise.reject(error)
   },
 )
 
 export default api
+
+
