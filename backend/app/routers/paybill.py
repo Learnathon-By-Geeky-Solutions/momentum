@@ -19,11 +19,7 @@ def pay_bill(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    """
-    Confirm payment for an order:
-      - Update the bill with the given method and trx_id, and mark its status as confirmed.
-      - Decrease the stock (order_quantity) of each product based on the quantities in the order items.
-    """
+
     order = (
         db.query(models.Order)
         .filter(

@@ -13,7 +13,7 @@ from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from app.database import get_db
 
 
-SECRET_KEY = os.getenv("JWT_SECRET_KEY")  # Change this in production
+SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 100
 RESET_TOKEN_EXPIRE_MINUTES = 30
@@ -30,10 +30,10 @@ conf = ConnectionConfig(
     MAIL_USERNAME=os.getenv("mymail"),
     MAIL_PASSWORD=os.getenv("google_password"),
     MAIL_FROM=os.getenv("mymail"),
-    MAIL_PORT=587,  # 587 for TLS, 465 for SSL
+    MAIL_PORT=587,
     MAIL_SERVER="smtp.gmail.com",
-    MAIL_STARTTLS=True,  # Correct key name
-    MAIL_SSL_TLS=False,  # Correct key name
+    MAIL_STARTTLS=True,
+    MAIL_SSL_TLS=False,
     USE_CREDENTIALS=True,
 )
 
@@ -124,7 +124,7 @@ def verify_reset_token(token: str) -> str:
 
 
 def create_email_verification_token(email: str):
-    return create_token({"sub": email}, 60)  # 1 hour expiration
+    return create_token({"sub": email}, 60)
 
 
 async def send_verification_email(email: str, token: str):
@@ -152,7 +152,7 @@ async def send_reset_email(email: str, link: str):
 
 def generate_verification_token(email: str):
 
-    expire = datetime.utcnow() + timedelta(minutes=15)  # Token expires in 15 min
+    expire = datetime.utcnow() + timedelta(minutes=15)
     data = {"sub": email, "exp": expire}
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -169,7 +169,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 def verify_token(token: str = Security(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload  # Return decoded data if valid
+        return payload
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -185,7 +185,6 @@ def authenticate_user(db: Session, username: str, password: str):
     return user
 
 
-# Get current user from token
 def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
 ):
@@ -199,5 +198,4 @@ def get_current_user(
     return user
 
 
-# Initialize utility class
 auth_utils = AuthUtils()

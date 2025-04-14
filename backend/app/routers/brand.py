@@ -15,7 +15,6 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-# Create Brand (protected route)
 @router.post("/brands", response_model=schemas.BrandOut)
 async def create_brand(
     brand: schemas.BrandCreate,
