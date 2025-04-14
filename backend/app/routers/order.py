@@ -19,16 +19,10 @@ async def create_order(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    """
-    Create a new order using the current user's id.
-    The order is created based on order items (product id, size, quantity).
-    The bill amount is calculated automatically as the sum of (product price * quantity)
-    for all order items.
-    """
-    # Create a new order for the current user
+
     db_order = models.Order(
         user_id=current_user.user_id,
-        status="Pending",  # Set initial status as "Pending"
+        status="Pending",
     )
     db.add(db_order)
     db.commit()
@@ -38,7 +32,7 @@ async def create_order(
 
     # Process each order item
     for item in order.order_items:
-        # Retrieve product information to calculate the cost
+
         product = (
             db.query(models.Product)
             .filter(models.Product.product_id == item.product_id)
@@ -49,7 +43,6 @@ async def create_order(
                 status_code=404, detail=f"Product with id {item.product_id} not found"
             )
 
-        # (Optional) Check if there's enough stock
         if (
             product.order_quantity is not None
             and item.quantity > product.order_quantity
@@ -59,11 +52,9 @@ async def create_order(
                 detail=f"Not enough stock for product {product.product_name}",
             )
 
-        # Calculate cost for this item (assuming product.price is of type DECIMAL/float)
         item_cost = float(product.price) * item.quantity
         total_amount += item_cost
 
-        # Create a new order item record
         db_order_item = models.OrderItem(
             order_id=db_order.order_id,
             product_id=item.product_id,
@@ -73,11 +64,10 @@ async def create_order(
         db.add(db_order_item)
 
     total_amount = Decimal(total_amount)
-    # Create the Bill record with the calculated total amount
     db_bill = models.Bill(
         order_id=db_order.order_id,
         amount=total_amount,
-        method="Pending",  # you may update this later (e.g., "Cash on Delivery", "Credit Card")
+        method="Pending",
         trx_id="1234",
         status="Pending",
     )
@@ -93,12 +83,12 @@ def place_order(user_id, product_id, size, quantity=1):
     """
     session = SessionLocal()
     try:
-        # Fetch product details
+
         product = (
             session.query(Product)
             .filter(
                 Product.product_id == product_id,
-                Product.order_size == size,  # Ensure correct size is ordered
+                Product.order_size == size,
             )
             .first()
         )
@@ -106,11 +96,9 @@ def place_order(user_id, product_id, size, quantity=1):
         if not product:
             return "Product not found or size unavailable."
 
-        # Check stock availability
         if product.order_quantity < quantity:
             return f"Sorry, only {product.order_quantity} items left in stock."
 
-        # Create a new order
         new_order = Order(
             user_id=user_id,
             product_id=product_id,
@@ -120,11 +108,10 @@ def place_order(user_id, product_id, size, quantity=1):
         )
         session.add(new_order)
 
-        # Reduce product stock
         product.order_quantity -= quantity
         session.commit()
 
-        return f"✅ Order placed successfully for {quantity} x {product.product_name} (Size: {size})!"
+        return f"Order placed successfully for {quantity} x {product.product_name} (Size: {size})!"
 
     except Exception as e:
         session.rollback()
@@ -146,8 +133,6 @@ async def get_my_orders(
     if not orders:
         raise HTTPException(status_code=404, detail="No orders found for this user")
 
-    # For constructing the links we use a base URL.
-    # In a real router, you might use request.url_for or an environment variable.
     base_url = "http://127.0.0.1:8000"
 
     orders_with_links = []
@@ -156,9 +141,7 @@ async def get_my_orders(
             "order_id": order.order_id,
             "user_id": order.user_id,
             "status": order.status,
-            # Link to view full order details (e.g., order summary, bill, etc.)
             "order_details_url": f"{base_url}/order/{order.order_id}",
-            # Link to view product details for items in this order
             "product_details_url": f"{base_url}/order/{order.order_id}/products",
         }
         orders_with_links.append(order_data)
@@ -210,7 +193,6 @@ async def get_order_details(
     if not order:
         raise HTTPException(status_code=404, detail=ORDER_NOT_FOUND)
 
-    # Get the bill for this order
     bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
 
     # Retrieve order items with product and brand details.
@@ -230,13 +212,12 @@ async def get_order_details(
             "brand_id": brand.brand_id,
             "product_name": product.product_name,
             "brand_name": brand.brand_name,
-            "order_size": order_item.size,  # assuming OrderItem has a column 'size'
+            "order_size": order_item.size,
             "order_quantity": order_item.quantity,
         }
 
         order_items.append(item_data)
 
-    # Construct the output data
     result = {
         "order_id": order.order_id,
         "status": order.status,
@@ -289,7 +270,7 @@ async def get_all_order_details(
                 "brand_id": brand.brand_id,
                 "product_name": product.product_name,
                 "brand_name": brand.brand_name,
-                "order_size": order_item.size,  # Adjust if your column name is different
+                "order_size": order_item.size,
                 "order_quantity": order_item.quantity,
             }
 
@@ -315,7 +296,6 @@ async def delete_order(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    # Retrieve the order ensuring it belongs to the current user
     order = (
         db.query(models.Order)
         .filter(
@@ -327,19 +307,16 @@ async def delete_order(
     if not order:
         raise HTTPException(status_code=404, detail=ORDER_NOT_FOUND)
 
-    # Retrieve the associated bill for this order
     bill = db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
     if not bill:
         raise HTTPException(status_code=404, detail="Bill not found for this order")
 
-    # Check if the bill's status is still "Pending" (case-insensitive)
     if bill.status.lower() != "pending":
         raise HTTPException(
             status_code=400,
             detail="Cannot delete order: bill is already confirmed or processed.",
         )
 
-    # Delete the order (if cascading is set up, related order items and bill might be deleted automatically)
     db.delete(order)
     db.commit()
 

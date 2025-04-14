@@ -13,7 +13,6 @@ from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
 from app.database import get_db
 
 
-# Environment variables
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")  # Change this in production
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 100
@@ -21,7 +20,7 @@ RESET_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-# Google OAuth2 Client ID and Secret
+
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
@@ -110,6 +109,18 @@ def create_token(data: dict, expires_minutes: int):
 
 def create_reset_token(email: str):
     return create_token({"sub": email}, RESET_TOKEN_EXPIRE_MINUTES)
+
+
+def verify_reset_token(token: str) -> str:
+    """Verify a reset token and return the email if valid."""
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=400, detail="Invalid token")
+        return email
+    except JWTError:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
 
 
 def create_email_verification_token(email: str):

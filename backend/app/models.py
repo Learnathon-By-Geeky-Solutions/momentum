@@ -90,7 +90,7 @@ class Order(Base):
     )
     bill = relationship(
         "Bill", back_populates="order", cascade="all, delete-orphan", uselist=False
-    )  # One-to-one relationship
+    )
 
 
 class OrderItem(Base):

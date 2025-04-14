@@ -6,7 +6,7 @@ import app.models as models
 from app.models import User, Brand
 from app.utils import (
     get_current_user,
-)  # Adjust the path based on your project structure
+)
 from typing import List, Optional
 
 from fastapi import APIRouter

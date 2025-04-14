@@ -47,10 +47,10 @@ class UserOut(BaseModel):
     full_name: Optional[str]
     address: Optional[str]
     phone: Optional[str]
-    role: str  # New field in response
+    role: str
 
     class Config:
-        from_attributes = True  # Pydantic v2 update
+        from_attributes = True
 
 
 class LoginRequest(BaseModel):
@@ -59,7 +59,6 @@ class LoginRequest(BaseModel):
 
 
 class BrandCreate(BaseModel):
-    # user_id: int  # Ensure the user exists before creating a brand
     brand_name: str
     brand_description: Optional[str]
     logo: Optional[str]
@@ -71,17 +70,16 @@ class BrandOut(BaseModel):
     brand_name: str
     brand_description: Optional[str]
     logo: Optional[str]
-    created_at: datetime  # Keep it as datetime
+    created_at: datetime
 
     class Config:
-        from_attributes = True  # Pydantic v2 update
+        from_attributes = True
 
 
 class ProductCreate(BaseModel):
-    # brand_id: int  # Ensure the brand exists before creating a product
     product_name: str
-    product_pic: List[str]  # Array of image storage links
-    product_video: List[str]  # Array of video storage links
+    product_pic: List[str]
+    product_video: List[str]
     category: str
     description: Optional[str]
     order_size: Optional[str]
@@ -102,11 +100,11 @@ class ProductOut(BaseModel):
     order_quantity: Optional[int]
     quantity_unit: Optional[str]
     price: float
-    rating: Optional[float]  # Given by buyers, not the product creator
-    approved: bool  # Fulfilled by admin
+    rating: Optional[float]
+    approved: bool
 
     class Config:
-        from_attributes = True  # Pydantic v2 update
+        from_attributes = True
 
 
 class ProductUpdate(BaseModel):
@@ -121,8 +119,8 @@ class ProductUpdate(BaseModel):
     order_quantity: Optional[int]
     quantity_unit: Optional[str]
     price: float
-    rating: Optional[float]  # Given by buyers, not the product creator
-    approved: bool  # Fulfilled by admin
+    rating: Optional[float]
+    approved: bool
 
 
 class UserUpdate(BaseModel):
@@ -183,7 +181,7 @@ class OrderDetailOut(BaseModel):
     status: str
     bill_status: Optional[str] = None
     created_at: datetime
-    bill_amount: Optional[Decimal]  # Using Decimal for currency
+    bill_amount: Optional[Decimal]
     order_items: List[OrderItemDetail]
 
     class Config:
