@@ -1,5 +1,3 @@
-
-
 from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Optional, List
 from datetime import datetime
@@ -10,12 +8,14 @@ class Token(BaseModel):
     access_token: str
     token_type: str
 
+
 class TokenData(BaseModel):
     email: Optional[str] = None
-    
-    
+
+
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+
 
 class ResetPasswordRequest(BaseModel):
     token: str
@@ -53,19 +53,15 @@ class UserOut(BaseModel):
     full_name: Optional[str]
     address: Optional[str]
     phone: Optional[str]
-    role: str  # New field in response
+    role: str
 
     class Config:
-        from_attributes = True  # Pydantic v2 update
-        
-
+        from_attributes = True
 
 
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=50)
-
-
 
 class BrandCreate(BaseModel):
     #user_id: int  # Ensure the user exists before creating a brand
@@ -73,16 +69,18 @@ class BrandCreate(BaseModel):
     brand_description: Optional[str] = Field(None, max_length=255)
     logo: Optional[str] = Field(None, pattern=r'^(http|https):\/\/.+\.(jpg|jpeg|png)$', description="Must be a valid image URL.")
 
+
 class BrandOut(BaseModel):
     brand_id: int
     user_id: int
     brand_name: str
     brand_description: Optional[str]
     logo: Optional[str]
-    created_at: datetime  # Keep it as datetime
+    created_at: datetime
 
     class Config:
-        from_attributes = True  # Pydantic v2 update
+        from_attributes = True
+
 
 class ProductCreate(BaseModel):
     #brand_id: int  # Ensure the brand exists before creating a product
@@ -108,12 +106,26 @@ class ProductOut(BaseModel):
     order_quantity: Optional[int]
     quantity_unit: Optional[str]
     price: float
-    rating: Optional[float]  # Given by buyers, not the product creator
-    approved: bool  # Fulfilled by admin
+
+
+class ProductOut(BaseModel):
+    product_id: int
+    # brand_id: int
+    product_name: str
+    product_pic: List[str]
+    product_video: List[str]
+    category: str
+    description: Optional[str]
+    order_size: Optional[str]
+    order_quantity: Optional[int]
+    quantity_unit: Optional[str]
+    price: float
+    rating: Optional[float]
+    approved: bool
 
     class Config:
-        from_attributes = True  # Pydantic v2 update
-        
+        from_attributes = True
+
 
 class ProductUpdate(ProductCreate):
     product_id: int
@@ -178,26 +190,17 @@ class OrderItemDetail(BaseModel):
     order_size: str
     order_quantity: int
 
+
 class OrderDetailOut(BaseModel):
     order_id: int
     status: str
     bill_status: Optional[str] = None
     created_at: datetime
-    bill_amount: Optional[Decimal]  # Using Decimal for currency
+    bill_amount: Optional[Decimal]
     order_items: List[OrderItemDetail]
 
     class Config:
         orm_mode = True
-        
-        
- 
-
-
-
-
-# class Message(BaseModel):
-#     role: str
-#     content: str
 
 class ChatRequest(BaseModel):
     message: str = Field(..., min_length=1, max_length=1000) 

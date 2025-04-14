@@ -3,7 +3,7 @@ venv/
 backend/__pycache__/
 backend/migrations/
 backend/alembic.ini
-backend/user_management/__pycache__/
+backend/app/__pycache__/
 __pycache__/
 *.pyc
 *.pyo

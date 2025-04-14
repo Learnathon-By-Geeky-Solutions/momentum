@@ -16,7 +16,7 @@ jobs:
       - name: Install black
         run: pip install black
       - name: Run black
-        run: black --check --diff --color backend/user_management
+        run: black --check --diff --color backend/app
         id: black
       - name: Create Pull Request
         if: steps.black.outputs.is_formatted == 'true'
