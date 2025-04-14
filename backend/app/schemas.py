@@ -90,8 +90,6 @@ class ProductCreate(BaseModel):
 
 class ProductOut(BaseModel):
     product_id: int
-    # brand_id: int
-    # brand_id: int
     product_name: str
     product_pic: List[str]
     product_video: List[str]
@@ -219,11 +217,6 @@ class PayBillRequest(BaseModel):
     order_id: int
     method: str
     trx_id: str
-
-
-# class Message(BaseModel):
-#     role: str
-#     content: str
 
 
 class ChatRequest(BaseModel):
