@@ -9,16 +9,12 @@ class Token(BaseModel):
     token_type: str
 
 
-
 class TokenData(BaseModel):
     email: Optional[str] = None
 
 
-
-
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
-
 
 
 class ResetPasswordRequest(BaseModel):
@@ -78,7 +74,6 @@ class LoginRequest(BaseModel):
     password: str = Field(..., min_length=8, max_length=50)
 
 class BrandCreate(BaseModel):
-    #user_id: int  # Ensure the user exists before creating a brand
     brand_name: str = Field(..., min_length=3, max_length=100)
     brand_description: Optional[str] = Field(None, max_length=255)
     logo: Optional[str] = Field(None, pattern=r'^(http|https):\/\/.+\.(jpg|jpeg|png)$', description="Must be a valid image URL.")
@@ -97,7 +92,6 @@ class BrandOut(BaseModel):
 
 
 class ProductCreate(BaseModel):
-    #brand_id: int  # Ensure the brand exists before creating a product
     product_name: str = Field(..., min_length=3, max_length=100)
     product_pic: List[str]
     product_video: List[str]
@@ -110,8 +104,6 @@ class ProductCreate(BaseModel):
 
 class ProductOut(BaseModel):
     product_id: int
-    # brand_id: int
-    # brand_id: int
     product_name: str
     product_pic: List[str]
     product_video: List[str]
@@ -163,6 +155,8 @@ class OrderOut(BaseModel):
     class Config:  
         from_attributes = True
 
+
+
 class OrderUpdate(BaseModel):
     status: st
 
@@ -201,7 +195,6 @@ class OrderItemDetail(BaseModel):
     order_quantity: int
 
 
-
 class OrderDetailOut(BaseModel):
     order_id: int
     status: str
@@ -213,9 +206,18 @@ class OrderDetailOut(BaseModel):
     class Config:
         orm_mode = True
 
+
+class PayBillRequest(BaseModel):
+    order_id: int
+    method: str
+    trx_id: str
+
+
 class ChatRequest(BaseModel):
-    message: str = Field(..., min_length=1, max_length=1000) 
-    
+    messages: List[str]
+
+    messages: List[str]
+
+
 class ChatResponse(BaseModel):
     response: str
-

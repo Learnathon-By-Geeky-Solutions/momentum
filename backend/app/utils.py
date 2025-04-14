@@ -76,9 +76,6 @@ class AuthUtils:
             raise HTTPException(
                 status_code=400, detail=f"Token verification failed: {str(e)}"
             )
-            raise HTTPException(
-                status_code=400, detail=f"Token verification failed: {str(e)}"
-            )
 
     def hash_password(self, password: str) -> str:
         """Hash a plain text password."""
@@ -165,7 +162,6 @@ async def send_reset_email(email: str, link: str):
     await fm.send_message(message)
 
 
-
 def generate_verification_token(email: str):
 
     expire = datetime.utcnow() + timedelta(minutes=15)
@@ -182,7 +178,6 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-
 def verify_token(token: str = Security(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -193,7 +188,6 @@ def verify_token(token: str = Security(oauth2_scheme)):
             detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
 
 
 def authenticate_user(db: Session, username: str, password: str):

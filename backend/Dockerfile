@@ -1,15 +1,19 @@
 FROM python:3.11-slim
 
+RUN useradd -m -u 1000 appuser
+
 WORKDIR /app
 
-# Install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
 COPY app/ app/
 COPY alembic/ alembic/
 COPY alembic.ini .
+
+RUN chown -R appuser:appuser /app
+
+USER appuser
 
 EXPOSE 8000
 
