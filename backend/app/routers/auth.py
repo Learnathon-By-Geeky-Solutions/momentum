@@ -8,16 +8,6 @@ from fastapi import (
     status,
     Request,
 )
-from fastapi import (
-    FastAPI,
-    Depends,
-    HTTPException,
-    Header,
-    APIRouter,
-    BackgroundTasks,
-    status,
-    Request,
-)
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -62,7 +52,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 app.include_router(auth.router)
 
 
-# Error message constants
 USER_NOT_FOUND = "User not found"
 INVALID_CREDENTIALS = "Invalid credentials"
 INVALID_TOKEN = "Invalid token or user not found"
@@ -77,10 +66,6 @@ VERIFICATION_EMAIL_SENT = "Verification email sent. Please check your inbox."
 
 
 @router.post("/token")
-async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    db: Session = Depends(get_db),
-):
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Session = Depends(get_db),
@@ -104,23 +89,14 @@ async def forgot_password(
     background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
 ):
-async def forgot_password(
-    request_data: ForgotPasswordRequest,
-    background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db),
-):
     user = db.query(User).filter(User.email == request_data.email).first()
 
-
-    # For security, return the same message even if the user is not found.
     if not user:
         return {"message": PASSWORD_RESET_EMAIL_SENT}
 
     reset_token = create_reset_token(user.email)
     reset_link = f"http://localhost:8000/reset-password?token={reset_token}"
 
-
-    # Use background tasks to send the email asynchronously
     background_tasks.add_task(send_reset_email, user.email, reset_link)
 
     return {"message": PASSWORD_RESET_EMAIL_SENT}
@@ -130,23 +106,18 @@ async def forgot_password(
 async def reset_password(
     request_data: ResetPasswordRequest, db: Session = Depends(get_db)
 ):
-async def reset_password(
-    request_data: ResetPasswordRequest, db: Session = Depends(get_db)
-):
     email = verify_reset_token(request_data.token)
     if email is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=INVALID_RESET_TOKEN
         )
 
-    # Find the user
     user = db.query(User).filter(User.email == email).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=USER_NOT_FOUND
         )
 
-    # Hash the new password and update
     hashed_password = auth_utils.hash_password(request_data.new_password)
     user.password = hashed_password
     db.commit()
@@ -163,17 +134,11 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         .filter((User.email == user.email) | (User.username == user.username))
         .first()
     )
-    existing_user = (
-        db.query(User)
-        .filter((User.email == user.email) | (User.username == user.username))
-        .first()
-    )
 
     if existing_user:
         raise HTTPException(status_code=400, detail=USER_ALREADY_EXISTS)
 
     hashed_password = auth_utils.hash_password(user.password)
-
 
     db_user = User(
         username=user.username,
@@ -182,8 +147,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         full_name=user.full_name,
         address=user.address,
         phone=user.phone,
-        role=user.role,  # Role is now validated
-        is_verified=False,
+        role=user.role,
         is_verified=False,
     )
 
@@ -208,9 +172,6 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
     if not user or not auth_utils.verify_password(request.password, user.password):
         raise HTTPException(status_code=401, detail=INVALID_CREDENTIALS)
 
-    access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=timedelta(minutes=30)
-    )
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=timedelta(minutes=30)
     )

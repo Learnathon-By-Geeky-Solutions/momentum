@@ -9,22 +9,17 @@ class Token(BaseModel):
     token_type: str
 
 
-
 class TokenData(BaseModel):
     email: Optional[str] = None
-
-
 
 
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 
 
-
 class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str
-
 
 
 class UserCreate(BaseModel):
@@ -35,7 +30,6 @@ class UserCreate(BaseModel):
     address: Optional[str]
     phone: Optional[str]
     role: Optional[str] = "customer"
-
 
     @field_validator("role")
     @classmethod
@@ -70,7 +64,6 @@ class BrandCreate(BaseModel):
     logo: Optional[str]
 
 
-
 class BrandOut(BaseModel):
     brand_id: int
     user_id: int
@@ -93,7 +86,6 @@ class ProductCreate(BaseModel):
     order_quantity: Optional[int]
     quantity_unit: Optional[str]
     price: float
-
 
 
 class ProductOut(BaseModel):
@@ -162,6 +154,8 @@ class OrderOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+
 class OrderItemCreate(BaseModel):
     product_id: int
     size: Optional[str]
@@ -209,7 +203,6 @@ class OrderItemDetail(BaseModel):
     order_quantity: int
 
 
-
 class OrderDetailOut(BaseModel):
     order_id: int
     status: str
@@ -220,7 +213,6 @@ class OrderDetailOut(BaseModel):
 
     class Config:
         orm_mode = True
-
 
 
 class PayBillRequest(BaseModel):
@@ -234,14 +226,11 @@ class PayBillRequest(BaseModel):
 #     content: str
 
 
-
 class ChatRequest(BaseModel):
     messages: List[str]
-
 
     messages: List[str]
 
 
 class ChatResponse(BaseModel):
     response: str
-

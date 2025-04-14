@@ -62,13 +62,6 @@ class AuthUtils:
                 "accounts.google.com",
                 "https://accounts.google.com",
             ]:
-            id_info = id_token.verify_oauth2_token(
-                token, requests.Request(), GOOGLE_CLIENT_ID
-            )
-            if id_info["iss"] not in [
-                "accounts.google.com",
-                "https://accounts.google.com",
-            ]:
                 raise ValueError("Invalid issuer")
             if id_info["aud"] != GOOGLE_CLIENT_ID:
                 raise ValueError("Invalid audience")
@@ -80,9 +73,6 @@ class AuthUtils:
                 "full_name": id_info.get("name"),
             }
         except ValueError as e:
-            raise HTTPException(
-                status_code=400, detail=f"Token verification failed: {str(e)}"
-            )
             raise HTTPException(
                 status_code=400, detail=f"Token verification failed: {str(e)}"
             )
@@ -172,7 +162,6 @@ async def send_reset_email(email: str, link: str):
     await fm.send_message(message)
 
 
-
 def generate_verification_token(email: str):
 
     expire = datetime.utcnow() + timedelta(minutes=15)
@@ -189,7 +178,6 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-
 def verify_token(token: str = Security(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -200,7 +188,6 @@ def verify_token(token: str = Security(oauth2_scheme)):
             detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
 
 
 def authenticate_user(db: Session, username: str, password: str):
