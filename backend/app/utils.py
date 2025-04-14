@@ -1,4 +1,13 @@
 from fastapi import FastAPI, Depends, HTTPException, status, Security
+from fastapi import (
+    FastAPI,
+    Depends,
+    HTTPException,
+    Header,
+    APIRouter,
+    BackgroundTasks,
+    status,
+)
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 from app.models import User
@@ -27,6 +36,7 @@ REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
 
 
 conf = ConnectionConfig(
+    MAIL_USERNAME=os.getenv("mymail"),
     MAIL_USERNAME=os.getenv("mymail"),
     MAIL_PASSWORD=os.getenv("google_password"),
     MAIL_FROM=os.getenv("mymail"),
@@ -63,6 +73,9 @@ class AuthUtils:
                 "full_name": id_info.get("name"),
             }
         except ValueError as e:
+            raise HTTPException(
+                status_code=400, detail=f"Token verification failed: {str(e)}"
+            )
             raise HTTPException(
                 status_code=400, detail=f"Token verification failed: {str(e)}"
             )
@@ -134,6 +147,7 @@ async def send_verification_email(email: str, token: str):
         recipients=[email],
         body=f"Click the link to verify your email: {verification_link}",
         subtype="html",
+        subtype="html",
     )
     fm = FastMail(conf)
     await fm.send_message(message)
@@ -145,9 +159,11 @@ async def send_reset_email(email: str, link: str):
         recipients=[email],
         body=f"Click the link to reset your password: {link}",
         subtype="html",
+        subtype="html",
     )
     fm = FastMail(conf)
     await fm.send_message(message)
+
 
 
 def generate_verification_token(email: str):
@@ -166,6 +182,7 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
+
 def verify_token(token: str = Security(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -176,6 +193,7 @@ def verify_token(token: str = Security(oauth2_scheme)):
             detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
 
 
 def authenticate_user(db: Session, username: str, password: str):
@@ -197,5 +215,20 @@ def get_current_user(
         raise HTTPException(status_code=401, detail="Invalid token or user not found")
     return user
 
+def get_current_admin(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+):
+    payload = verify_token(token)
+    user_email = payload.get("sub")
+    if not user_email:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
+    user = db.query(User).filter(User.email == user_email).first()
+    if not user or user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Not enough permissions"
+        )
+    return user
 
 auth_utils = AuthUtils()

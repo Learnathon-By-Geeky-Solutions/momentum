@@ -1,28 +1,215 @@
-# momentum
+# 🧶 Handicraft
+
+[![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![PostgreSQL](https://img.shields.io/badge/postgresql-blue?style=for-the-badge&logo=postgresql&logoColor=blue&labelColor=black)](https://www.postgresql.org/)
+[![ShadCn](https://img.shields.io/badge/Shadcn%2FUi%20-%20black?style=for-the-badge&logo=shadcnui)](https://ui.shadcn.com/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Next.Js](https://img.shields.io/badge/Next.js-black?style=for-the-badge&logo=%23000000)](https://nextjs.org/docs)
+[![Github Action](https://img.shields.io/badge/Github%20Actions%20-%20black?style=for-the-badge&logo=githubactions&logoColor=blue&labelColor=white&color=black)](https://github.com/features/actions)
+[![Typescript](https://img.shields.io/badge/Typescript%20-%20black?style=for-the-badge&logo=Typescript)]()
+
+
+<p align="center">
+  <img src="images/banner.jpg" alt="Handicraft Banner" />
+</p>
+
+<h2 align="center">🌾 From Rural Hands to Global Hearts 🌍</h2>
+
+<p align="center">
+  <b>Handicraft</b> is a purpose-driven e-commerce platform that connects rural artisans directly with global customers — empowering local creators and delivering authentic, handcrafted goods with transparency and trust.
+</p>
+
+# 🔍 What is Handicraft?
+
+<p align="center">
+  <img src="images/logo.jpg" alt="Handicraft Logo" width="20%" />
+</p>
+
+**Handicraft** is a purpose-driven e-commerce platform that bridges the gap between **rural artisans** and **global customers**.  
+By removing middlemen, we ensure that the true creators — the talented hands behind each product — receive fair recognition and value for their craftsmanship.
+
+With a focus on:
+
+- 🌍 **Transparency**
+- 🎨 **Authenticity**
+- 🤝 **Community Empowerment**
+
+Handicraft creates a sustainable ecosystem where **tradition meets technology**.  
+Whether you're a customer seeking unique, handmade goods or a rural producer looking for a wider market, **Handicraft** is your trusted digital marketplace.
+
+## 🎥 Product Tour
+
+[![Project-Demo](https://img.shields.io/badge/Demo-Handicraft-Green?style=for-the-badge&color=%23FFA500&)](https://learnathon-by-geeky-solutions.github.io/momentum/)
 
 ## Team Members
-- JamilAhmed00 (Team Leader)
-- mdadul
-- ShajjadGani
 
-## Mentor
-- @Sunny1509006
+- [![Static Badge](https://img.shields.io/badge/Jamil%20Ahmed%20-Team%20Leader%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black&color=Red)](https://github.com/JamilAhmed00)
+- [![Member - 2](https://img.shields.io/badge/Emdadul%20Islam%20-%20black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mdadul)
 
-## Project Description
-Add your project description here.
+- [![Member - 3](https://img.shields.io/badge/Shajjad%20Gani%20Shovon-%20black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ShajjadGani)
+
+
+## Mentor: 
+
+- [![Static Badge](https://img.shields.io/badge/MD.%20Arif%20Istiake%20Sunny%20-%20Mentor%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black)](https://github.com/Sunny1509006)
+
+
+## 📖 Table of Contents
+
+ - [**Features**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Tech Stack**](https://github.com/matiassingers/awesome-readme)
+ - [**Project Structure**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+ - [**Getting Started**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+ - [**API Documentation**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
+ - [**Environment Variables**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Running Tests**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Deployment with Docker**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Contributing**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Licence**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+
+
+## ✨ Features
+
+### 🧑‍🎨 Artisan Features
+
+- ***Post Creation:*** Ability to create and manage product listings.
+
+- ***Brand Creation:*** Create and manage their own brand profile.
+
+- ***Profile Creation:*** Set up and personalize an artisan profile.
+
+- ***Price Comparison:*** View prices of similar products to stay competitive in the market.
+
+### 👨‍💻 Customer Features
+- ***Profile Creation:*** Create and manage their customer profile.
+- ***Product/Posts Viewing:*** Browse products or artisan posts.
+- ***Order and Purchase:*** Place orders and make purchases directly through the platform.
+
+### 🛠️ Admin Features
+- ***Monitor Platform Activities:*** Track and oversee all activities of customers and artisans.
+- ***Vulnerability Prevention:*** Ensure the platform's security and smooth functioning by identifying and fixing potential issues.
+- ***Content Moderation:*** Review and approve posts from artisans and customers to ensure quality and compliance with platform standards.
+
+
+## 🛠️ Tech Stack
+
+### Frontend 
+- ***ReactJS:***  A JavaScript library for building fast, dynamic user interfaces with reusable components.
+- ***NextJs:*** A React framework for server-side rendering and static site generation, optimizing performance and SEO.
+- ***Typescript:***  A superset of JavaScript that adds static typing, improving code quality and error prevention.
+- ***TailwindCSS:*** A utility-first CSS framework for rapid UI development with customizable design systems.
+- ***ShadcnUi:*** A UI component library focused on accessibility and design, providing ready-to-use components.
+- ***Tanstack Query:*** A data-fetching library that simplifies managing and syncing server data in React apps.
+- ***Axios:*** A promise-based HTTP client for making API requests, handling responses, and managing errors.
+
+### Backend
+- ***FastAPI:*** A modern, fast web framework for building APIs with Python, based on standard Python type hints and asynchronous programming.
+- ***SQLAlchemy:*** A powerful SQL toolkit and Object-Relational Mapping (ORM) library for Python, enabling easy database interaction and management.
+- ***PostgreSQL:*** An open-source, highly extensible relational database system, known for its reliability, data integrity, and support for complex queries.
+
+### Authentication 
+- ***JWT Tokens:*** JSON Web Tokens (JWT) are a compact, URL-safe way to represent claims between two parties. Used for secure user authentication and data exchange, JWTs are commonly used in API authentication systems.
+
+### DevOps
+- ***Docker:*** A platform that automates the deployment of applications inside lightweight, portable containers, ensuring consistency across environments.
+- ***GitHub Actions:*** A CI/CD tool integrated with GitHub for automating workflows like testing, building, and deploying code directly from your repository.
+
+## 📁 Project Structure
+
+```bash
+  momentum/
+  ├── backend/               # FastAPI application
+  │   ├── app/               # Main application code
+  │   ├── tests/             # Backend tests
+  │   └── requirements.txt   # Python dependencies
+  ├── frontend/              # React application
+  │   ├── src/               # Frontend source code
+  │   └── package.json       # Frontend dependencies and scripts
+  ├── docs/                  # Documentation and diagrams
+  ├── daily-activity/        # Daily progress logs
+  ├── .github/workflows/     # GitHub Actions for CI/CD
+  └── README.md              # Project documentation
+```
+
 
 ## Getting Started
-1. Clone the repository
-2. Install dependencies
-3. Start development
+**Prerequisites**
+- Python 3.9+
+- Node.js 14+
+- PostgreSQL
+- Docker (optional)
 
-## Development Guidelines
-1. Create feature branches
-2. Make small, focused commits
-3. Write descriptive commit messages
-4. Create pull requests for review
+**Backend Setup**
+```bash
+  cd backend
+  python -m venv venv
+  source venv/bin/activate
+  pip install -r requirements.txt
+  uvicorn app.main:app --reload
+```
+**Frontend Setup**
+```bash
+  cd frontend
+  npm install
+  npm start
+```
 
-## Resources
-- [Project Documentation](docs/)
-- [Development Setup](docs/setup.md)
-- [Contributing Guidelines](CONTRIBUTING.md)
+
+## 🔐 Environment Variables
+
+Create a .env file in both backend/ and frontend/ directories with the following variables:
+
+**Backend (.env)**
+```env
+  DATABASE_URL=postgresql://user:password@localhost:5432/momentum_db
+  SECRET_KEY=your_secret_key
+  ALGORITHM=HS256
+  ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+**Frontend (.env)**
+```env
+  REACT_APP_API_URL=http://localhost:8000
+```
+
+
+## 🧪 Running Tests
+
+To run tests, run the following command
+
+**Backend Tests**
+```bash
+  cd backend
+  pytest
+```
+
+**Frontend Tests**
+```bash
+  cd frontend
+  npm test
+```
+
+
+## 📦 Deployment with Docker
+
+To deploy the application using Docker:
+
+```bash
+  docker-compose up --build
+
+```
+
+
+## 🤝 Contributing
+
+- Fork the repository.
+- Create a new branch: git checkout -b feature/your-feature-name.
+- Commit your changes: git commit -m 'Add your message'.
+- Push to the branch: git push origin feature/your-feature-name.
+- Open a pull request.
+
+
+
+## 📄 License
+
+This project is licensed under the **MIT License** – see the [LICENSE](./LICENSE) file for details.
