@@ -2,7 +2,7 @@ from pydantic import BaseModel, EmailStr, field_validator, Field
 from typing import Optional, List
 from datetime import datetime
 from decimal import Decimal
-
+import re
 
 class Token(BaseModel):
     access_token: str
@@ -19,18 +19,24 @@ class ForgotPasswordRequest(BaseModel):
 
 class ResetPasswordRequest(BaseModel):
     token: str
-    new_password: str
-
+    new_password: str = Field(..., min_length=8, max_length=50, description="Password must be between 8-50 characters.")
+    
+    @field_validator("new_password")
+    @classmethod
+    def validate_password(cls, value):
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$', value):
+            raise ValueError("Password must contain at least one letter, one number, and one special character.")
+        return value
 
 class UserCreate(BaseModel):
-    username: Optional[str]
-    email: str
-    password: str
-    full_name: Optional[str]
-    address: Optional[str]
-    phone: Optional[str]
-    role: Optional[str] = "customer"
-
+    username: Optional[str] = Field(None, min_length=3, max_length=50)
+    email: EmailStr  # Ensures valid email format
+    password: str = Field(..., min_length=8, max_length=50)
+    full_name: Optional[str] = Field(None, max_length=100)
+    address: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, pattern=r'^(?:\+88|01)?(?:\d{9,10})$', description="Must be a valid BD phone number.")
+    role: str = Field(..., description="User role must be specified.")
+    
     @field_validator("role")
     @classmethod
     def validate_role(cls, value):
@@ -52,16 +58,25 @@ class UserOut(BaseModel):
     class Config:
         from_attributes = True
 
+class UserUpdate(BaseModel):
+    username: str
+    email: str
+    full_name: str
+    address: str
+    phone: str
+
+
+class PromoteUser(BaseModel):
+    role: str
 
 class LoginRequest(BaseModel):
-    email: str
-    password: str
-
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=50)
 
 class BrandCreate(BaseModel):
-    brand_name: str
-    brand_description: Optional[str]
-    logo: Optional[str]
+    brand_name: str = Field(..., min_length=3, max_length=100)
+    brand_description: Optional[str] = Field(None, max_length=255)
+    logo: Optional[str] = Field(None, pattern=r'^(http|https):\/\/.+\.(jpg|jpeg|png)$', description="Must be a valid image URL.")
 
 
 class BrandOut(BaseModel):
@@ -77,16 +92,15 @@ class BrandOut(BaseModel):
 
 
 class ProductCreate(BaseModel):
-    product_name: str
+    product_name: str = Field(..., min_length=3, max_length=100)
     product_pic: List[str]
     product_video: List[str]
-    category: str
-    description: Optional[str]
+    category: str = Field(..., min_length=3, max_length=50)
+    description: Optional[str] = Field(None, max_length=500)
     order_size: Optional[str]
-    order_quantity: Optional[int]
+    order_quantity: Optional[int] = Field(None, ge=1)
     quantity_unit: Optional[str]
-    price: float
-
+    price: float = Field(..., gt=0)
 
 class ProductOut(BaseModel):
     product_id: int
@@ -105,79 +119,53 @@ class ProductOut(BaseModel):
     class Config:
         from_attributes = True
 
-
 class ProductUpdate(BaseModel):
-    product_id: int
-    brand_id: int
     product_name: str
-    product_pic: List[str]
-    product_video: List[str]
     category: str
-    description: Optional[str]
-    order_size: Optional[str]
-    order_quantity: Optional[int]
-    quantity_unit: Optional[str]
+    description: str
     price: float
-    rating: Optional[float]
     approved: bool
 
-
+class ProductUpdate(ProductCreate):
+    product_id: int
+        
+        
 class UserUpdate(BaseModel):
-    full_name: Optional[str] = None
-    address: Optional[str] = None
-    phone: Optional[str] = None
+    full_name: Optional[str] = Field(None, max_length=100)
+    address: Optional[str] = Field(None, max_length=255)
+    phone: Optional[str] = Field(None, pattern=r'^(?:\+88|01)?(?:\d{9,10})$')
 
 
-class OrderItemCreate(BaseModel):
-    product_id: int
-    size: Optional[str]
-    quantity: int
-
-
-class BillCreate(BaseModel):
-    amount: float
-    method: str
-    trx_id: str
-    status: str
-
-
-class OrderCreate(BaseModel):
+class OrderItemCreate(BaseModel):  
+    product_id: int  
+    size: Optional[str]  
+    quantity: int = Field(..., ge=1)  
+   
+  
+class OrderCreate(BaseModel):  
     order_items: List[OrderItemCreate]
 
 
-class OrderOut(BaseModel):
-    order_id: int
-    user_id: int
-    status: str
-
-    class Config:
+class OrderOut(BaseModel):  
+    order_id: int  
+    user_id: int  
+    status: str  
+   
+  
+    class Config:  
         from_attributes = True
 
 
-class OrderItemCreate(BaseModel):
-    product_id: int
-    size: Optional[str]
-    quantity: int
+
+class OrderUpdate(BaseModel):
+    status: st
 
 
-class BillCreate(BaseModel):
-    amount: float
-    method: str
-    trx_id: str
-    status: str
-
-
-class OrderCreate(BaseModel):
-    order_items: List[OrderItemCreate]
-
-
-class OrderOut(BaseModel):
-    order_id: int
-    user_id: int
-    status: str
-
-    class Config:
-        from_attributes = True
+class BillCreate(BaseModel):  
+    amount: float = Field(..., gt=0)
+    method: str = Field(..., min_length=3)
+    trx_id: str = Field(..., min_length=5, max_length=50)
+    status: str  
 
 
 class BillOut(BaseModel):
@@ -190,6 +178,12 @@ class BillOut(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class PayBillRequest(BaseModel):
+    order_id: int
+    method: str
+    trx_id: str = Field(..., min_length=5, max_length=50)
 
 
 class OrderItemDetail(BaseModel):
