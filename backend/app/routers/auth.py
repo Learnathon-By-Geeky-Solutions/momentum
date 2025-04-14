@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from typing import Annotated, List, Optional
 from passlib.context import CryptContext
-from app.models import User, Order, OrderItem, Bill  # adjust as needed
+from app.models import User, Order, OrderItem, Bill
 from app.schemas import (
     UserCreate,
     Token,
