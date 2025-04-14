@@ -23,8 +23,27 @@ from app.routers import (
     paybill,
 )
 
-import sentry_sdk
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import dotenv
+import sentry_sdk
+
+# Fix CORS error
+app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "https://fastapi-user-management.herokuapp.com",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 sentry_sdk.init(

@@ -1,8 +1,13 @@
 import {
-  Laptop,
-  Monitor,
-  Gamepad,
-  ComputerIcon as Desktop,
+  Brush,
+  Gem,
+  Home,
+  Shirt,
+  Leaf,
+  Utensils,
+  Baby,
+  FileText,
+  Globe,
   type LucideIcon,
 } from "lucide-react"
 
@@ -29,110 +34,225 @@ export interface Category {
 
 export const categories: Category[] = [
   {
-    name: "Desktop",
-    href: "/category/desktop",
-    icon: Desktop,
+    name: "Handmade Crafts",
+    href: "/category/handmade-crafts",
+    icon: Brush,
     subcategories: [
       {
-        name: "Gaming Desktop",
-        href: "/category/gaming-desktop",
-        icon: Gamepad,
+        name: "Pottery & Ceramics",
+        href: "/category/pottery-ceramics",
+        icon: Brush,
         brands: [
           {
-            name: "Alienware",
-            href: "/brand/alienware",
-            image: "/placeholder.svg?height=40&width=40",
+            name: "Pottery",
+            href: "/category/pottery",
+            image: "/images/pottery.png",
           },
           {
-            name: "ROG",
-            href: "/brand/rog",
-            image: "/placeholder.svg?height=40&width=40",
+            name: "Ceramics",
+            href: "/category/ceramics",
+            image: "/images/ceramics.png",
+          },
+        ],
+      },
+      {
+        name: "Woodworking & Carving",
+        href: "/category/woodworking",
+        icon: Brush,
+        brands: [
+          {
+            name: "Woodworking",
+            href: "/category/woodworking",
+            image: "/images/woodworking.png",
           },
           {
-            name: "MSI",
-            href: "/brand/msi",
-            image: "/placeholder.svg?height=40&width=40",
+            name: "Carving",
+            href: "/category/carving",
+            image: "/images/carving.png",
+          },
+        ],
+      },
+      {
+        name: "Glass Art",
+        href: "/category/glass-art",
+        icon: Brush,
+        brands: [
+          {
+            name: "Glass Art",
+            href: "/category/glass-art",
+            image: "/images/glass-art.png",
           },
         ],
       },
     ],
   },
   {
-    name: "Laptop",
-    href: "/category/laptop",
-    icon: Laptop,
+    name: "Jewelry & Accessories",
+    href: "/category/jewelry",
+    icon: Gem,
     subcategories: [
       {
-        name: "All Laptop",
-        href: "/category/all-laptop",
-        icon: Laptop,
-      },
-      {
-        name: "Gaming Laptop",
-        href: "/category/gaming-laptop",
-        icon: Gamepad,
+        name: "Handmade Necklaces",
+        href: "/category/necklaces",
+        icon: Gem,
         brands: [
           {
-            name: "Lenovo",
-            href: "/brand/lenovo",
-            image: "/placeholder.svg?height=40&width=40",
-          },
-          {
-            name: "Asus",
-            href: "/brand/asus",
-            image: "/placeholder.svg?height=40&width=40",
-          },
-          {
-            name: "MSI",
-            href: "/brand/msi",
-            image: "/placeholder.svg?height=40&width=40",
-          },
-          {
-            name: "HP",
-            href: "/brand/hp",
-            image: "/placeholder.svg?height=40&width=40",
-          },
-          {
-            name: "Acer",
-            href: "/brand/acer",
-            image: "/placeholder.svg?height=40&width=40",
-          },
-          {
-            name: "Gigabyte",
-            href: "/brand/gigabyte",
-            image: "/placeholder.svg?height=40&width=40",
-          },
-          {
-            name: "Thunderobot",
-            href: "/brand/thunderobot",
-            image: "/placeholder.svg?height=40&width=40",
-          },
-          {
-            name: "Dell",
-            href: "/brand/dell",
-            image: "/placeholder.svg?height=40&width=40",
+            name: "Necklaces",
+            href: "/category/necklaces",
+            image: "/images/necklaces.png",
           },
         ],
       },
       {
-        name: "Premium Ultrabook",
-        href: "/category/premium-ultrabook",
-        icon: Laptop,
+        name: "Earrings",
+        href: "/category/earrings",
+        icon: Gem,
+      },
+      {
+        name: "Bracelets & Bangles",
+        href: "/category/bracelets",
+        icon: Gem,
       },
     ],
   },
   {
-    name: "Laptop Accessories",
-    href: "/category/laptop-accessories",
-    icon: Monitor,
+    name: "Home Décor",
+    href: "/category/home-decor",
+    icon: Home,
     subcategories: [
       {
-        name: "Laptop Bag",
-        href: "/category/laptop-bag",
+        name: "Handmade Candles",
+        href: "/category/handmade-candles",
+        icon: Home,
       },
       {
-        name: "Laptop Accessories",
-        href: "/category/accessories",
+        name: "Wall Art & Paintings",
+        href: "/category/wall-art",
+        icon: Home,
+      },
+      {
+        name: "Decorative Lamps",
+        href: "/category/decorative-lamps",
+        icon: Home,
+      },
+    ],
+  },
+  {
+    name: "Fashion & Apparel",
+    href: "/category/fashion",
+    icon: Shirt,
+    subcategories: [
+      {
+        name: "Handwoven Fabrics",
+        href: "/category/handwoven-fabrics",
+        icon: Shirt,
+      },
+      {
+        name: "Knitted & Crocheted Items",
+        href: "/category/knitted-items",
+        icon: Shirt,
+      },
+    ],
+  },
+  {
+    name: "Beauty & Personal Care",
+    href: "/category/beauty",
+    icon: Leaf,
+    subcategories: [
+      {
+        name: "Handmade Soaps",
+        href: "/category/handmade-soaps",
+        icon: Leaf,
+      },
+      {
+        name: "Essential Oils & Perfumes",
+        href: "/category/essential-oils",
+        icon: Leaf,
+      },
+    ],
+  },
+  {
+    name: "Food & Beverages",
+    href: "/category/food",
+    icon: Utensils,
+    subcategories: [
+      {
+        name: "Artisanal Chocolates",
+        href: "/category/chocolates",
+        icon: Utensils,
+      },
+      {
+        name: "Handmade Baked Goods",
+        href: "/category/baked-goods",
+        icon: Utensils,
+      },
+    ],
+  },
+  {
+    name: "Furniture & Home Essentials",
+    href: "/category/furniture",
+    icon: Home,
+    subcategories: [
+      {
+        name: "Custom Wooden Furniture",
+        href: "/category/wooden-furniture",
+        icon: Home,
+      },
+      {
+        name: "Handwoven Baskets",
+        href: "/category/baskets",
+        icon: Home,
+      },
+    ],
+  },
+  {
+    name: "Toys & Kids’ Items",
+    href: "/category/toys",
+    icon: Baby,
+    subcategories: [
+      {
+        name: "Handmade Plush Toys",
+        href: "/category/plush-toys",
+        icon: Baby,
+      },
+      {
+        name: "Wooden Toys",
+        href: "/category/wooden-toys",
+        icon: Baby,
+      },
+    ],
+  },
+  {
+    name: "Stationery & Office Supplies",
+    href: "/category/stationery",
+    icon: FileText,
+    subcategories: [
+      {
+        name: "Handmade Journals",
+        href: "/category/journals",
+        icon: FileText,
+      },
+      {
+        name: "Custom Wax Seals",
+        href: "/category/wax-seals",
+        icon: FileText,
+      },
+    ],
+  },
+  {
+    name: "Cultural & Traditional Art",
+    href: "/category/cultural-art",
+    icon: Globe,
+    subcategories: [
+      {
+        name: "Tribal & Indigenous Crafts",
+        href: "/category/tribal-crafts",
+        icon: Globe,
+      },
+      {
+        name: "Ethnic Accessories",
+        href: "/category/ethnic-accessories",
+        icon: Globe,
       },
     ],
   },

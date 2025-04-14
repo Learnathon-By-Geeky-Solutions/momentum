@@ -9,12 +9,16 @@ class Token(BaseModel):
     token_type: str
 
 
+
 class TokenData(BaseModel):
     email: Optional[str] = None
 
 
+
+
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
+
 
 
 class ResetPasswordRequest(BaseModel):
@@ -107,6 +111,7 @@ class ProductCreate(BaseModel):
 class ProductOut(BaseModel):
     product_id: int
     # brand_id: int
+    # brand_id: int
     product_name: str
     product_pic: List[str]
     product_video: List[str]
@@ -196,6 +201,7 @@ class OrderItemDetail(BaseModel):
     order_quantity: int
 
 
+
 class OrderDetailOut(BaseModel):
     order_id: int
     status: str
@@ -212,3 +218,4 @@ class ChatRequest(BaseModel):
     
 class ChatResponse(BaseModel):
     response: str
+
