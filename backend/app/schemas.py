@@ -58,6 +58,16 @@ class UserOut(BaseModel):
     class Config:
         from_attributes = True
 
+class UserUpdate(BaseModel):
+    username: str
+    email: str
+    full_name: str
+    address: str
+    phone: str
+
+
+class PromoteUser(BaseModel):
+    role: str
 
 class LoginRequest(BaseModel):
     email: EmailStr
@@ -96,20 +106,6 @@ class ProductCreate(BaseModel):
 
 class ProductOut(BaseModel):
     product_id: int
-    #brand_id: int
-    product_name: str
-    product_pic: List[str]
-    product_video: List[str]
-    category: str
-    description: Optional[str]
-    order_size: Optional[str]
-    order_quantity: Optional[int]
-    quantity_unit: Optional[str]
-    price: float
-
-
-class ProductOut(BaseModel):
-    product_id: int
     # brand_id: int
     product_name: str
     product_pic: List[str]
@@ -126,6 +122,12 @@ class ProductOut(BaseModel):
     class Config:
         from_attributes = True
 
+class ProductUpdate(BaseModel):
+    product_name: str
+    category: str
+    description: str
+    price: float
+    approved: bool
 
 class ProductUpdate(ProductCreate):
     product_id: int
@@ -155,6 +157,9 @@ class OrderOut(BaseModel):
   
     class Config:  
         from_attributes = True
+
+class OrderUpdate(BaseModel):
+    status: st
 
 
 class BillCreate(BaseModel):  
