@@ -15,3 +15,4 @@ backend/.__pycache__/
 alembic.ini
 backend/main.py
 .__pycache__/
+.venv
