@@ -5,7 +5,7 @@ from app.schemas import UserUpdate
 from app.database import get_db
 from app.utils import (
     get_current_user,
-)  # or from router.auth, depending on your structure
+)
 from typing import List, Optional
 from fastapi import APIRouter
 
@@ -13,7 +13,6 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-# View Profile
 @router.get("/profile")
 async def get_profile(user: User = Depends(get_current_user)):
     return {

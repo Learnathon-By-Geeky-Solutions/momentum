@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from typing import Annotated, List, Optional
 from passlib.context import CryptContext
-from app.models import User, Order, OrderItem, Bill  # adjust as needed
+from app.models import User, Order, OrderItem, Bill
 from app.schemas import (
     UserCreate,
     Token,
@@ -51,7 +51,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 app.include_router(auth.router)
 
 
-# Error message constants
+
 USER_NOT_FOUND = "User not found"
 INVALID_CREDENTIALS = "Invalid credentials"
 INVALID_TOKEN = "Invalid token or user not found"
@@ -91,14 +91,12 @@ async def forgot_password(
 ):
     user = db.query(User).filter(User.email == request_data.email).first()
 
-    # For security, return the same message even if the user is not found.
     if not user:
         return {"message": PASSWORD_RESET_EMAIL_SENT}
 
     reset_token = create_reset_token(user.email)
     reset_link = f"http://localhost:8000/reset-password?token={reset_token}"
 
-    # Use background tasks to send the email asynchronously
     background_tasks.add_task(send_reset_email, user.email, reset_link)
 
     return {"message": PASSWORD_RESET_EMAIL_SENT}
@@ -114,14 +112,12 @@ async def reset_password(
             status_code=status.HTTP_400_BAD_REQUEST, detail=INVALID_RESET_TOKEN
         )
 
-    # Find the user
     user = db.query(User).filter(User.email == email).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=USER_NOT_FOUND
         )
 
-    # Hash the new password and update
     hashed_password = auth_utils.hash_password(request_data.new_password)
     user.password = hashed_password
     db.commit()
@@ -155,7 +151,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         full_name=user.full_name,
         address=user.address,
         phone=user.phone,
-        role=user.role,  # Role is now validated
+        role=user.role,
         is_verified=False,
     )
 

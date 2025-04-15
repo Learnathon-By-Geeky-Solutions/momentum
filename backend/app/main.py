@@ -11,6 +11,7 @@ from app.models import User
 from app.utils import auth_utils, create_access_token, verify_token
 from app.database import get_db
 from app.minio.routers import upload
+from app.ai.routers import search
 import dotenv
 
 from app.routers import (
@@ -77,6 +78,7 @@ app.include_router(product.router, prefix="", tags=["Products"])
 app.include_router(upload.router, prefix="", tags=["Upload"])
 app.include_router(order.router, prefix="", tags=["Orders"])
 app.include_router(paybill.router, prefix="", tags=["Paybills"])
+app.include_router(search.router, prefix="", tags=["AiSearch"])
 # app.include_router(agent.router, prefix="/agent", tags=["Agent"])
 
 
