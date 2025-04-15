@@ -28,7 +28,6 @@ REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
 
 conf = ConnectionConfig(
     MAIL_USERNAME=os.getenv("mymail"),
-    MAIL_USERNAME=os.getenv("mymail"),
     MAIL_PASSWORD=os.getenv("google_password"),
     MAIL_FROM=os.getenv("mymail"),
     MAIL_PORT=587,
@@ -136,7 +135,6 @@ async def send_verification_email(email: str, token: str):
         recipients=[email],
         body=f"Click the link to verify your email: {verification_link}",
         subtype="html",
-        subtype="html",
     )
     fm = FastMail(conf)
     await fm.send_message(message)
@@ -147,7 +145,6 @@ async def send_reset_email(email: str, link: str):
         subject="Reset Your Password",
         recipients=[email],
         body=f"Click the link to reset your password: {link}",
-        subtype="html",
         subtype="html",
     )
     fm = FastMail(conf)
