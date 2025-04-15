@@ -48,6 +48,7 @@ app.add_middleware(
         "X-Requested-With",
         "Access-Control-Request-Method",
         "Access-Control-Request-Headers",
+        "Access-Control-Allow-Origin"
     ],
     expose_headers=["Content-Range", "X-Content-Range"],
     max_age=600,
