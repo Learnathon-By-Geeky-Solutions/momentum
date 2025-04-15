@@ -29,7 +29,15 @@ import dotenv
 import sentry_sdk
 import os
 
-app = FastAPI()
+app = FastAPI(
+    title="Handicrafts API Documentation",
+    description="API for the Handicrafts application",
+    version="1.0.0",
+    contact={
+        "name": "Team Momentum",
+        "url": "https://github.com/Learnathon-By-Geeky-Solutions/momentum",
+    },
+)
 
 
 origins = [

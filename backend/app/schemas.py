@@ -167,7 +167,7 @@ class OrderOut(BaseModel):
 
 
 class OrderUpdate(BaseModel):
-    status: st
+    status: str
 
 
 class BillCreate(BaseModel):  
