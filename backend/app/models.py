@@ -32,7 +32,6 @@ class User(Base):
 
     brands = relationship("Brand", back_populates="user")
 
-    # Add this relationship for Order
     orders = relationship("Order", back_populates="user")
 
 
@@ -60,8 +59,8 @@ class Product(Base):
         Integer, ForeignKey("brand.brand_id", ondelete="CASCADE"), nullable=False
     )
     product_name = Column(String(255), nullable=False)
-    product_pic = Column(ARRAY(Text))  # Array of image storage links
-    product_video = Column(ARRAY(Text))  # Array of video storage links
+    product_pic = Column(ARRAY(Text))
+    product_video = Column(ARRAY(Text))
     category = Column(String(100), nullable=False)
     description = Column(Text)
     order_size = Column(String(50))
@@ -90,7 +89,7 @@ class Order(Base):
     )
     bill = relationship(
         "Bill", back_populates="order", cascade="all, delete-orphan", uselist=False
-    )  # One-to-one relationship
+    )
 
 
 class OrderItem(Base):

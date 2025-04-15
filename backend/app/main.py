@@ -11,6 +11,7 @@ from app.models import User
 from app.utils import auth_utils, create_access_token, verify_token
 from app.database import get_db
 from app.minio.routers import upload
+from app.ai.routers import search
 import dotenv
 
 from app.routers import (
@@ -20,10 +21,29 @@ from app.routers import (
     order,
     profile,
     paybill,
-)  # Import routers
+)
 
-import sentry_sdk
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
+import dotenv
+import sentry_sdk
+
+# Fix CORS error
+app = FastAPI()
+
+origins = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "https://fastapi-user-management.herokuapp.com",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 sentry_sdk.init(
@@ -41,7 +61,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app = FastAPI()
 
-# Include routers with prefixes and tags for organization
+
 app.include_router(auth.router, prefix="", tags=["Auth"])
 app.include_router(profile.router, prefix="", tags=["Profile"])
 app.include_router(brand.router, prefix="", tags=["Brands"])
@@ -49,6 +69,7 @@ app.include_router(product.router, prefix="", tags=["Products"])
 app.include_router(upload.router, prefix="", tags=["Upload"])
 app.include_router(order.router, prefix="", tags=["Orders"])
 app.include_router(paybill.router, prefix="", tags=["Paybills"])
+app.include_router(search.router, prefix="", tags=["AiSearch"])
 # app.include_router(agent.router, prefix="/agent", tags=["Agent"])
 
 

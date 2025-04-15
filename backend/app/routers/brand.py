@@ -6,7 +6,7 @@ import app.models as models
 from app.models import User, Brand
 from app.utils import (
     get_current_user,
-)  # Adjust the path based on your project structure
+)
 from typing import List, Optional
 
 from fastapi import APIRouter
@@ -15,7 +15,6 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-# Create Brand (protected route)
 @router.post("/brands", response_model=schemas.BrandOut)
 async def create_brand(
     brand: schemas.BrandCreate,
