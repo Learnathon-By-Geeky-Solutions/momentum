@@ -1,4 +1,4 @@
-# utils/ai_search.py
+
 from openai import AzureOpenAI
 from langdetect import detect
 from sklearn.metrics.pairwise import cosine_similarity
@@ -23,12 +23,13 @@ def detect_language(text: str) -> str:
 
 
 def generate_keywords(query: str) -> dict:
-    prompt = f"""Extract product search filters and translate to English clearly from the user's input below.  
+    prompt = f"""Extract product search filters and translate to English clearly from the user's input below.
+      
 User input: "{query}"  
 Respond ONLY in valid JSON format clearly with this structure:  
 {{  
   "keywords": [list of main product words in original language],  
-  "keywords_en": [list of main product words translated clearly to English],  
+  "keywords_en": [list of main product keywords translated clearly to English],  
   "category": string or null,  
   "price_range": [min, max] or null,  
   "brand": string or null  
@@ -48,10 +49,12 @@ Respond ONLY in valid JSON format clearly with this structure:
 
     try:
         text = response.choices[0].message.content
+        print(text)
         json_text = re.search(r"{.*}", text, re.DOTALL)
         if json_text:
             return json.loads(json_text.group())
         else:
+            
             return {"keywords": [], "keywords_en": []}
     except Exception:
         return {"keywords": [], "keywords_en": []}
@@ -59,6 +62,7 @@ Respond ONLY in valid JSON format clearly with this structure:
 
 def get_most_similar_products(products, keywords):
     keyword_text = " ".join(keywords).lower().strip()
+    print(keyword_text)
     matched_products = [
         product
         for product in products
@@ -89,3 +93,12 @@ def get_most_similar_products(products, keywords):
         reverse=True,
     )
     return [p for p, _ in fuzzy_matches]
+
+
+
+
+
+
+
+
+

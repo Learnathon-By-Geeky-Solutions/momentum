@@ -26,8 +26,6 @@ async def create_brand(
         db.query(models.Brand).filter(models.Brand.user_id == user.user_id).first()
     )
 
-    # print(existing_brand.brand_name)
-
     if existing_brand:
         raise HTTPException(status_code=400, detail="You can create only one brand.")
 
