@@ -1,4 +1,3 @@
-
 from openai import AzureOpenAI
 from langdetect import detect
 from sklearn.metrics.pairwise import cosine_similarity
@@ -54,7 +53,7 @@ Respond ONLY in valid JSON format clearly with this structure:
         if json_text:
             return json.loads(json_text.group())
         else:
-            
+
             return {"keywords": [], "keywords_en": []}
     except Exception:
         return {"keywords": [], "keywords_en": []}
@@ -93,12 +92,3 @@ def get_most_similar_products(products, keywords):
         reverse=True,
     )
     return [p for p, _ in fuzzy_matches]
-
-
-
-
-
-
-
-
-

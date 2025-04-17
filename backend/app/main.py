@@ -74,6 +74,5 @@ app.include_router(paybill.router, prefix="", tags=["Paybills"])
 app.include_router(search.router, prefix="/search", tags=["Sementic Search"])
 
 
-
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)

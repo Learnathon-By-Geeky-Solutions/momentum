@@ -9,8 +9,8 @@ from app.ai.utils.ai_search import (
 )
 
 
-
 router = APIRouter()
+
 
 @router.get("/")
 def ai_product_search(

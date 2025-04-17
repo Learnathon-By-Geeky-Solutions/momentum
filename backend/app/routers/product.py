@@ -106,7 +106,7 @@ def delete_product(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-   
+
     product = (
         db.query(models.Product).filter(models.Product.product_id == product_id).first()
     )
@@ -116,7 +116,7 @@ def delete_product(
     brand = (
         db.query(models.Brand).filter(models.Brand.brand_id == product.brand_id).first()
     )
-    
+
     if not brand or brand.user_id != current_user.user_id:
         raise HTTPException(
             status_code=403, detail="You do not have permission to delete this product"
@@ -136,7 +136,6 @@ def delete_product(
             status_code=400, detail="Complete the order before deleting this product."
         )
 
-   
     db.delete(product)
     db.commit()
 
