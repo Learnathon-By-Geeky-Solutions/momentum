@@ -74,14 +74,6 @@ class UserOut(BaseModel):
         from_attributes = True
 
 
-class UserUpdate(BaseModel):
-    username: str
-    email: str
-    full_name: str
-    address: str
-    phone: str
-
-
 class PromoteUser(BaseModel):
     role: str
 
