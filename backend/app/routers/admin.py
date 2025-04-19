@@ -1,12 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from models import User, Product, Order
-from database import get_db
-from utils import get_current_admin
-from schemas import UserUpdate, ProductUpdate, OrderUpdate
-from schemas import PromoteUser
+from app.models import User, Product, Order
+from app.database import get_db
+from app.utils import get_current_admin
+from app.schemas import UserUpdate, ProductUpdate, OrderUpdate, PromoteUser
 
-router = APIRouter(prefix="/admin", tags=["Admin"])
+router = APIRouter()
+
+
+def get_object_or_404(model, object_id: int, db: Session, field="id", name="Item"):
+    obj = db.query(model).filter(getattr(model, field) == object_id).first()
+    if not obj:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"{name} not found"
+        )
+    return obj
+
+
+def update_object_fields(db_obj, update_data):
+    for key, value in update_data.model_dump(exclude_unset=True).items():
+        setattr(db_obj, key, value)
+
 
 @router.put("/users/promote/{user_id}")
 async def promote_user(
@@ -15,32 +29,25 @@ async def promote_user(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
 ):
-    role = role_data.role.lower()
-
-    if role != "admin":
+    if role_data.role.lower() != "admin":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid role. Only 'admin' is allowed.",
         )
 
-    user = db.query(User).filter(User.user_id == user_id).first()
-
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
-
-    user.role = role
+    user = get_object_or_404(User, user_id, db, field="user_id", name="User")
+    user.role = "admin"
     db.commit()
     db.refresh(user)
     return {"detail": f"User {user.username} is now an admin"}
 
+
 @router.get("/users")
 async def get_all_users(
-    db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin),
 ):
-    users = db.query(User).all()
-    return users
+    return db.query(User).all()
 
 
 @router.put("/users/{user_id}")
@@ -50,15 +57,8 @@ async def update_user(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
 ):
-    user = db.query(User).filter(User.user_id == user_id).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
-
-    for key, value in user_data.model_dump(exclude_unset=True).items():
-        setattr(user, key, value)
-
+    user = get_object_or_404(User, user_id, db, field="user_id", name="User")
+    update_object_fields(user, user_data)
     db.commit()
     db.refresh(user)
     return user
@@ -70,22 +70,18 @@ async def delete_user(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
 ):
-    user = db.query(User).filter(User.user_id == user_id).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
-        )
-
+    user = get_object_or_404(User, user_id, db, field="user_id", name="User")
     db.delete(user)
     db.commit()
     return {"detail": "User deleted successfully"}
 
+
 @router.get("/products")
 async def get_all_products(
-    db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin),
 ):
-    products = db.query(Product).all()
-    return products
+    return db.query(Product).all()
 
 
 @router.put("/products/{product_id}")
@@ -95,15 +91,10 @@ async def update_product(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
 ):
-    product = db.query(Product).filter(Product.product_id == product_id).first()
-    if not product:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
-        )
-
-    for key, value in product_data.model_dump(exclude_unset=True).items():
-        setattr(product, key, value)
-
+    product = get_object_or_404(
+        Product, product_id, db, field="product_id", name="Product"
+    )
+    update_object_fields(product, product_data)
     db.commit()
     db.refresh(product)
     return product
@@ -115,22 +106,20 @@ async def delete_product(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
 ):
-    product = db.query(Product).filter(Product.product_id == product_id).first()
-    if not product:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
-        )
-
+    product = get_object_or_404(
+        Product, product_id, db, field="product_id", name="Product"
+    )
     db.delete(product)
     db.commit()
     return {"detail": "Product deleted successfully"}
 
+
 @router.get("/orders")
 async def get_all_orders(
-    db: Session = Depends(get_db), current_admin: User = Depends(get_current_admin)
+    db: Session = Depends(get_db),
+    current_admin: User = Depends(get_current_admin),
 ):
-    orders = db.query(Order).all()
-    return orders
+    return db.query(Order).all()
 
 
 @router.put("/orders/{order_id}")
@@ -140,15 +129,8 @@ async def update_order(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
 ):
-    order = db.query(Order).filter(Order.order_id == order_id).first()
-    if not order:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Order not found"
-        )
-
-    for key, value in order_data.model_dump(exclude_unset=True).items():
-        setattr(order, key, value)
-
+    order = get_object_or_404(Order, order_id, db, field="order_id", name="Order")
+    update_object_fields(order, order_data)
     db.commit()
     db.refresh(order)
     return order
@@ -160,12 +142,7 @@ async def delete_order(
     db: Session = Depends(get_db),
     current_admin: User = Depends(get_current_admin),
 ):
-    order = db.query(Order).filter(Order.order_id == order_id).first()
-    if not order:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Order not found"
-        )
-
+    order = get_object_or_404(Order, order_id, db, field="order_id", name="Order")
     db.delete(order)
     db.commit()
     return {"detail": "Order deleted successfully"}
