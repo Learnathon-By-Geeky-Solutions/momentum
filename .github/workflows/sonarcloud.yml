@@ -41,3 +41,4 @@ jobs:
           projectBaseDir: backend
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          DATABASE_URL: DATABASE_URL
