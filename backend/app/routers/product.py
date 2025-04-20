@@ -106,25 +106,22 @@ def delete_product(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user),
 ):
-    # Retrieve the product by its ID
+
     product = (
         db.query(models.Product).filter(models.Product.product_id == product_id).first()
     )
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
 
-    # Retrieve the brand associated with the product
     brand = (
         db.query(models.Brand).filter(models.Brand.brand_id == product.brand_id).first()
     )
-    # Ensure the current user owns this brand
+
     if not brand or brand.user_id != current_user.user_id:
         raise HTTPException(
             status_code=403, detail="You do not have permission to delete this product"
         )
 
-    # Check for any pending order items for this product.
-    # This joins OrderItem and Order, and checks if there is any order with status "Pending"
     pending_order_item = (
         db.query(models.OrderItem)
         .join(models.Order, models.OrderItem.order_id == models.Order.order_id)
@@ -139,7 +136,6 @@ def delete_product(
             status_code=400, detail="Complete the order before deleting this product."
         )
 
-    # If no pending order is found, delete the product.
     db.delete(product)
     db.commit()
 
