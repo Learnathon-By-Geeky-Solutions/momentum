@@ -8,7 +8,8 @@ from app.ai.utils.ai_search import (
     get_most_similar_products,
 )
 
-router = APIRouter(prefix="/search", tags=["AI Product Search"])
+
+router = APIRouter()
 
 
 @router.get("/")

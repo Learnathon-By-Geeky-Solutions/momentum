@@ -13,6 +13,7 @@ class User(BaseModel):
     is_verified: bool
 
 
+
 class Token(BaseModel):
     access_token: str
     user: User
@@ -28,14 +29,24 @@ class ForgotPasswordRequest(BaseModel):
 
 class ResetPasswordRequest(BaseModel):
     token: str
-    new_password: str = Field(..., min_length=8, max_length=50, description="Password must be between 8-50 characters.")
-    
+    new_password: str = Field(
+        ...,
+        min_length=8,
+        max_length=50,
+        description="Password must be between 8-50 characters.",
+    )
+
     @field_validator("new_password")
     @classmethod
     def validate_password(cls, value):
-        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$', value):
-            raise ValueError("Password must contain at least one letter, one number, and one special character.")
+        if not re.match(
+            r"^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$", value
+        ):
+            raise ValueError(
+                "Password must contain at least one letter, one number, and one special character."
+            )
         return value
+
 
 class UserCreate(BaseModel):
     username: Optional[str] = Field(None, min_length=3, max_length=50)
@@ -43,9 +54,13 @@ class UserCreate(BaseModel):
     password: str = Field(..., min_length=8, max_length=50)
     full_name: Optional[str] = Field(None, max_length=100)
     address: Optional[str] = Field(None, max_length=255)
-    phone: Optional[str] = Field(None, pattern=r'^(?:\+88|01)?(?:\d{9,10})$', description="Must be a valid BD phone number.")
+    phone: Optional[str] = Field(
+        None,
+        pattern=r"^(?:\+88|01)?(?:\d{9,10})$",
+        description="Must be a valid BD phone number.",
+    )
     role: str = Field(..., description="User role must be specified.")
-    
+
     @field_validator("role")
     @classmethod
     def validate_role(cls, value):
@@ -67,25 +82,24 @@ class UserOut(BaseModel):
     class Config:
         from_attributes = True
 
-class UserUpdate(BaseModel):
-    username: str
-    email: str
-    full_name: str
-    address: str
-    phone: str
-
 
 class PromoteUser(BaseModel):
     role: str
+
 
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=50)
 
+
 class BrandCreate(BaseModel):
     brand_name: str = Field(..., min_length=3, max_length=100)
     brand_description: Optional[str] = Field(None, max_length=255)
-    logo: Optional[str] = Field(None, pattern=r'^(http|https):\/\/.+\.(jpg|jpeg|png)$', description="Must be a valid image URL.")
+    logo: Optional[str] = Field(
+        None,
+        pattern=r"^(http|https):\/\/.+\.(jpg|jpeg|png)$",
+        description="Must be a valid image URL.",
+    )
 
 
 class BrandOut(BaseModel):
@@ -111,6 +125,7 @@ class ProductCreate(BaseModel):
     quantity_unit: Optional[str]
     price: float = Field(..., gt=0)
 
+
 class ProductOut(BaseModel):
     product_id: int
     product_name: str
@@ -128,6 +143,7 @@ class ProductOut(BaseModel):
     class Config:
         from_attributes = True
 
+
 class ProductUpdate(BaseModel):
     product_name: str
     category: str
@@ -135,46 +151,45 @@ class ProductUpdate(BaseModel):
     price: float
     approved: bool
 
+
 class ProductUpdate(ProductCreate):
     product_id: int
-        
-        
+
+
 class UserUpdate(BaseModel):
     full_name: Optional[str] = Field(None, max_length=100)
     address: Optional[str] = Field(None, max_length=255)
-    phone: Optional[str] = Field(None, pattern=r'^(?:\+88|01)?(?:\d{9,10})$')
+    phone: Optional[str] = Field(None, pattern=r"^(?:\+88|01)?(?:\d{9,10})$")
 
 
-class OrderItemCreate(BaseModel):  
-    product_id: int  
-    size: Optional[str]  
-    quantity: int = Field(..., ge=1)  
-   
-  
-class OrderCreate(BaseModel):  
+class OrderItemCreate(BaseModel):
+    product_id: int
+    size: Optional[str]
+    quantity: int = Field(..., ge=1)
+
+
+class OrderCreate(BaseModel):
     order_items: List[OrderItemCreate]
 
 
-class OrderOut(BaseModel):  
-    order_id: int  
-    user_id: int  
-    status: str  
-   
-  
-    class Config:  
-        from_attributes = True
+class OrderOut(BaseModel):
+    order_id: int
+    user_id: int
+    status: str
 
+    class Config:
+        from_attributes = True
 
 
 class OrderUpdate(BaseModel):
     status: str
 
 
-class BillCreate(BaseModel):  
+class BillCreate(BaseModel):
     amount: float = Field(..., gt=0)
     method: str = Field(..., min_length=3)
     trx_id: str = Field(..., min_length=5, max_length=50)
-    status: str  
+    status: str
 
 
 class BillOut(BaseModel):

@@ -21,7 +21,8 @@ from app.routers import (
     order,
     profile,
     paybill,
-)  
+    admin,
+)
 
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
@@ -78,16 +79,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 
-# Include routers with prefixes and tags for organization
-app.include_router(auth.router, prefix="/auth", tags=["Auth"])
+
+app.include_router(admin.router, prefix="/admin", tags=["Admin"])
+app.include_router(auth.router, prefix="", tags=["Auth"])
 app.include_router(profile.router, prefix="", tags=["Profile"])
 app.include_router(brand.router, prefix="", tags=["Brands"])
 app.include_router(product.router, prefix="", tags=["Products"])
 app.include_router(upload.router, prefix="", tags=["Upload"])
 app.include_router(order.router, prefix="", tags=["Orders"])
 app.include_router(paybill.router, prefix="", tags=["Paybills"])
-app.include_router(search.router, prefix="", tags=["AiSearch"])
-# app.include_router(agent.router, prefix="/agent", tags=["Agent"])
+app.include_router(search.router, prefix="/search", tags=["Sementic Search"])
 
 
 if __name__ == "__main__":
