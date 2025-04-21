@@ -1,4 +1,4 @@
-name: SonarCloud Backend Analysis
+name: SonarQube Analysis
 
 on:
   push:
@@ -9,36 +9,18 @@ on:
       - 'backend/**'
 
 jobs:
-  sonarcloud:
-    name: SonarCloud
+  sonarqube:
     runs-on: ubuntu-latest
-
-    defaults:
-      run:
-        working-directory: backend
-
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Set up Python
-        uses: actions/setup-python@v4
         with:
-          python-version: '3.12.2'
+          fetch-depth: 0
 
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest pytest-cov coverage python-dotenv
-
-      - name: create env file
-        run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > backend/.env
-      - name: Run tests and generate coverage
-        run: |
-          pytest --cov=app --cov-report=xml:coverage.xml tests/ --cov-report=term
-
-      - name: SonarCloud Scan
+      - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          projectBaseDir: backend
+         
