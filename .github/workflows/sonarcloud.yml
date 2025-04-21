@@ -31,11 +31,12 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov coverage python-dotenv
 
-      - name: Load environment variables and run tests
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      - name: create env file
         run: |
-          pytest --cov=app --cov-report=xml --cov-report=term
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > backend/.env
+      - name: Run tests and generate coverage
+        run: |
+          pytest --cov=app --cov-report=xml:coverage.xml tests/ --cov-report=term
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarqube-scan-action@v5
