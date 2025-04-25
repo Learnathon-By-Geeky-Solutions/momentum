@@ -196,4 +196,3 @@ async def ssl_cancel(request: Request, db: Session = Depends(get_db)):
         bill.status = "Cancelled"
         db.commit()
     return {"message": "Payment cancelled"}
-
