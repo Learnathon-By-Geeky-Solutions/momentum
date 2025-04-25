@@ -143,7 +143,7 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
     ├── backend/                    # Python Backend Application
     │   ├── app/
     │   ├── tests/
-    │   ├── alembic/               # Database migrations
+    │   ├── alembic/                # Database migrations
     │   ├── venv/
     │   ├── requirements.txt
     │   ├── docker-compose.yml
