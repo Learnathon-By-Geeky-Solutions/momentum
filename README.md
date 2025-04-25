@@ -43,15 +43,15 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
  - [**Team Members**](#-team-members)
  - [**Product Tour**](#-product-tour)
  - [**Features**](#-features)
- - [**Tech Stack**](#-tech-stack)
+ - [**Tech Stacks**](#tech-stacks)
  - [**Project Structure**](#-project-structure)
- - [**Getting Started**](#-getting-started)
+ - [**Getting Started**](#getting-started)
  - [**API Documentation**](#-api-documentation)
  - [**Environment Variables**](#-environment-variables)
  - [**Running Tests**](#-running-tests)
  - [**Deployment with Docker**](#-deployment-with-docker)
  - [**Contributing**](#-contributing)
- - [**Licence**](#-licence)
+ - [**License**](#-license)
 
 
 ## 👥 Team Members
@@ -95,7 +95,7 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 - ***Content Moderation:*** Review and approve posts from artisans and customers to ensure quality and compliance with platform standards.
 
 
-## 🛠️ Tech Stack
+## Tech Stacks
 
 ### Frontend 
 - ***ReactJS:***  A JavaScript library for building fast, dynamic user interfaces with reusable components.
