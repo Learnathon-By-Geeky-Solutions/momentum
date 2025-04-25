@@ -122,24 +122,46 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 
 ```bash
   momentum/
-  ├── backend/               # FastAPI application
-  │   ├── app/               # Main application code
-  │   ├── tests/             # Backend tests
-  │   └── requirements.txt   # Python dependencies
-  ├── frontend/              # React application
-  │   ├── src/               # Frontend source code
-  │   └── package.json       # Frontend dependencies and scripts
-  ├── docs/                  # Documentation and diagrams
-  ├── daily-activity/        # Daily progress logs
-  ├── .github/workflows/     # GitHub Actions for CI/CD
-  └── README.md              # Project documentation
+    ├── .git/
+    ├── .github/
+    ├── .vscode/
+    ├── .pytest_cache/
+    ├── frontend/                   # Next.js Frontend Application
+    │   ├── app/
+    │   ├── components/
+    │   ├── constant/
+    │   ├── hooks/
+    │   ├── lib/
+    │   ├── provider/
+    │   ├── public/
+    │   ├── .next/
+    │   ├── node_modules/
+    │   ├── package.json
+    │   ├── tailwind.config.ts
+    │   └── various config files
+    │
+    ├── backend/                    # Python Backend Application
+    │   ├── app/
+    │   ├── tests/
+    │   ├── alembic/               # Database migrations
+    │   ├── venv/
+    │   ├── requirements.txt
+    │   ├── docker-compose.yml
+    │   ├── Dockerfile
+    │   └── various config files
+    │
+    ├── docs/
+    ├── images/
+    ├── daily-activity/
+    ├── README.md
+    └── LICENSE
 ```
 
 
 ## Getting Started
 **Prerequisites**
-- Python 3.9+
-- Node.js 14+
+- Python 3.12.2+
+- Node.js 20+
 - PostgreSQL
 - Docker (optional)
 
