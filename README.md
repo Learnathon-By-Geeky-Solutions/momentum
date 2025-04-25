@@ -38,11 +38,23 @@ With a focus on:
 Handicraft creates a sustainable ecosystem where **tradition meets technology**.  
 Whether you're a customer seeking unique, handmade goods or a rural producer looking for a wider market, **Handicraft** is your trusted digital marketplace.
 
-## 🎥 Product Tour
+## 📖 Table of Contents
 
-[![Project-Demo](https://img.shields.io/badge/Demo-Handicraft-Green?style=for-the-badge&color=%23FFA500&)](https://learnathon-by-geeky-solutions.github.io/momentum/)
+ - [**Team Members**](#-team-members)
+ - [**Product Tour**](#-product-tour)
+ - [**Features**](#-features)
+ - [**Tech Stack**](#-tech-stack)
+ - [**Project Structure**](#-project-structure)
+ - [**Getting Started**](#-getting-started)
+ - [**API Documentation**](#-api-documentation)
+ - [**Environment Variables**](#-environment-variables)
+ - [**Running Tests**](#-running-tests)
+ - [**Deployment with Docker**](#-deployment-with-docker)
+ - [**Contributing**](#-contributing)
+ - [**Licence**](#-licence)
 
-## Team Members
+
+## 👥 Team Members
 
 - [![Static Badge](https://img.shields.io/badge/Jamil%20Ahmed%20-Team%20Leader%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black&color=Red)](https://github.com/JamilAhmed00)
 - [![Member - 2](https://img.shields.io/badge/Emdadul%20Islam%20-%20black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mdadul)
@@ -50,23 +62,14 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 - [![Member - 3](https://img.shields.io/badge/Shajjad%20Gani%20Shovon-%20black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ShajjadGani)
 
 
-## Mentor: 
+## 👨🏻‍🏫 Mentor: 
 
-- [![Static Badge](https://img.shields.io/badge/MD.%20Arif%20Istiake%20Sunny%20-%20Mentor%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black)](https://github.com/Sunny1509006)
+- [![Mentor](https://img.shields.io/badge/MD.%20Arif%20Istiake%20Sunny%20-%20Mentor%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black)](https://github.com/Sunny1509006)
 
 
-## 📖 Table of Contents
+## 🎥 Product Tour
 
- - [**Features**](#-features)
- - [**Tech Stack**](https://github.com/matiassingers/awesome-readme)
- - [**Project Structure**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
- - [**Getting Started**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
- - [**API Documentation**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
- - [**Environment Variables**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Running Tests**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Deployment with Docker**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Contributing**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Licence**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+[![Project-Demo](https://img.shields.io/badge/Demo-Handicraft-Green?style=for-the-badge&color=%23FFA500&)](https://learnathon-by-geeky-solutions.github.io/momentum/)
 
 
 ## ✨ Features
