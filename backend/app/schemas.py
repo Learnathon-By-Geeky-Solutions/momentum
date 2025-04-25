@@ -224,8 +224,6 @@ class OrderDetailOut(BaseModel):
 
 class PayBillRequest(BaseModel):
     order_id: int
-    method: str
-    trx_id: str
 
 
 class ChatRequest(BaseModel):
