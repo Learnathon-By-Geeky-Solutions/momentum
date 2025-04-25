@@ -8,7 +8,6 @@ omit =
     */alembic/*
     alembic.ini
     Dockerfile
-    alembic.ini
     **/__pycache__/**
 
 [report]
