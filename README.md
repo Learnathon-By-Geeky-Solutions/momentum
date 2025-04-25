@@ -57,7 +57,7 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 
 ## 📖 Table of Contents
 
- - [**Features**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+ - [**Features**](#-features)
  - [**Tech Stack**](https://github.com/matiassingers/awesome-readme)
  - [**Project Structure**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
  - [**Getting Started**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
