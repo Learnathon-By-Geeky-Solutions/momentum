@@ -108,3 +108,32 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
         raise_invalid_credentials()
     token = create_access_token({"sub": user.email}, timedelta(minutes=30))
     return {"access_token": token, "token_type": "bearer"}
+
+
+@router.post("/google-signup")
+def google_signup(id_token: str, db: Session = Depends(get_db)):
+    try:
+        user_info = auth_utils.verify_google_token(id_token)
+
+        existing_user = db.query(User).filter(User.email == user_info["email"]).first()
+        if existing_user:
+            access_token = create_access_token({"sub": user_info["email"]})
+            return {"access_token": access_token, "token_type": "bearer"}
+
+        new_user = User(
+            email=user_info["email"],
+            full_name=user_info["full_name"],
+            google_id=user_info["google_id"],
+            is_verified=user_info["email_verified"],
+            role="user",
+            password=None,
+        )
+
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        access_token = create_access_token({"sub": new_user.email})
+        return {"access_token": access_token, "token_type": "bearer"}
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
