@@ -74,14 +74,6 @@ class UserOut(BaseModel):
         from_attributes = True
 
 
-class UserUpdate(BaseModel):
-    username: str
-    email: str
-    full_name: str
-    address: str
-    phone: str
-
-
 class PromoteUser(BaseModel):
     role: str
 
@@ -232,8 +224,6 @@ class OrderDetailOut(BaseModel):
 
 class PayBillRequest(BaseModel):
     order_id: int
-    method: str
-    trx_id: str
 
 
 class ChatRequest(BaseModel):

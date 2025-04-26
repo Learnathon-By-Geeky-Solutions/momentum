@@ -29,10 +29,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install pytest pytest-cov coverage
+          pip install pytest pytest-cov coverage python-dotenv
 
-      - name: Run tests and generate coverage report
+      - name: Load environment variables and run tests
         run: |
+          echo "Loading .env file"
+          python -c "import dotenv; dotenv.load_dotenv()"
           pytest --cov=app --cov-report=xml --cov-report=term
 
       - name: SonarCloud Scan

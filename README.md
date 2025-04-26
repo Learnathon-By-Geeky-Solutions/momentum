@@ -38,11 +38,23 @@ With a focus on:
 Handicraft creates a sustainable ecosystem where **tradition meets technology**.  
 Whether you're a customer seeking unique, handmade goods or a rural producer looking for a wider market, **Handicraft** is your trusted digital marketplace.
 
-## 🎥 Product Tour
+## 📖 Table of Contents
 
-[![Project-Demo](https://img.shields.io/badge/Demo-Handicraft-Green?style=for-the-badge&color=%23FFA500&)](https://learnathon-by-geeky-solutions.github.io/momentum/)
+ - [**Team Members**](#-team-members)
+ - [**Product Tour**](#-product-tour)
+ - [**Features**](#-features)
+ - [**Tech Stacks**](#tech-stacks)
+ - [**Project Structure**](#-project-structure)
+ - [**Getting Started**](#getting-started)
+ - [**API Documentation**](#-api-documentation)
+ - [**Environment Variables**](#-environment-variables)
+ - [**Running Tests**](#-running-tests)
+ - [**Deployment with Docker**](#-deployment-with-docker)
+ - [**Contributing**](#-contributing)
+ - [**License**](#-license)
 
-## Team Members
+
+## 👥 Team Members
 
 - [![Static Badge](https://img.shields.io/badge/Jamil%20Ahmed%20-Team%20Leader%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black&color=Red)](https://github.com/JamilAhmed00)
 - [![Member - 2](https://img.shields.io/badge/Emdadul%20Islam%20-%20black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/mdadul)
@@ -50,23 +62,14 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 - [![Member - 3](https://img.shields.io/badge/Shajjad%20Gani%20Shovon-%20black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/ShajjadGani)
 
 
-## Mentor: 
+## 👨🏻‍🏫 Mentor: 
 
-- [![Static Badge](https://img.shields.io/badge/MD.%20Arif%20Istiake%20Sunny%20-%20Mentor%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black)](https://github.com/Sunny1509006)
+- [![Mentor](https://img.shields.io/badge/MD.%20Arif%20Istiake%20Sunny%20-%20Mentor%20-%20red?style=for-the-badge&logo=github&logoColor=white&labelColor=black)](https://github.com/Sunny1509006)
 
 
-## 📖 Table of Contents
+## 🎥 Product Tour
 
- - [**Features**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Tech Stack**](https://github.com/matiassingers/awesome-readme)
- - [**Project Structure**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
- - [**Getting Started**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
- - [**API Documentation**](https://bulldogjob.com/news/449-how-to-write-a-good-readme-for-your-github-project)
- - [**Environment Variables**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Running Tests**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Deployment with Docker**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Contributing**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
- - [**Licence**](https://awesomeopensource.com/project/elangosundar/awesome-README-templates)
+[![Project-Demo](https://img.shields.io/badge/Demo-Handicraft-Green?style=for-the-badge&color=%23FFA500&)](https://learnathon-by-geeky-solutions.github.io/momentum/)
 
 
 ## ✨ Features
@@ -92,7 +95,7 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 - ***Content Moderation:*** Review and approve posts from artisans and customers to ensure quality and compliance with platform standards.
 
 
-## 🛠️ Tech Stack
+## Tech Stacks
 
 ### Frontend 
 - ***ReactJS:***  A JavaScript library for building fast, dynamic user interfaces with reusable components.
@@ -119,24 +122,46 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 
 ```bash
   momentum/
-  ├── backend/               # FastAPI application
-  │   ├── app/               # Main application code
-  │   ├── tests/             # Backend tests
-  │   └── requirements.txt   # Python dependencies
-  ├── frontend/              # React application
-  │   ├── src/               # Frontend source code
-  │   └── package.json       # Frontend dependencies and scripts
-  ├── docs/                  # Documentation and diagrams
-  ├── daily-activity/        # Daily progress logs
-  ├── .github/workflows/     # GitHub Actions for CI/CD
-  └── README.md              # Project documentation
+    ├── .git/
+    ├── .github/
+    ├── .vscode/
+    ├── .pytest_cache/
+    ├── frontend/                   # Next.js Frontend Application
+    │   ├── app/
+    │   ├── components/
+    │   ├── constant/
+    │   ├── hooks/
+    │   ├── lib/
+    │   ├── provider/
+    │   ├── public/
+    │   ├── .next/
+    │   ├── node_modules/
+    │   ├── package.json
+    │   ├── tailwind.config.ts
+    │   └── various config files
+    │
+    ├── backend/                    # Python Backend Application
+    │   ├── app/
+    │   ├── tests/
+    │   ├── alembic/                # Database migrations
+    │   ├── venv/
+    │   ├── requirements.txt
+    │   ├── docker-compose.yml
+    │   ├── Dockerfile
+    │   └── various config files
+    │
+    ├── docs/
+    ├── images/
+    ├── daily-activity/
+    ├── README.md
+    └── LICENSE
 ```
 
 
 ## Getting Started
 **Prerequisites**
-- Python 3.9+
-- Node.js 14+
+- Python 3.12.2+
+- Node.js 20+
 - PostgreSQL
 - Docker (optional)
 
