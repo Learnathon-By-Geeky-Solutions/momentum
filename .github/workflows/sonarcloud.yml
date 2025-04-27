@@ -31,44 +31,43 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-cov coverage python-dotenv
 
-      - name: Set environment variables
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
-          MYMAIL: ${{ secrets.MYMAIL }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          PGADMIN_DEFAULT_EMAIL: ${{ secrets.PGADMIN_DEFAULT_EMAIL }}
-          PGADMIN_DEFAULT_PASSWORD: ${{ secrets.PGADMIN_DEFAULT_PASSWORD }}
-          MY_KEY: ${{ secrets.MY_KEY }}
-          GOOGLE_PASSWORD: ${{ secrets.GOOGLE_PASSWORD }}
-          AZURE_OPENAI_ENDPOINT: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-          API_VERSION: ${{ secrets.API_VERSION }}
-          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
-          MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
-          MINIO_URL: ${{ secrets.MINIO_URL }}
-          MINIO_BUCKET_NAME: ${{ secrets.MINIO_BUCKET_NAME }}
-          MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
-          MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
-          SSLCOMMERZ_STORE_ID: ${{ secrets.SSLCOMMERZ_STORE_ID }}
-          SSLCOMMERZ_STORE_PASS: ${{ secrets.SSLCOMMERZ_STORE_PASS }}
-          SSLCOMMERZ_IS_SANDBOX: ${{ secrets.SSLCOMMERZ_IS_SANDBOX }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          INFOBIP_API_KEY: ${{ secrets.INFOBIP_API_KEY }}
-          INFOBIP_BASE_URL: ${{ secrets.INFOBIP_BASE_URL }}
-          INFOBIP_SENDER: ${{ secrets.INFOBIP_SENDER }}
-        run: echo "Environment variables set."
+      - name: Export environment variables
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "TEST_DATABASE_URL=${{ secrets.TEST_DATABASE_URL }}" >> $GITHUB_ENV
+          echo "mymail=${{ secrets.MYMAIL }}" >> $GITHUB_ENV
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> $GITHUB_ENV
+          echo "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" >> $GITHUB_ENV
+          echo "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" >> $GITHUB_ENV
+          echo "my_key=${{ secrets.MY_KEY }}" >> $GITHUB_ENV
+          echo "google_password=${{ secrets.GOOGLE_PASSWORD }}" >> $GITHUB_ENV
+          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> $GITHUB_ENV
+          echo "API_VERSION=${{ secrets.API_VERSION }}" >> $GITHUB_ENV
+          echo "AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}" >> $GITHUB_ENV
+          echo "MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}" >> $GITHUB_ENV
+          echo "MINIO_ROOT_PASSWORD=${{ secrets.MINIO_ROOT_PASSWORD }}" >> $GITHUB_ENV
+          echo "MINIO_URL=${{ secrets.MINIO_URL }}" >> $GITHUB_ENV
+          echo "MINIO_BUCKET_NAME=${{ secrets.MINIO_BUCKET_NAME }}" >> $GITHUB_ENV
+          echo "MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "MINIO_SECRET_KEY=${{ secrets.MINIO_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "SSLCOMMERZ_STORE_ID=${{ secrets.SSLCOMMERZ_STORE_ID }}" >> $GITHUB_ENV
+          echo "SSLCOMMERZ_STORE_PASS=${{ secrets.SSLCOMMERZ_STORE_PASS }}" >> $GITHUB_ENV
+          echo "SSLCOMMERZ_IS_SANDBOX=${{ secrets.SSLCOMMERZ_IS_SANDBOX }}" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "INFOBIP_API_KEY=${{ secrets.INFOBIP_API_KEY }}" >> $GITHUB_ENV
+          echo "INFOBIP_BASE_URL=${{ secrets.INFOBIP_BASE_URL }}" >> $GITHUB_ENV
+          echo "INFOBIP_SENDER=${{ secrets.INFOBIP_SENDER }}" >> $GITHUB_ENV
 
       - name: Run Tests and Coverage
+        env:  # << VERY IMPORTANT
+          DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+          TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
         run: |
-          source $GITHUB_ENV
-          python -c "from dotenv import load_dotenv; load_dotenv()"
           pytest --cov=app --cov-report=xml --cov-report=term
-      
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
