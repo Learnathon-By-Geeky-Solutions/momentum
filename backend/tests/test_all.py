@@ -19,7 +19,6 @@ def test_register_user(client):
     assert "access_token" in response.json()
 
 
-
 def test_forgot_password(client):
     response = client.post("/forgot-password", json={
         "email": "testuser@example.com"
@@ -45,11 +44,6 @@ def test_google_signup_invalid(client):
         "id_token": "fake_id_token"
     })
     assert response.status_code == 400
-    
-    
-    
-    
-    
     
     
 def test_get_all_users_unauthorized(client):
@@ -96,10 +90,6 @@ def test_update_profile_unauthorized(client):
     })
     assert response.status_code in [401, 403]
     
-    
-    
-    
-
 
 def test_create_brand_unauthorized(client):
     response = client.post("/brands", json={
