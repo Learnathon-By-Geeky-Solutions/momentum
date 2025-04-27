@@ -83,7 +83,6 @@ def initiate_payment(
     random_suffix = secrets.randbelow(9000) + 1000
     unique_tran_id = f"ORDER_{bill.order_id}_{timestamp}{random_suffix}"
 
-
     post_body = {
         "total_amount": str(bill.amount),
         "currency": "BDT",

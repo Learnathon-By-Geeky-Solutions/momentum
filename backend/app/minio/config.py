@@ -13,8 +13,9 @@ MINIO_CLIENT = Minio(
 
 BUCKET_NAME = "media"
 
+
 def initialize_minio_bucket():
-    
+
     try:
         if not MINIO_CLIENT.bucket_exists(BUCKET_NAME):
             MINIO_CLIENT.make_bucket(BUCKET_NAME)
