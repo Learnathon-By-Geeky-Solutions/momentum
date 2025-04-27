@@ -65,12 +65,6 @@ class AuthUtils:
         except ValueError:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=INVALID_TOKEN)
 
-    def hash_password(self, password: str) -> str:
-        return pwd_context.hash(password)
-
-    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
-        return pwd_context.verify(plain_password, hashed_password)
-
     def get_google_auth_url(self):
         scope = "openid email profile"
         return (
@@ -90,6 +84,12 @@ class AuthUtils:
         if response.status_code != 200:
             raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=INVALID_TOKEN)
         return response.json()
+
+    def hash_password(self, password: str) -> str:
+        return pwd_context.hash(password)
+
+    def verify_password(self, plain_password: str, hashed_password: str) -> bool:
+        return pwd_context.verify(plain_password, hashed_password)
 
 
 auth_utils = AuthUtils()

@@ -2,7 +2,6 @@ import os
 from minio import Minio
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 MINIO_CLIENT = Minio(
@@ -14,8 +13,14 @@ MINIO_CLIENT = Minio(
 
 BUCKET_NAME = "media"
 
-if not MINIO_CLIENT.bucket_exists(BUCKET_NAME):
-    MINIO_CLIENT.make_bucket(BUCKET_NAME)
-    print(f"Bucket '{BUCKET_NAME}' created successfully.")
-else:
-    print(f"Bucket '{BUCKET_NAME}' already exists.")
+
+def initialize_minio_bucket():
+
+    try:
+        if not MINIO_CLIENT.bucket_exists(BUCKET_NAME):
+            MINIO_CLIENT.make_bucket(BUCKET_NAME)
+            print(f"Bucket '{BUCKET_NAME}' created successfully.")
+        else:
+            print(f"Bucket '{BUCKET_NAME}' already exists.")
+    except Exception as e:
+        print(f"Warning: Could not initialize MinIO bucket. Reason: {e}")
