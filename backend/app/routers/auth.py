@@ -57,10 +57,13 @@ async def forgot_password(
     db: Session = Depends(get_db),
 ):
     user = get_user_by_email(db, request.email)
-    if user:
-        token = create_reset_token(user.email)
-        link = f"http://localhost:8000/reset-password?token={token}"
-        background_tasks.add_task(send_reset_email, user.email, link)
+    if not user:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=USER_NOT_FOUND)
+    if user.role == "admin":
+        raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Admin cannot reset password")
+    token = create_reset_token(user.email)
+    link = f"http://localhost:8000/reset-password?token={token}"
+    background_tasks.add_task(send_reset_email, user.email, link)
     return {"message": PASSWORD_RESET_SENT}
 
 
@@ -91,7 +94,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         full_name=user.full_name,
         address=user.address,
         phone=user.phone,
-        role=user.role,
+        role=user.role if user.role else "customer",
         is_verified=False,
     )
     db.add(new_user)
@@ -107,7 +110,17 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
     if not user or not auth_utils.verify_password(request.password, user.password):
         raise_invalid_credentials()
     token = create_access_token({"sub": user.email}, timedelta(minutes=30))
-    return {"access_token": token, "token_type": "bearer"}
+    data = {
+        "username": user.username,
+        "email": user.email,
+        "full_name": user.full_name,
+        "address": user.address,
+        "phone": user.phone,
+        "role": user.role,
+        "is_verified": user.is_verified,
+        
+    }
+    return {"access_token": token, "token_type": "bearer" , "user": data}
 
 
 @router.post("/google-signup")

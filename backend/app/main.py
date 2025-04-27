@@ -30,19 +30,28 @@ import dotenv
 import sentry_sdk
 
 # Fix CORS error
-app = FastAPI()
+app = FastAPI(
+    title="Handicrafts API Documentation",
+    description="API for the Handicrafts application",
+    version="1.0.0",
+    contact={
+        "name": "Team Momentum",
+        "url": "https://github.com/Learnathon-By-Geeky-Solutions/momentum",
+    },
+)
 
 origins = [
+    "http://localhost:3001",
     "http://localhost:3000",
-    "http://localhost:8000",
-    "https://fastapi-user-management.herokuapp.com",
+    "https://handi-craft.xyz",
+    "https://www.handi-craft.xyz",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
     allow_headers=["*"],
 )
 
@@ -58,9 +67,6 @@ sentry_sdk.init(
 dotenv.load_dotenv()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
-
-app = FastAPI()
 
 
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
