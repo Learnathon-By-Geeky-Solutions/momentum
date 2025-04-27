@@ -6,7 +6,7 @@ import uuid
 import http.client
 import json
 import os
-import random
+import secrets
 from dotenv import load_dotenv
 from fastapi_mail import FastMail, MessageSchema
 from app.database import get_db
@@ -80,8 +80,9 @@ def initiate_payment(
     )
 
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S")
-    random_suffix = random.randint(1000, 9999)
+    random_suffix = secrets.randbelow(9000) + 1000
     unique_tran_id = f"ORDER_{bill.order_id}_{timestamp}{random_suffix}"
+
 
     post_body = {
         "total_amount": str(bill.amount),
