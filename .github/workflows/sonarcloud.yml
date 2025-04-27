@@ -33,11 +33,36 @@ jobs:
 
       - name: Export environment variables
         run: |
-          set -a
-          source .env
-          set +a
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+          echo "mymail=${{ secrets.MYMAIL }}" >> $GITHUB_ENV
+          echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> $GITHUB_ENV
+          echo "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" >> $GITHUB_ENV
+          echo "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" >> $GITHUB_ENV
+          echo "my_key=${{ secrets.MY_KEY }}" >> $GITHUB_ENV
+          echo "google_password=${{ secrets.GOOGLE_PASSWORD }}" >> $GITHUB_ENV
+        
+          echo "AZURE_OPENAI_ENDPOINT=${{ secrets.AZURE_OPENAI_ENDPOINT }}" >> $GITHUB_ENV
+          echo "API_VERSION=${{ secrets.API_VERSION }}" >> $GITHUB_ENV
+          echo "AZURE_OPENAI_API_KEY=${{ secrets.AZURE_OPENAI_API_KEY }}" >> $GITHUB_ENV
+          echo "MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}" >> $GITHUB_ENV
+          echo "MINIO_ROOT_PASSWORD=${{ secrets.MINIO_ROOT_PASSWORD }}" >> $GITHUB_ENV
+          echo "MINIO_URL=${{ secrets.MINIO_URL }}" >> $GITHUB_ENV
+          echo "MINIO_BUCKET_NAME=${{ secrets.MINIO_BUCKET_NAME }}" >> $GITHUB_ENV
+          echo "MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}" >> $GITHUB_ENV
+          echo "MINIO_SECRET_KEY=${{ secrets.MINIO_SECRET_KEY }}" >> $GITHUB_ENV
+          echo "SSLCOMMERZ_STORE_ID=${{ secrets.SSLCOMMERZ_STORE_ID }}" >> $GITHUB_ENV
+          echo "SSLCOMMERZ_STORE_PASS=${{ secrets.SSLCOMMERZ_STORE_PASS }}" >> $GITHUB_ENV
+          echo "SSLCOMMERZ_IS_SANDBOX=${{ secrets.SSLCOMMERZ_IS_SANDBOX }}" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> $GITHUB_ENV
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> $GITHUB_ENV
+          echo "INFOBIP_API_KEY=${{ secrets.INFOBIP_API_KEY }}" >> $GITHUB_ENV
+          echo "INFOBIP_BASE_URL=${{ secrets.INFOBIP_BASE_URL }}" >> $GITHUB_ENV
+          echo "INFOBIP_SENDER=${{ secrets.INFOBIP_SENDER }}" >> $GITHUB_ENV
 
-      - name: Run tests with coverage
+      - name: Run Tests and Coverage
         run: |
           pytest --cov=app --cov-report=xml --cov-report=term
 
