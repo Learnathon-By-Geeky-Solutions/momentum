@@ -63,10 +63,12 @@ jobs:
           INFOBIP_SENDER: ${{ secrets.INFOBIP_SENDER }}
         run: echo "Environment variables set."
 
-      - name: Load environment and run tests
+      - name: Run Tests and Coverage
         run: |
+          source $GITHUB_ENV
           python -c "from dotenv import load_dotenv; load_dotenv()"
           pytest --cov=app --cov-report=xml --cov-report=term
+      
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
