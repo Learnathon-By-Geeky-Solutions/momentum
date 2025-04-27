@@ -5,6 +5,9 @@ from sqlalchemy.orm import sessionmaker
 from app.database import Base, get_db
 from app.main import app
 from fastapi.testclient import TestClient
+from app.models.user import User
+from app.models.product import Product
+from app.models.order import Order
 
 TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
 
