@@ -15,7 +15,6 @@ from app.helpers.orders import (
     validate_artisan_order_access,
     format_order_response,
     get_artisan_order_items,
-    get_current_user,
 )
 from app.helpers.orders import (
     PRODUCT_NOT_FOUND,
