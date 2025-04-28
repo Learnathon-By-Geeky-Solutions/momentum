@@ -61,7 +61,9 @@ async def forgot_password(
     if not user:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail=USER_NOT_FOUND)
     if user.role == "admin":
-        raise HTTPException(status.HTTP_403_FORBIDDEN, detail="Admin cannot reset password")
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN, detail="Admin cannot reset password"
+        )
     token = create_reset_token(user.email)
     link = f"http://localhost:8000/reset-password?token={token}"
     background_tasks.add_task(send_reset_email, user.email, link)
@@ -121,9 +123,8 @@ async def login(request: LoginRequest, db: Session = Depends(get_db)):
         "phone": user.phone,
         "role": user.role,
         "is_verified": user.is_verified,
-        
     }
-    return {"access_token": token, "token_type": "bearer" , "user": data}
+    return {"access_token": token, "token_type": "bearer", "user": data}
 
 
 @router.post("/google-signup")

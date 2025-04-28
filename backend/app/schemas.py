@@ -4,8 +4,10 @@ from datetime import datetime
 from decimal import Decimal
 import re
 
+
 class RegistrationResponse(BaseModel):
-   message: str
+    message: str
+
 
 class Token(BaseModel):
     access_token: str
@@ -160,6 +162,8 @@ class OrderItemCreate(BaseModel):
 
 class OrderCreate(BaseModel):
     order_items: List[OrderItemCreate]
+    address: Optional[str] = Field(None, max_length=255)
+    phone: str
 
 
 class OrderOut(BaseModel):

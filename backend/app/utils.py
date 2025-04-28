@@ -14,8 +14,8 @@ from app.database import get_db
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30*24*60 
-RESET_TOKEN_EXPIRE_MINUTES = 30*24*60
+ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60 * 60
+RESET_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60 * 60
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
@@ -131,7 +131,8 @@ async def send_email(subject: str, email: str, body: str):
 
 
 async def send_verification_email(email: str, token: str):
-    link = f"http://localhost:8000/verify-email?token={token}"
+    baseUrl = os.getenv("BASE_URL")
+    link = f"{baseUrl}/account/verify-email?token={token}"
     await send_email(
         "Verify Your Email", email, f"Click the link to verify your email: {link}"
     )

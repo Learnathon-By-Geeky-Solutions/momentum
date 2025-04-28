@@ -54,18 +54,21 @@ def post_product(
     db.refresh(new_product)
     return new_product
 
+
 @router.get("/products/me", response_model=List[schemas.ProductOut])
-def get_products_me(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+def get_products_me(
+    db: Session = Depends(get_db), user: User = Depends(get_current_user)
+):
     products = (
         db.query(models.Product)
-       .join(models.Brand, models.Product.brand_id == models.Brand.brand_id)
-       .filter(models.Brand.user_id == user.user_id)
-       .all()
+        .join(models.Brand, models.Product.brand_id == models.Brand.brand_id)
+        .filter(models.Brand.user_id == user.user_id)
+        .all()
     )
     if not products:
         raise HTTPException(status_code=404, detail="No products found for this user.")
-    return products 
-    
+    return products
+
 
 @router.patch("/products/{product_id}", response_model=schemas.ProductCreate)
 def update_product(
@@ -104,6 +107,7 @@ def get_product(product_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Product not found.")
 
     return product
+
 
 @router.get("/products", response_model=List[schemas.ProductOut])
 def get_all_products(db: Session = Depends(get_db)):

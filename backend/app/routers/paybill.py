@@ -13,6 +13,7 @@ from app.database import get_db
 from app import models, schemas
 from app.utils import get_current_user, conf
 from sslcommerz_lib import SSLCOMMERZ
+from fastapi.responses import HTMLResponse
 
 load_dotenv()
 router = APIRouter()
@@ -162,10 +163,31 @@ async def ssl_success(request: Request, db: Session = Depends(get_db)):
         await send_email(
             artisan.email,
             "New Order Received",
-            f"You have received a new order from {user.username}.",
+            f"You have received a new order from {user.username}. Order ID: {order.order_id} for {bill.amount} BDT. Please check your dashboard for details.",
         )
 
-    return {"message": "Payment successful and notifications sent"}
+    # Redirect to the frontend success page
+    frontend_url = os.getenv("FRONTEND_URL")
+    success_url = f"{frontend_url}/payment-success?orderId={order.order_id}"
+
+    # Return an HTML response that redirects to the frontend
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <title>Payment Successful</title>
+            <meta http-equiv="refresh" content="0;url={success_url}">
+        </head>
+        <body>
+            <p>Payment successful! Redirecting to order confirmation page...</p>
+            <script>
+                window.location.href = "{success_url}";
+            </script>
+        </body>
+    </html>
+    """
+
+    return HTMLResponse(content=html_content)
 
 
 @router.post("/ssl-fail")

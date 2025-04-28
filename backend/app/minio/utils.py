@@ -69,7 +69,7 @@ def extract_minio_object_key(url: str) -> str:
     Converts 'https://s3.handi-craft.xyz/media/photos/007.jpg' → 'photos/007.jpg'
     """
     parsed = urlparse(url)
-    parts = parsed.path.strip("/").split("/", 2) 
+    parts = parsed.path.strip("/").split("/", 2)
     if len(parts) >= 2:
         return "/".join(parts[1:])  # Skip the bucket name
     return parts[-1]

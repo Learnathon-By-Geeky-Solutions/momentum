@@ -48,7 +48,7 @@ async def update_profile(
 @router.put("/become-artisan")
 async def become_artisan(
     db: Session = Depends(get_db),
-    user: User = Depends(get_current_user), 
+    user: User = Depends(get_current_user),
 ):
     if user.role == "artisan":
         raise HTTPException(status_code=400, detail="You are already an artisan")
