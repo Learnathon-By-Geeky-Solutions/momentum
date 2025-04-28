@@ -138,7 +138,7 @@ def google_signup(id_token: str, db: Session = Depends(get_db)):
             full_name=user_info["full_name"],
             google_id=user_info["google_id"],
             is_verified=user_info["email_verified"],
-            role="user",
+            role="customer",
             password=None,
         )
 
