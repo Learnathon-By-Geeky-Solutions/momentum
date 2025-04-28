@@ -6,6 +6,7 @@ from app.minio.config import MINIO_CLIENT, BUCKET_NAME
 from minio.error import S3Error
 from urllib.parse import urlparse
 from typing import List
+import os
 
 PRODUCT_PHOTO = "product photo"
 PRODUCT_VIDEO = "product video"

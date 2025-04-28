@@ -9,6 +9,7 @@ from app.schemas import (
     LoginRequest,
     ForgotPasswordRequest,
     ResetPasswordRequest,
+    RegistrationResponse,
 )
 from app.utils import (
     auth_utils,
@@ -78,7 +79,7 @@ async def reset_password(data: ResetPasswordRequest, db: Session = Depends(get_d
     return {"message": PASSWORD_RESET_SUCCESS}
 
 
-@router.post("/register", response_model=Token)
+@router.post("/register", response_model=RegistrationResponse)
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     existing_user = (
         db.query(User)
@@ -101,7 +102,9 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     token = create_email_verification_token(user.email)
     await send_verification_email(user.email, token)
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+        "message": "User registered successfully. Please check your email for verification.",
+    }
 
 
 @router.post("/login", response_model=Token)

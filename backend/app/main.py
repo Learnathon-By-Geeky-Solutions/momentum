@@ -53,8 +53,6 @@ app.add_middleware(
 )
 
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
 
 app.include_router(admin.router, prefix="/admin", tags=["Admin"])
 app.include_router(auth.router, prefix="", tags=["Auth"])

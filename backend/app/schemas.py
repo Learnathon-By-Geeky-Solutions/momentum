@@ -4,6 +4,8 @@ from datetime import datetime
 from decimal import Decimal
 import re
 
+class RegistrationResponse(BaseModel):
+   message: str
 
 class Token(BaseModel):
     access_token: str
