@@ -69,7 +69,7 @@ class Product(Base):
     price = Column(DECIMAL(10, 2), nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.now())
     rating = Column(DECIMAL(3, 2), nullable=True)
-    approved = Column(Boolean, default=False)
+    approved = Column(Boolean, default=True)
 
     brand = relationship("Brand", back_populates="products")
 

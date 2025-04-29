@@ -10,7 +10,7 @@ PRODUCT_PHOTO = "product photo"
 PRODUCT_VIDEO = "product video"
 
 VALID_TYPES = ["profile", PRODUCT_PHOTO, PRODUCT_VIDEO]
-ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png"]
+ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"]
 ALLOWED_VIDEO_TYPES = ["video/mp4", "video/mpeg"]
 MAX_FILE_SIZE_MB = 5  # 5 MB
 

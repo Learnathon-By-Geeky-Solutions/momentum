@@ -111,7 +111,7 @@ class ProductCreate(BaseModel):
     product_pic: List[str]
     product_video: List[str]
     category: str = Field(..., min_length=3, max_length=50)
-    description: Optional[str] = Field(None, max_length=500)
+    description: Optional[str] = Field(None, max_length=5500)
     order_size: Optional[str]
     order_quantity: Optional[int] = Field(None, ge=1)
     quantity_unit: Optional[str]
