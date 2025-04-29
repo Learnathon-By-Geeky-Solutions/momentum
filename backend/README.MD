@@ -82,6 +82,12 @@ uvicorn main:app --reload
   ```
 
 
+
+- **Locust.io Run Command**
+  ``` locust -f locustfile.py --host http://localhost:8000
+
+  ```
+
 ## 📄 License
 
 This project is licensed under the **MIT License** – see the [LICENSE](./LICENSE) file for details.

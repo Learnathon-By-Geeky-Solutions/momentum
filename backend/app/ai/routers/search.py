@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
+from typing import List
 from app.database import get_db
 from app.models import Product, Brand
 from app.ai.utils.ai_search import (
@@ -8,9 +9,7 @@ from app.ai.utils.ai_search import (
     get_most_similar_products,
 )
 
-
 router = APIRouter()
-
 
 @router.get("/")
 def ai_product_search(
@@ -22,6 +21,7 @@ def ai_product_search(
 
     keywords_original = search_data.get("keywords", [])
     keywords_en = search_data.get("keywords_en", [])
+    synonyms = search_data.get("synonyms", {})
     category = search_data.get("category")
     price_range = search_data.get("price_range")
     brand_name = search_data.get("brand")
@@ -43,12 +43,8 @@ def ai_product_search(
     all_products = query.all()
     print(f"Total products fetched from DB: {len(all_products)}")
 
-    if keywords_en:
-        matched_products = get_most_similar_products(all_products, keywords_en)
-    else:
-        matched_products = get_most_similar_products(
-            all_products, keywords_original or [q.strip()]
-        )
+    
+    matched_products = get_most_similar_products(all_products, keywords_en, synonyms)
 
     return {
         "language": lang,

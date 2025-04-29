@@ -95,6 +95,7 @@ class Order(Base):
 class OrderItem(Base):
     __tablename__ = "order_items"
     order_item_id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+
     order_id = Column(
         Integer, ForeignKey("orders.order_id", ondelete="CASCADE"), nullable=False
     )
@@ -103,6 +104,9 @@ class OrderItem(Base):
     )
     size = Column(String(50), nullable=True)
     quantity = Column(Integer, nullable=False)
+
+    address = Column(String(255), nullable=True)
+    phone = Column(String(20), nullable=True)
 
     order = relationship("Order", back_populates="order_items")
     product = relationship("Product")

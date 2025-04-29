@@ -15,7 +15,6 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
-# Post Product (protected route)
 @router.post("/products", response_model=schemas.ProductCreate)
 def post_product(
     product: schemas.ProductCreate,

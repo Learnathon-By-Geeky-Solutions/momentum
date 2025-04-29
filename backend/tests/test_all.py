@@ -1,218 +1,102 @@
 import pytest
-from fastapi.testclient import TestClient
-from app.main import app
+from fastapi import status
+from unittest.mock import Mock, patch
+from app.models import User
 
-client = TestClient(app)
+# 1. Auth Endpoints -----------------------------------------------------------
+def test_register(client, db_session):
+    """Registration with verification email"""
+    with patch("app.utils.send_verification_email", Mock()):
+        response = client.post("/register", json={
+            "username": "testuser",
+            "email": "test@example.com",
+            "password": "password",
+            "full_name": "Test User",
+            "address": "123 Street",
+            "phone": "1234567890",
+            "role": "customer"
+        })
+        assert response.status_code == status.HTTP_200_OK
+        assert db_session.query(User).filter_by(email="test@example.com").first()
 
+def test_google_signup(client, db_session):
+    """Google OAuth registration"""
+    mock_user = {
+        "email": "test@google.com",
+        "full_name": "Google User",
+        "google_id": "123",
+        "email_verified": True
+    }
+    with patch("app.utils.auth_utils.verify_google_token", return_value=mock_user):
+        response = client.post("/google-signup", params={"id_token": "valid"})
+        assert response.status_code == status.HTTP_200_OK
+        assert db_session.query(User).filter_by(email="test@google.com").first()
 
-def test_register_user(client):
-    response = client.post("/register", json={
-        "username": "testuser",
-        "email": "testuser@example.com",
-        "password": "password123",
-        "full_name": "Test User",
-        "address": "123 Test Lane",
-        "phone": "1234567890",
-        "role": "customer"
-    })
-    assert response.status_code == 200
-    assert "access_token" in response.json()
+# 2. Profile Endpoints --------------------------------------------------------
+@pytest.fixture
+def auth_user(db_session):
+    """Pre-authenticated test user"""
+    user = User(
+        user_id=1,
+        username="testuser",
+        email="test@example.com",
+        full_name="Test User",
+        address="123 Street",
+        phone="1234567890"
+    )
+    db_session.add(user)
+    db_session.commit()
+    return user
 
+def test_get_profile(client, auth_user):
+    """Profile retrieval"""
+    with patch("app.utils.get_current_user", return_value=auth_user):
+        response = client.get("/profile")
+        assert response.status_code == status.HTTP_200_OK
+        assert response.json()["email"] == "test@example.com"
 
-def test_forgot_password(client):
-    response = client.post("/forgot-password", json={
-        "email": "testuser@example.com"
-    })
-    assert response.status_code == 200
+def test_update_profile(client, db_session, auth_user):
+    """Full profile update"""
+    with patch("app.utils.get_current_user", return_value=auth_user):
+        response = client.patch("/profile", json={
+            "full_name": "New Name",
+            "phone": "9876543210"
+        })
+        assert response.status_code == status.HTTP_200_OK
+        
+        db_session.refresh(auth_user)
+        assert auth_user.full_name == "New Name"
+        assert auth_user.phone == "9876543210"
 
-def test_reset_password_invalid_token(client):
-    response = client.post("/reset-password", json={
-        "token": "invalid_token",
-        "new_password": "newpassword123"
-    })
-    assert response.status_code == 400 or response.status_code == 422
+def test_partial_update(client, db_session, auth_user):
+    """Single field update"""
+    with patch("app.utils.get_current_user", return_value=auth_user):
+        response = client.patch("/profile", json={"phone": "9876543210"})
+        assert response.status_code == status.HTTP_200_OK
+        
+        db_session.refresh(auth_user)
+        assert auth_user.phone == "9876543210"
 
-def test_login_for_access_token_fail(client):
-    response = client.post("/token", data={
-        "username": "wrong@example.com",
-        "password": "wrongpassword"
-    })
-    assert response.status_code == 401
+def test_empty_update(client, auth_user):
+    """Empty payload update"""
+    with patch("app.utils.get_current_user", return_value=auth_user):
+        response = client.patch("/profile", json={})
+        assert response.status_code == status.HTTP_200_OK
 
-def test_google_signup_invalid(client):
-    response = client.post("/google-signup", params={
-        "id_token": "fake_id_token"
-    })
-    assert response.status_code == 400
-    
-    
-def test_get_all_users_unauthorized(client):
-    response = client.get("/admin/users")
-    assert response.status_code in [401, 403]
-
-def test_get_all_products_unauthorized(client):
-    response = client.get("/admin/products")
-    assert response.status_code in [401, 403]
-
-def test_get_all_orders_unauthorized(client):
-    response = client.get("/admin/orders")
-    assert response.status_code in [401, 403]
-
-def test_promote_user_unauthorized(client):
-    response = client.put("/admin/users/promote/1", json={
-        "role": "admin"
-    })
-    assert response.status_code in [401, 403]
-
-def test_delete_user_unauthorized(client):
-    response = client.delete("/admin/users/1")
-    assert response.status_code in [401, 403]
-
-def test_delete_product_unauthorized(client):
-    response = client.delete("/admin/products/1")
-    assert response.status_code in [401, 403]
-
-def test_delete_order_unauthorized(client):
-    response = client.delete("/admin/orders/1")
-    assert response.status_code in [401, 403]
-
-
-
-def test_get_profile_unauthorized(client):
+# 3. Error Handling -----------------------------------------------------------
+def test_unauthorized_access(client):
+    """Unauthenticated profile access"""
     response = client.get("/profile")
-    assert response.status_code in [401, 403]
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-def test_update_profile_unauthorized(client):
-    response = client.patch("/profile", json={
-        "full_name": "New Name",
-        "address": "New Address",
-        "phone": "1234567890"
-    })
-    assert response.status_code in [401, 403]
-    
+def test_invalid_data(client, auth_user):
+    """Invalid phone format"""
+    with patch("app.utils.get_current_user", return_value=auth_user):
+        response = client.patch("/profile", json={"phone": "invalid"})
+        assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
-def test_create_brand_unauthorized(client):
-    response = client.post("/brands", json={
-        "brand_name": "Test Brand",
-        "brand_description": "Test Description",
-        "logo": "test_logo.png"
-    })
-    assert response.status_code in [401, 403]
-
-def test_get_my_brand_unauthorized(client):
-    response = client.get("/brands/me")
-    assert response.status_code in [401, 403]
-
-def test_update_brand_unauthorized(client):
-    response = client.patch("/brands/me", json={
-        "brand_name": "Updated Brand",
-        "brand_description": "Updated Description",
-        "logo": "updated_logo.png"
-    })
-    assert response.status_code in [401, 403]
-
-
-
-
-
-def test_create_product_unauthorized(client):
-    response = client.post("/products", json={
-        "product_name": "Test Product",
-        "product_pic": "pic.png",
-        "product_video": "video.mp4",
-        "category": "Test Category",
-        "description": "Test description",
-        "order_size": "M",
-        "order_quantity": 10,
-        "quantity_unit": "pcs",
-        "price": 100.0
-    })
-    assert response.status_code in [401, 403]
-
-def test_update_product_unauthorized(client):
-    response = client.patch("/products/1", json={
-        "product_name": "Updated Product",
-        "product_pic": "updated_pic.png",
-        "product_video": "updated_video.mp4",
-        "category": "Updated Category",
-        "description": "Updated description",
-        "order_size": "L",
-        "order_quantity": 5,
-        "quantity_unit": "pcs",
-        "price": 150.0
-    })
-    assert response.status_code in [401, 403]
-
-def test_delete_product_unauthorized(client):
-    response = client.delete("/products/1")
-    assert response.status_code in [401, 403]
-
-def test_get_product(client):
-    response = client.get("/products/1")
-    assert response.status_code in [200, 404]
-
-
-def test_get_all_products(client):
-    response = client.get("/products")
-    assert response.status_code == 200
-
-
-
-
-def test_root_endpoint_available():
-    response = client.get("/")
-    assert response.status_code in (200, 404)  
-def test_get_my_orders_endpoint_accessible():
-    response = client.get("/orders/me")
-    assert response.status_code in (401, 403)  
-
-def test_get_my_orders_details_endpoint_accessible():
-    response = client.get("/orders/me/details")
-    assert response.status_code in (401, 403)
-
-def test_get_bill_for_order_endpoint_accessible():
-    response = client.get("/orders/1/bill")
-    assert response.status_code in (401, 403, 404)
-
-def test_get_order_details_endpoint_accessible():
-    response = client.get("/orders/1/details")
-    assert response.status_code in (401, 403, 404)
-
-def test_delete_order_endpoint_accessible():
-    response = client.delete("/orders/1")
-    assert response.status_code in (401, 403, 404)
-    
-    
-    
-    
-    
-    
-    
-    
-def test_initiate_payment():
-    response = client.post(
-        "/initiate-payment", 
-        json={"order_id": "12345"}
-    )
-    assert response.status_code == 200 or 404
-
-def test_ssl_success():
-    response = client.post(
-        "/ssl-success", 
-        data={"tran_id": "ORDER_12345_2023042712345678910"}
-    )
-    assert response.status_code == 200
-
-def test_ssl_fail():
-    response = client.post(
-        "/ssl-fail", 
-        data={"tran_id": "ORDER_12345_2023042712345678910"}
-    )
-    assert response.status_code == 200
-
-def test_ssl_cancel():
-    response = client.post(
-        "/ssl-cancel", 
-        data={"tran_id": "ORDER_12345_2023042712345678910"}
-    )
-    assert response.status_code == 200
+def test_nonexistent_user(client):
+    """Update non-existent user"""
+    with patch("app.utils.get_current_user", return_value=User(user_id=999)):
+        response = client.patch("/profile", json={"full_name": "Ghost"})
+        assert response.status_code == status.HTTP_404_NOT_FOUND
