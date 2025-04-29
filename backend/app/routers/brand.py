@@ -15,6 +15,34 @@ from fastapi import APIRouter
 router = APIRouter()
 
 
+@router.get("/brands")
+async def get_brands(
+    db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 100,
+):
+    brands = db.query(models.Brand).offset(skip).limit(limit).all()
+    return brands
+
+
+@router.get("/brands/{brand_id}")
+async def get_brand(
+    brand_id: int,
+    db: Session = Depends(get_db),
+):
+    brand = db.query(models.Brand).filter(models.Brand.brand_id == brand_id).first()
+
+    if not brand:
+        raise HTTPException(status_code=404, detail="Brand not found")
+
+    products = (
+        db.query(models.Product).filter(models.Product.brand_id == brand_id).all()
+    )
+    brand.products = products
+
+    return brand
+
+
 @router.post("/brands", response_model=schemas.BrandOut)
 async def create_brand(
     brand: schemas.BrandCreate,

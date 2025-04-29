@@ -257,7 +257,44 @@ async def get_orders_for_artisan(
     if not orders:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail=NO_ORDERS_FOUND)
 
-    return [format_order_response(order) for order in orders]
+    orders_details = []
+    for order in orders:
+        bill = (
+            db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
+        )
+        order_items = (
+            db.query(models.OrderItem, models.Product, models.Brand)
+            .join(
+                models.Product, models.OrderItem.product_id == models.Product.product_id
+            )
+            .join(models.Brand, models.Product.brand_id == models.Brand.brand_id)
+            .filter(models.OrderItem.order_id == order.order_id)
+            .all()
+        )
+
+        items_details = [
+            {
+                "product_id": product.product_id,
+                "brand_id": brand.brand_id,
+                "product_name": product.product_name,
+                "brand_name": brand.brand_name,
+                "order_size": order_item.size,
+                "order_quantity": order_item.quantity,
+            }
+            for order_item, product, brand in order_items
+        ]
+
+        order_data = {
+            "order_id": order.order_id,
+            "status": order.status,
+            "bill_status": bill.status if bill else None,
+            "created_at": order.created_at,
+            "bill_amount": bill.amount if bill else None,
+            "order_items": items_details,
+        }
+        orders_details.append(order_data)
+
+    return orders_details
 
 
 @router.get("/orders/artisan/{order_id}/details")

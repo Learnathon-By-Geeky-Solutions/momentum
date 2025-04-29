@@ -113,8 +113,9 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
 async def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = get_user_by_email(db, request.email)
     if not user or not auth_utils.verify_password(request.password, user.password):
-        raise_invalid_credentials()
-    token = create_access_token({"sub": user.email}, timedelta(minutes=30))
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=USER_NOT_FOUND)
+
+    token = create_access_token({"sub": user.email}, timedelta(days=30))
     data = {
         "username": user.username,
         "email": user.email,
