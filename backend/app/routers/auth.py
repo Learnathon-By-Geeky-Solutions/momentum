@@ -9,6 +9,7 @@ from app.schemas import (
     LoginRequest,
     ForgotPasswordRequest,
     ResetPasswordRequest,
+    RegistrationResponse,
 )
 from app.utils import (
     auth_utils,
@@ -57,10 +58,15 @@ async def forgot_password(
     db: Session = Depends(get_db),
 ):
     user = get_user_by_email(db, request.email)
-    if user:
-        token = create_reset_token(user.email)
-        link = f"http://localhost:8000/reset-password?token={token}"
-        background_tasks.add_task(send_reset_email, user.email, link)
+    if not user:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=USER_NOT_FOUND)
+    if user.role == "admin":
+        raise HTTPException(
+            status.HTTP_403_FORBIDDEN, detail="Admin cannot reset password"
+        )
+    token = create_reset_token(user.email)
+    link = f"http://localhost:8000/reset-password?token={token}"
+    background_tasks.add_task(send_reset_email, user.email, link)
     return {"message": PASSWORD_RESET_SENT}
 
 
@@ -75,7 +81,7 @@ async def reset_password(data: ResetPasswordRequest, db: Session = Depends(get_d
     return {"message": PASSWORD_RESET_SUCCESS}
 
 
-@router.post("/register", response_model=Token)
+@router.post("/register", response_model=RegistrationResponse)
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     existing_user = (
         db.query(User)
@@ -91,23 +97,35 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         full_name=user.full_name,
         address=user.address,
         phone=user.phone,
-        role=user.role,
+        role=user.role if user.role else "customer",
         is_verified=False,
     )
     db.add(new_user)
     db.commit()
     token = create_email_verification_token(user.email)
     await send_verification_email(user.email, token)
-    return {"access_token": token, "token_type": "bearer"}
+    return {
+        "message": "User registered successfully. Please check your email for verification.",
+    }
 
 
 @router.post("/login", response_model=Token)
 async def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = get_user_by_email(db, request.email)
     if not user or not auth_utils.verify_password(request.password, user.password):
-        raise_invalid_credentials()
-    token = create_access_token({"sub": user.email}, timedelta(minutes=30))
-    return {"access_token": token, "token_type": "bearer"}
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=USER_NOT_FOUND)
+
+    token = create_access_token({"sub": user.email}, timedelta(days=30))
+    data = {
+        "username": user.username,
+        "email": user.email,
+        "full_name": user.full_name,
+        "address": user.address,
+        "phone": user.phone,
+        "role": user.role,
+        "is_verified": user.is_verified,
+    }
+    return {"access_token": token, "token_type": "bearer", "user": data}
 
 
 @router.post("/google-signup")

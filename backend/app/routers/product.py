@@ -2,13 +2,10 @@ from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 import app.schemas as schemas
 import app.models as models
 from app.database import get_db  # Database session dependency
-from app.models import User, Product, Brand, Order, OrderItem  # ORM models
+from app.models import User, Brand
 from app.utils import get_current_user
-from app.schemas import ProductCreate, ProductOut  # Pydantic schemas
-from fastapi import FastAPI, Depends, HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List
-from app.database import SessionLocal
 from fastapi import APIRouter
 
 
@@ -58,6 +55,21 @@ def post_product(
     return new_product
 
 
+@router.get("/products/me", response_model=List[schemas.ProductOut])
+def get_products_me(
+    db: Session = Depends(get_db), user: User = Depends(get_current_user)
+):
+    products = (
+        db.query(models.Product)
+        .join(models.Brand, models.Product.brand_id == models.Brand.brand_id)
+        .filter(models.Brand.user_id == user.user_id)
+        .all()
+    )
+    if not products:
+        raise HTTPException(status_code=404, detail="No products found for this user.")
+    return products
+
+
 @router.patch("/products/{product_id}", response_model=schemas.ProductCreate)
 def update_product(
     product_id: int,
@@ -82,10 +94,13 @@ def update_product(
     return product
 
 
-@router.get("/products/{product_id}", response_model=schemas.ProductOut)
+@router.get("/products/{product_id}")
 def get_product(product_id: int, db: Session = Depends(get_db)):
     product = (
-        db.query(models.Product).filter(models.Product.product_id == product_id).first()
+        db.query(models.Product)
+        .options(joinedload(models.Product.brand))
+        .filter(models.Product.product_id == product_id)
+        .first()
     )
 
     if not product:

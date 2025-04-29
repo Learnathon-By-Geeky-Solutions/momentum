@@ -1,11 +1,10 @@
 from fastapi import UploadFile, HTTPException
 from typing import List, Tuple, Optional
 from app.models import Product
-from fastapi import UploadFile
 from app.minio.config import MINIO_CLIENT, BUCKET_NAME
 from minio.error import S3Error
 from urllib.parse import urlparse
-from typing import List
+import os
 
 PRODUCT_PHOTO = "product photo"
 PRODUCT_VIDEO = "product video"
@@ -17,6 +16,7 @@ MAX_FILE_SIZE_MB = 5  # 5 MB
 
 
 async def upload_to_minio(file: UploadFile, folder: str):
+    MINIO_URL = os.getenv("MINIO_URL")
     file_name = f"{folder}/{file.filename}"
     MINIO_CLIENT.put_object(
         bucket_name=BUCKET_NAME,
@@ -26,7 +26,9 @@ async def upload_to_minio(file: UploadFile, folder: str):
         part_size=10 * 1024 * 1024,  # 10MB chunk size
         content_type=file.content_type,
     )
-    return f"http://localhost:9000/{BUCKET_NAME}/{file_name}"
+    print(f"{MINIO_URL}/{BUCKET_NAME}/{file_name}")
+
+    return f"{MINIO_URL}/{BUCKET_NAME}/{file_name}"
 
 
 def validate_file_type(content_type: str, upload_type: str) -> None:
@@ -64,7 +66,7 @@ async def delete_from_minio(object_name: str) -> bool:
 
 def extract_minio_object_key(url: str) -> str:
     """
-    Converts 'http://localhost:9000/media/photos/007.jpg' → 'photos/007.jpg'
+    Converts 'https://s3.handi-craft.xyz/media/photos/007.jpg' → 'photos/007.jpg'
     """
     parsed = urlparse(url)
     parts = parsed.path.strip("/").split("/", 2)

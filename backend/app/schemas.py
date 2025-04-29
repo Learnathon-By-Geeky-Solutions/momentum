@@ -5,9 +5,14 @@ from decimal import Decimal
 import re
 
 
+class RegistrationResponse(BaseModel):
+    message: str
+
+
 class Token(BaseModel):
     access_token: str
     token_type: str
+    user: dict
 
 
 class TokenData(BaseModel):
@@ -86,11 +91,7 @@ class LoginRequest(BaseModel):
 class BrandCreate(BaseModel):
     brand_name: str = Field(..., min_length=3, max_length=100)
     brand_description: Optional[str] = Field(None, max_length=255)
-    logo: Optional[str] = Field(
-        None,
-        pattern=r"^(http|https):\/\/.+\.(jpg|jpeg|png)$",
-        description="Must be a valid image URL.",
-    )
+    logo: Optional[str]
 
 
 class BrandOut(BaseModel):
@@ -161,6 +162,8 @@ class OrderItemCreate(BaseModel):
 
 class OrderCreate(BaseModel):
     order_items: List[OrderItemCreate]
+    address: Optional[str] = Field(None, max_length=255)
+    phone: str
 
 
 class OrderOut(BaseModel):

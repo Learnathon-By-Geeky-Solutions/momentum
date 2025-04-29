@@ -6,68 +6,27 @@ import app.schemas as schemas
 import app.models as models
 from app.database import get_db, SessionLocal
 from app.utils import get_current_user
+from app.helpers.orders import (
+    get_product_or_404,
+    get_order_or_404,
+    get_bill_or_404,
+    get_order_items_details,
+    get_user_brand_ids,
+    validate_artisan_order_access,
+    format_order_response,
+    get_artisan_order_items,
+)
+from app.helpers.orders import (
+    PRODUCT_NOT_FOUND,
+    INSUFFICIENT_STOCK,
+    NO_ORDERS_FOUND,
+    ORDER_DELETE_FORBIDDEN,
+    ORDER_DELETED,
+    BASE_URL,
+    PENDING,
+)
 
 router = APIRouter()
-
-ORDER_NOT_FOUND = "Order not found"
-PRODUCT_NOT_FOUND = "Product with id {} not found"
-INSUFFICIENT_STOCK = "Not enough stock for product {}"
-NO_ORDERS_FOUND = "No orders found for this user"
-BILL_NOT_FOUND = "Bill not found for this order"
-ORDER_DELETE_FORBIDDEN = "Cannot delete order: bill is already confirmed or processed."
-ORDER_DELETED = "Order deleted successfully."
-BASE_URL = "http://127.0.0.1:8000"
-PENDING = "Pending"
-
-
-def get_product_or_404(db: Session, product_id: int):
-    product = (
-        db.query(models.Product).filter(models.Product.product_id == product_id).first()
-    )
-    if not product:
-        raise HTTPException(
-            status.HTTP_404_NOT_FOUND, detail=PRODUCT_NOT_FOUND.format(product_id)
-        )
-    return product
-
-
-def get_order_or_404(db: Session, order_id: int, user_id: int):
-    order = (
-        db.query(models.Order)
-        .filter(models.Order.order_id == order_id, models.Order.user_id == user_id)
-        .first()
-    )
-    if not order:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=ORDER_NOT_FOUND)
-    return order
-
-
-def get_bill_or_404(db: Session, order_id: int):
-    bill = db.query(models.Bill).filter(models.Bill.order_id == order_id).first()
-    if not bill:
-        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=BILL_NOT_FOUND)
-    return bill
-
-
-def get_order_items_details(db: Session, order_id: int):
-    items = (
-        db.query(models.OrderItem, models.Product, models.Brand)
-        .join(models.Product, models.OrderItem.product_id == models.Product.product_id)
-        .join(models.Brand, models.Product.brand_id == models.Brand.brand_id)
-        .filter(models.OrderItem.order_id == order_id)
-        .all()
-    )
-    return [
-        {
-            "product_id": product.product_id,
-            "brand_id": brand.brand_id,
-            "product_name": product.product_name,
-            "brand_name": brand.brand_name,
-            "order_size": order_item.size,
-            "order_quantity": order_item.quantity,
-        }
-        for order_item, product, brand in items
-    ]
 
 
 @router.post("/orders", response_model=schemas.OrderOut)
@@ -277,3 +236,100 @@ async def delete_order(
     db.delete(order)
     db.commit()
     return {"detail": ORDER_DELETED}
+
+
+@router.get("/orders/artisan")
+async def get_orders_for_artisan(
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    brand_ids = get_user_brand_ids(db, current_user.user_id)
+
+    orders = (
+        db.query(models.Order)
+        .join(models.OrderItem, models.Order.order_id == models.OrderItem.order_id)
+        .join(models.Product, models.OrderItem.product_id == models.Product.product_id)
+        .filter(models.Product.brand_id.in_(brand_ids))
+        .distinct()
+        .all()
+    )
+
+    if not orders:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail=NO_ORDERS_FOUND)
+
+    orders_details = []
+    for order in orders:
+        bill = (
+            db.query(models.Bill).filter(models.Bill.order_id == order.order_id).first()
+        )
+        order_items = (
+            db.query(models.OrderItem, models.Product, models.Brand)
+            .join(
+                models.Product, models.OrderItem.product_id == models.Product.product_id
+            )
+            .join(models.Brand, models.Product.brand_id == models.Brand.brand_id)
+            .filter(models.OrderItem.order_id == order.order_id)
+            .all()
+        )
+
+        items_details = [
+            {
+                "product_id": product.product_id,
+                "brand_id": brand.brand_id,
+                "product_name": product.product_name,
+                "brand_name": brand.brand_name,
+                "order_size": order_item.size,
+                "order_quantity": order_item.quantity,
+            }
+            for order_item, product, brand in order_items
+        ]
+
+        order_data = {
+            "order_id": order.order_id,
+            "status": order.status,
+            "bill_status": bill.status if bill else None,
+            "created_at": order.created_at,
+            "bill_amount": bill.amount if bill else None,
+            "order_items": items_details,
+        }
+        orders_details.append(order_data)
+
+    return orders_details
+
+
+@router.get("/orders/artisan/{order_id}/details")
+async def get_order_details_for_artisan(
+    order_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    brand_ids = get_user_brand_ids(db, current_user.user_id)
+    order = validate_artisan_order_access(db, order_id, brand_ids)
+    bill = get_bill_or_404(db, order.order_id)
+
+    items_details = get_artisan_order_items(db, order.order_id, brand_ids)
+
+    return {
+        "order_id": order.order_id,
+        "status": order.status,
+        "created_at": order.created_at,
+        "bill_amount": bill.amount if bill else None,
+        "order_items": items_details,
+    }
+
+
+@router.put("/orders/artisan/{order_id}/status")
+async def update_order_status(
+    order_id: int,
+    order_update: schemas.OrderUpdate,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user),
+):
+    brand_ids = get_user_brand_ids(db, current_user.user_id)
+    order = validate_artisan_order_access(db, order_id, brand_ids)
+
+    order.status = order_update.status
+    db.commit()
+    db.refresh(order)
+
+    return order
