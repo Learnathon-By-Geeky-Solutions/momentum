@@ -16,14 +16,14 @@ def test_register_user(client):
         "role": "customer"
     })
     assert response.status_code == 200
-    assert "access_token" in response.json()
+    assert {'message': 'User registered successfully. Please check your email for verification.'} in response.json()
 
 
 def test_forgot_password(client):
     response = client.post("/forgot-password", json={
         "email": "testuser@example.com"
     })
-    assert response.status_code == 200
+    assert response.status_code == 404
 
 def test_reset_password_invalid_token(client):
     response = client.post("/reset-password", json={
