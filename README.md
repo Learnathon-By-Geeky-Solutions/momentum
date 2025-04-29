@@ -9,10 +9,7 @@
 [![Github Action](https://img.shields.io/badge/Github%20Actions%20-%20black?style=for-the-badge&logo=githubactions&logoColor=blue&labelColor=white&color=black)](https://github.com/features/actions)
 [![Typescript](https://img.shields.io/badge/Typescript%20-%20black?style=for-the-badge&logo=Typescript)]()
 
-
-<p align="center">
-  <img src="images/banner.jpg" alt="Handicraft Banner" />
-</p>
+![Architecture Diagram](images/banner.jpg)
 
 <h2 align="center">🌾 From Rural Hands to Global Hearts 🌍</h2>
 
@@ -43,6 +40,10 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
  - [**Team Members**](#-team-members)
  - [**Product Tour**](#-product-tour)
  - [**Features**](#-features)
+ - [**🛠 Project Design Overview**](#-project-design-overview)
+    - [**🏛 System Architecture**](#1-system-architecture)
+    - [**🛠 Technical Architecture**](#2--technical-architecture)
+    - [**🗃 Database Design (ERd)**](#3--database-design-erd)
  - [**Tech Stacks**](#tech-stacks)
  - [**Project Structure**](#-project-structure)
  - [**Getting Started**](#getting-started)
@@ -94,6 +95,119 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 - ***Vulnerability Prevention:*** Ensure the platform's security and smooth functioning by identifying and fixing potential issues.
 - ***Content Moderation:*** Review and approve posts from artisans and customers to ensure quality and compliance with platform standards.
 
+
+# 🛠 Project Design Overview
+## 1. System Architecture
+
+![Architecture Diagram](images/System_Architecture.png)
+
+### Overview
+- **User Interaction**:
+  - Users can sign up and log in either as **Artisans** or **Customers**.
+- **Front-End**:
+  - Handles user authentication, artisan/customer dashboards, admin panel, product listings, search, filters, and responsive design.
+- **Back-End**:
+  - Manages authentication, profiles, product CRUD, brand creation, order management, admin monitoring, and semantic analysis.
+- **Security**:
+  - Secure API access using **JWT Tokens**.
+- **Validation**:
+  - Input and output data validated via **Pydantic Models**.
+- **Database**:
+  - Stores users, products, brands, orders, billing information, and chats.
+- **Storage**:
+  - Handles image and logo uploads using **MinIO** storage service.
+
+
+## 2. 🛠 Technical Architecture
+
+![Architecture Diagram](images/System_design.png)
+
+### 🖥 Front-End
+- **Frameworks**: React.js, Next.js
+- **Language**: TypeScript
+- **UI Libraries**: TailwindCSS, ShadcnUI
+- **State Management**: Tanstack Query
+- **API Communication**: Axios
+- **Features**:
+  - User authentication and authorization
+  - Artisan and Customer dashboards
+  - Product listing, filtering, searching
+  - Admin monitoring panel
+  - Fully responsive and optimized for various devices
+
+### ⚙️ Back-End
+- **Framework**: FastAPI (Python)
+- **Authentication**:
+  - JWT Token-based secure authentication
+- **Data Validation**:
+  - Pydantic models for request/response validation
+- **Core Modules**:
+  - User & Profile Management
+  - Product Management (CRUD)
+  - Brand Management
+  - Order Processing
+  - Admin Monitoring & Semantic Analysis
+
+---
+
+### 🛢 Database
+- **Type**: PostgreSQL
+- **Managed Entities**:
+  - Users, Brands, Products, Orders, Bills
+
+---
+
+### 🗄 Storage
+- **Object Storage**: MinIO
+- **Used For**:
+  - Product images
+  - Brand logos
+  - Other media uploads
+
+---
+
+### 🔐 Security
+- JWT (JSON Web Tokens) for secure authentication
+- Password hashing and validation
+- Role-based access control for Admin, Artisan, and Customer users
+
+---
+
+### 🧠 Additional Features
+- **Semantic analysis** module for intelligent data handling.
+- Admin tools for monitoring product and user activities.
+
+
+## 3. 🗃 Database Design (ERD)
+
+![Architecture Diagram](images/ERD.png)
+
+### 📋 Overview
+
+- **User Table**:
+  - Stores user information like username, email, password, phone, and address.
+  - Supports third-party login via Google (google_id).
+  - Tracks user roles (artisan, customer, admin) and account verification status.
+  
+- **Brand Table**:
+  - Each brand is linked to a user (artisan).
+  - Stores brand name, description, logo, and creation date.
+
+- **Product Table**:
+  - Each product is linked to a brand.
+  - Stores product details such as name, images, videos, category, description, pricing, order size/quantity, and approval status.
+  
+- **Order Table**:
+  - Represents orders placed by users (customers).
+  - Tracks order status and creation date.
+
+- **OrderTeam Table**:
+  - Links an order with multiple products.
+  - Stores product-specific details within an order: size, quantity, phone number, and delivery address.
+
+- **Bill Table**:
+  - Linked to orders for billing management.
+  - Stores transaction details: amount, payment method, transaction ID, billing status, and creation date.
 
 ## Tech Stacks
 
