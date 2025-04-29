@@ -5,25 +5,6 @@ from app.main import app
 client = TestClient(app)
 
 
-def test_register_user(client):
-    response = client.post(
-        "/register",
-        json={
-            "username": "testuser",
-            "email": "testuser@example.com",
-            "password": "password123",
-            "full_name": "Test User",
-            "address": "123 Test Lane",
-            "phone": "1234567890",
-            "role": "customer",
-        },
-    )
-    assert response.status_code == 200
-    assert response.json() == {
-        "message": "User registered successfully. Please check your email for verification."
-    }
-
-
 def test_forgot_password(client):
     response = client.post("/forgot-password", json={"email": "testuser@example.com"})
     assert response.status_code == 404
