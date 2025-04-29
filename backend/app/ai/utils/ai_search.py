@@ -21,6 +21,7 @@ def detect_language(text: str) -> str:
     except Exception:
         return "en"
 
+
 def generate_keywords(query: str) -> Dict[str, Any]:
     prompt = f"""Extract product search filters and translate to English clearly from the user's input below.
       
@@ -38,8 +39,13 @@ Respond ONLY in valid JSON format clearly with this structure:
     response = client.chat.completions.create(
         model="gpt-4o",
         temperature=0.5,
-        messages=[{"role": "system", "content": "You're a helpful product search assistant and translator."},
-                  {"role": "user", "content": prompt}]
+        messages=[
+            {
+                "role": "system",
+                "content": "You're a helpful product search assistant and translator.",
+            },
+            {"role": "user", "content": prompt},
+        ],
     )
 
     try:
@@ -50,32 +56,30 @@ Respond ONLY in valid JSON format clearly with this structure:
             return json.loads(json_text.group())
         else:
             return {"keywords": [], "keywords_en": [], "synonyms": {}}
-    except Exception as e:
+    except (json.JSONDecodeError, AttributeError, IndexError) as e:
+        print(f"Error parsing AI response: {e}")
         return {"keywords": [], "keywords_en": [], "synonyms": {}}
+
 
 def extract_price_range_from_text(text: str) -> Union[List[float], None]:
     text = text.lower()
 
-   
     match_under = re.search(r"under\s*(\d+)", text)
     if match_under:
         max_price = float(match_under.group(1))
         return [0, max_price]
 
-    
     match_below = re.search(r"below\s*(\d+)", text)
     if match_below:
         max_price = float(match_below.group(1))
         return [0, max_price]
 
-    
     match_between = re.search(r"between\s*(\d+)\s*and\s*(\d+)", text)
     if match_between:
         min_price = float(match_between.group(1))
         max_price = float(match_between.group(2))
         return [min_price, max_price]
 
-    
     match_from_to = re.search(r"from\s*(\d+)\s*to\s*(\d+)", text)
     if match_from_to:
         min_price = float(match_from_to.group(1))
@@ -83,35 +87,35 @@ def extract_price_range_from_text(text: str) -> Union[List[float], None]:
         return [min_price, max_price]
 
     return None
+
+
 def get_most_similar_products(products, keywords, synonyms):
     keyword_texts = []
-    
-    
+
     for keyword in keywords:
-        keyword_texts.append(keyword.lower())  
-        
-        
+        keyword_texts.append(keyword.lower())
+
         if keyword in synonyms:
             for synonym in synonyms[keyword]:
                 keyword_texts.append(synonym.lower())
-    
+
     print(f"Enhanced Keywords for Search (including synonyms): {keyword_texts}")
-    
-    
+
     matched_products = [
         product
         for product in products
         if any(
-            keyword in (
+            keyword
+            in (
                 f"{product.product_name or ''} {product.category or ''} {product.description or ''}"
-            ).lower() for keyword in keyword_texts
+            ).lower()
+            for keyword in keyword_texts
         )
     ]
-    
+
     if matched_products:
         return matched_products
 
-    
     fuzzy_threshold = 68
     fuzzy_matches = [
         (

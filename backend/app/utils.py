@@ -131,8 +131,8 @@ async def send_email(subject: str, email: str, body: str):
 
 
 async def send_verification_email(email: str, token: str):
-    baseUrl = os.getenv("BASE_URL")
-    link = f"{baseUrl}/account/verify-email?token={token}"
+    base_url = os.getenv("BASE_URL")
+    link = f"{base_url}/account/verify-email?token={token}"
     await send_email(
         "Verify Your Email", email, f"Click the link to verify your email: {link}"
     )
