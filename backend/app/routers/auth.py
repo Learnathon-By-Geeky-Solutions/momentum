@@ -15,12 +15,12 @@ from app.utils import (
     auth_utils,
     create_access_token,
     create_email_verification_token,
-    send_verification_email,
     verify_reset_token,
     create_reset_token,
     send_reset_email,
     authenticate_user,
 )
+from app.tasks import send_verification_email
 from app.database import get_db
 import os
 
@@ -33,6 +33,7 @@ PASSWORD_RESET_SUCCESS = "Password reset successful."
 PASSWORD_RESET_SENT = "If the email exists, a password reset link has been sent."
 
 FRONTEND_URL = os.getenv("FRONTEND_URL")
+
 
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
@@ -105,7 +106,8 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     db.add(new_user)
     db.commit()
     token = create_email_verification_token(user.email)
-    await send_verification_email(user.email, token)
+    link = f"{FRONTEND_URL}/account/verify-email?token={token}"
+    send_verification_email.delay(user.email, token, link)
     return {
         "message": "User registered successfully. Please check your email for verification.",
     }

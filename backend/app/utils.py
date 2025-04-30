@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from app.models import User
 from app.database import get_db
+from app.tasks import celery_app
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 ALGORITHM = "HS256"
@@ -124,6 +125,7 @@ def create_email_verification_token(email: str):
     return create_token({"sub": email}, 60)
 
 
+@celery_app.task
 async def send_email(subject: str, email: str, body: str):
     message = MessageSchema(
         subject=subject, recipients=[email], body=body, subtype="html"
