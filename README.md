@@ -48,6 +48,7 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
  - [**Project Structure**](#-project-structure)
  - [**Getting Started**](#getting-started)
  - [**API Documentation**](#-api-documentation)
+    - [**🛰️ Live API Docs**](#-live-api-docs)
  - [**Environment Variables**](#-environment-variables)
  - [**Running Tests**](#-running-tests)
  - [**Deployment with Docker**](#-deployment-with-docker)
@@ -293,6 +294,20 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
   npm install
   npm start
 ```
+
+## 📘 API Documentation
+
+This section provides access to the full API documentation for the Handicraft platform. You can explore all available endpoints, request/response formats, authentication methods, and more.
+
+### 🔗 Live API Docs
+
+[![Swagger UI Docs](https://img.shields.io/badge/API-Swagger_UI-blue?logo=swagger)](https://api.handi-craft.xyz/docs#/)
+[![ReDoc API Reference](https://img.shields.io/badge/API-ReDoc_Reference-orange?logo=readthedocs)](https://api.handi-craft.xyz/redoc)
+
+- **Swagger UI** – Interactive API playground where you can try out endpoints and see responses in real-time.
+- **ReDoc Reference** – Clean, structured, and searchable API reference documentation powered by ReDoc.
+
+For any issues or questions regarding the API, please contact the development team or open an issue in the repository.
 
 
 ## 🔐 Environment Variables
