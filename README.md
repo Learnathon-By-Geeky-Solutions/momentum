@@ -75,7 +75,7 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 
 ## 🎥 Product Tour
 
-[![Project-Demo](https://img.shields.io/badge/Demo-Handicraft-Green?style=for-the-badge&color=%23FFA500&)](https://learnathon-by-geeky-solutions.github.io/momentum/)
+[![Project-Demo](https://img.shields.io/badge/Demo-Handicraft-Green?style=for-the-badge&color=%23FFA500&)](https://handi-craft.xyz/)
 
 
 ## ✨ Features
@@ -239,6 +239,10 @@ The backend is built using robust Python-based tools and a powerful relational d
 | ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white&style=flat-square) | **FastAPI:** A modern, fast web framework for building APIs with Python, based on standard Python type hints and asynchronous programming. |
 | ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-CA1F27?logo=python&logoColor=white&style=flat-square) | **SQLAlchemy:** A powerful SQL toolkit and Object-Relational Mapping (ORM) library for Python, enabling easy database interaction and management. |
 | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white&style=flat-square) | **PostgreSQL:** An open-source, highly extensible relational database system, known for its reliability, data integrity, and support for complex queries. |
+| ![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white&style=flat-square) | **Redis:** An in-memory data store used for caching and as a message broker between services. |
+| ![Celery](https://img.shields.io/badge/Celery-37814A?logo=celery&logoColor=white&style=flat-square) | **Celery:** A distributed task queue for running background jobs asynchronously using workers. |
+| ![Flower](https://img.shields.io/badge/Flower-FFA500?logo=flower&logoColor=white&style=flat-square) | **Flower:** A web-based tool for monitoring and administrating Celery clusters in real-time. |
+
 
 
 ## 🔐 Authentication Tech Stack
@@ -418,3 +422,11 @@ We welcome contributions from the community! Follow these steps to contribute:
 ## 📄 License
 
 This project is licensed under the **MIT License** – see the [LICENSE](./LICENSE) file for details.
+
+## 🙏 Acknowledgment
+
+We extend our sincere thanks to **[Learnathon by Geeky Solutions](https://www.geekysolutions.com/learnathon)** for creating this kind of opportunity and learning environment.
+
+This project was initiated and developed as part of the **Learnathon** program — a platform that empowers developers to build real-world projects, gain hands-on experience, and grow through community-driven learning.
+
+> 🚀 _"Thank you Learnathon for enabling innovation, collaboration, and practical growth."_
