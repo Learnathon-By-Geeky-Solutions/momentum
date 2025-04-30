@@ -22,6 +22,7 @@ from app.utils import (
     authenticate_user,
 )
 from app.database import get_db
+import os
 
 router = APIRouter()
 
@@ -31,6 +32,7 @@ USER_NOT_FOUND = "User not found"
 PASSWORD_RESET_SUCCESS = "Password reset successful."
 PASSWORD_RESET_SENT = "If the email exists, a password reset link has been sent."
 
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 def get_user_by_email(db: Session, email: str):
     return db.query(User).filter(User.email == email).first()
@@ -65,7 +67,7 @@ async def forgot_password(
             status.HTTP_403_FORBIDDEN, detail="Admin cannot reset password"
         )
     token = create_reset_token(user.email)
-    link = f"http://localhost:8000/reset-password?token={token}"
+    link = f"{FRONTEND_URL}/account/reset-password?token={token}"
     background_tasks.add_task(send_reset_email, user.email, link)
     return {"message": PASSWORD_RESET_SENT}
 

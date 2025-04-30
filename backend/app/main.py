@@ -41,15 +41,17 @@ origins = [
     "http://localhost:3001",
     "http://localhost:3000",
     "https://handi-craft.xyz",
-    "https://www.handi-craft.xyz",
+    "https://www.handi-craft.xyz/"
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=origins, 
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"],
     allow_headers=["*"],
+    expose_headers=["*"],  
+    max_age=600,  
 )
 
 

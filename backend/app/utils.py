@@ -20,6 +20,8 @@ GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = "http://127.0.0.1:8000/auth/callback"
 
+FRONTEND_URL = os.getenv("FRONTEND_URL")
+
 MAIL_USERNAME = os.getenv("mymail")
 MAIL_PASSWORD = os.getenv("google_password")
 
@@ -131,8 +133,7 @@ async def send_email(subject: str, email: str, body: str):
 
 
 async def send_verification_email(email: str, token: str):
-    base_url = os.getenv("BASE_URL")
-    link = f"{base_url}/account/verify-email?token={token}"
+    link = f"{FRONTEND_URL}/account/verify-email?token={token}"
     await send_email(
         "Verify Your Email", email, f"Click the link to verify your email: {link}"
     )
