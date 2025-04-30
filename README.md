@@ -45,6 +45,10 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
     - [**🛠 Technical Architecture**](#2--technical-architecture)
     - [**🗃 Database Design (ERd)**](#3--database-design-erd)
  - [**Tech Stacks**](#tech-stacks)
+    - [**Frontend Tech Stack**](#%EF%B8%8F-frontend-tech-stack)
+    - [**Backend Tech Stack**](#-backend-tech-stack)
+    - [**Authentication Tech Stack**](#-authentication-tech-stack)
+    - [**Devops Infrastructure**](#-devops--infrastructure)
  - [**Project Structure**](#-project-structure)
  - [**Getting Started**](#getting-started)
  - [**API Documentation**](#-api-documentation)
@@ -139,7 +143,7 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 ### ⚙️ Back-End
 - **Framework**: FastAPI (Python)
 - **Authentication**:
-  - JWT Token-based secure authentication
+  - OAuth 2.0, JWT Token-based secure authentication
 - **Data Validation**:
   - Pydantic models for request/response validation
 - **Core Modules**:
@@ -212,26 +216,59 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 
 ## Tech Stacks
 
-### Frontend 
-- ***ReactJS:***  A JavaScript library for building fast, dynamic user interfaces with reusable components.
-- ***NextJs:*** A React framework for server-side rendering and static site generation, optimizing performance and SEO.
-- ***Typescript:***  A superset of JavaScript that adds static typing, improving code quality and error prevention.
-- ***TailwindCSS:*** A utility-first CSS framework for rapid UI development with customizable design systems.
-- ***ShadcnUi:*** A UI component library focused on accessibility and design, providing ready-to-use components.
-- ***Tanstack Query:*** A data-fetching library that simplifies managing and syncing server data in React apps.
-- ***Axios:*** A promise-based HTTP client for making API requests, handling responses, and managing errors.
+## 🖥️ Frontend Tech Stack
 
-### Backend
-- ***FastAPI:*** A modern, fast web framework for building APIs with Python, based on standard Python type hints and asynchronous programming.
-- ***SQLAlchemy:*** A powerful SQL toolkit and Object-Relational Mapping (ORM) library for Python, enabling easy database interaction and management.
-- ***PostgreSQL:*** An open-source, highly extensible relational database system, known for its reliability, data integrity, and support for complex queries.
+Our frontend is built using modern, powerful, and scalable technologies designed for performance, maintainability, and great user experience.
 
-### Authentication 
-- ***JWT Tokens:*** JSON Web Tokens (JWT) are a compact, URL-safe way to represent claims between two parties. Used for secure user authentication and data exchange, JWTs are commonly used in API authentication systems.
+| Technology | Description |
+|------------|-------------|
+| ![ReactJS](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white&style=flat-square) | **ReactJS:** A JavaScript library for building fast, dynamic user interfaces with reusable components. |
+| ![Next.js](https://img.shields.io/badge/Next.js-000000?logo=next.js&logoColor=white&style=flat-square) | **Next.js:** A React framework for server-side rendering and static site generation, optimizing performance and SEO. |
+| ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white&style=flat-square) | **TypeScript:** A superset of JavaScript that adds static typing, improving code quality and error prevention. |
+| ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white&style=flat-square) | **TailwindCSS:** A utility-first CSS framework for rapid UI development with customizable design systems. |
+| ![ShadcnUI](https://img.shields.io/badge/Shadcn_UI-000000?logo=vercel&logoColor=white&style=flat-square) | **ShadcnUI:** A UI component library focused on accessibility and design, providing ready-to-use components. |
+| ![TanStack Query](https://img.shields.io/badge/TanStack_Query-FF4154?logo=reactquery&logoColor=white&style=flat-square) | **TanStack Query:** A data-fetching library that simplifies managing and syncing server data in React apps. |
+| ![Axios](https://img.shields.io/badge/Axios-5A29E4?logo=axios&logoColor=white&style=flat-square) | **Axios:** A promise-based HTTP client for making API requests, handling responses, and managing errors. |
 
-### DevOps
-- ***Docker:*** A platform that automates the deployment of applications inside lightweight, portable containers, ensuring consistency across environments.
-- ***GitHub Actions:*** A CI/CD tool integrated with GitHub for automating workflows like testing, building, and deploying code directly from your repository.
+## 🧩 Backend Tech Stack
+
+The backend is built using robust Python-based tools and a powerful relational database to ensure speed, scalability, and maintainability.
+
+| Technology | Description |
+|------------|-------------|
+| ![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white&style=flat-square) | **FastAPI:** A modern, fast web framework for building APIs with Python, based on standard Python type hints and asynchronous programming. |
+| ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-CA1F27?logo=python&logoColor=white&style=flat-square) | **SQLAlchemy:** A powerful SQL toolkit and Object-Relational Mapping (ORM) library for Python, enabling easy database interaction and management. |
+| ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white&style=flat-square) | **PostgreSQL:** An open-source, highly extensible relational database system, known for its reliability, data integrity, and support for complex queries. |
+
+
+## 🔐 Authentication Tech Stack
+
+We use modern and secure methods to authenticate users and handle data exchange in our application.
+
+| Technology | Description |
+|------------|-------------|
+| ![JWT](https://img.shields.io/badge/JWT-000000?logo=json-web-tokens&logoColor=white&style=flat-square) | **JWT Tokens:** JSON Web Tokens (JWT) are a compact, URL-safe way to represent claims between two parties. Used for secure user authentication and data exchange, JWTs are commonly used in API authentication systems. |
+| ![OAuth 2.0](https://img.shields.io/badge/OAuth_2.0-6A6A6A?logo=oauth&logoColor=white&style=flat-square) | **OAuth 2.0:** A widely-used open standard for access delegation, commonly used for secure user authentication and authorization, allowing users to grant access to their resources without sharing their credentials. |
+
+
+## 🚀 DevOps & Infrastructure
+
+Our project is built and deployed using a modern DevOps stack, enabling continuous delivery, high availability, and efficient debugging in production.
+
+| Tool | Description |
+|------|-------------|
+| ![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white&style=flat-square) | Distributed version control system for source code management. |
+| ![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white&style=flat-square) | Code hosting, issue tracking, and collaborative development platform. |
+| ![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-2088FF?logo=githubactions&logoColor=white&style=flat-square) | CI/CD pipeline used to build, test, and deploy code automatically. |
+| ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white&style=flat-square) | Containerization platform to build, ship, and run apps anywhere. |
+| ![Caddy](https://img.shields.io/badge/Caddy-3788D8?logo=caddy&logoColor=white&style=flat-square) | Modern web server with automatic HTTPS, used as a reverse proxy. |
+| ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?logo=cloudflare&logoColor=white&style=flat-square) | CDN and DNS services with security features like DDoS protection. |
+| ![DigitalOcean](https://img.shields.io/badge/DigitalOcean-0080FF?logo=digitalocean&logoColor=white&style=flat-square) | Cloud infrastructure provider hosting our production environment. |
+| ![Sentry](https://img.shields.io/badge/Sentry-362D59?logo=sentry&logoColor=white&style=flat-square) | Real-time error tracking and monitoring to help debug production issues. |
+| ![Locust](https://img.shields.io/badge/Locust-000000?logo=python&logoColor=white&style=flat-square) | Open-source load testing tool used to measure performance and scalability. |
+
+---
+
 
 ## 📁 Project Structure
 
@@ -274,11 +311,17 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
 
 
 ## Getting Started
-**Prerequisites**
-- Python 3.12.2+
-- Node.js 20+
-- PostgreSQL
-- Docker (optional)
+## 🧰 Requirements
+
+To run this project locally or in production, ensure the following tools are installed:
+
+| Tool | Version |
+|------|---------|
+| ![Python](https://img.shields.io/badge/Python-3.12.2%2B-3776AB?logo=python&logoColor=white&style=flat-square) | Python 3.12.2 or higher |
+| ![Node.js](https://img.shields.io/badge/Node.js-20%2B-339933?logo=node.js&logoColor=white&style=flat-square) | Node.js 20 or higher |
+| ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Latest-4169E1?logo=postgresql&logoColor=white&style=flat-square) | PostgreSQL (latest recommended) |
+| ![Docker](https://img.shields.io/badge/Docker-Latest-2496ED?logo=docker&logoColor=white&style=flat-square) | Docker (latest stable) |
+
 
 **Backend Setup**
 ```bash
@@ -293,6 +336,12 @@ Whether you're a customer seeking unique, handmade goods or a rural producer loo
   cd frontend
   npm install
   npm start
+```
+**🐳 Docker Setup**
+```bash
+docker compose build
+docker compose up -d
+docker compose down
 ```
 
 ## 📘 API Documentation
@@ -352,17 +401,19 @@ To deploy the application using Docker:
   docker-compose up --build
 
 ```
-
-
 ## 🤝 Contributing
 
-- Fork the repository.
-- Create a new branch: git checkout -b feature/your-feature-name.
-- Commit your changes: git commit -m 'Add your message'.
-- Push to the branch: git push origin feature/your-feature-name.
-- Open a pull request.
+We welcome contributions from the community! Follow these steps to contribute:
 
+| Step | Command |
+|------|---------|
+| ![Fork](https://img.shields.io/badge/🔱-Fork_Repository-blue?style=flat-square) | Fork the repository to your GitHub account. |
+| ![Branch](https://img.shields.io/badge/🌿-Create_New_Branch-green?style=flat-square) | `git checkout -b feature/your-feature-name` |
+| ![Commit](https://img.shields.io/badge/💾-Commit_Changes-9cf?style=flat-square) | `git commit -m 'Add your message'` |
+| ![Push](https://img.shields.io/badge/📤-Push_Branch-orange?style=flat-square) | `git push origin feature/your-feature-name` |
+| ![PR](https://img.shields.io/badge/🚀-Open_Pull_Request-purple?style=flat-square) | Submit a pull request for review. |
 
+> 🧠 **Tip:** Make sure to follow the coding standards and check for any open issues before starting work.
 
 ## 📄 License
 
